@@ -1,43 +1,40 @@
+import { Link } from 'react-router-dom';
+import logo from '../../../assets/logo.png';
 const Footer = () => {
   return (
-    <footer className="footer bg-base-200 text-base-content p-10">
-      <nav>
+    <footer className="flex gap-4 bg-primary text-white p-10">
+      <aside className='basis-2/5
+       flex-col flex'>
+        <Link to={'/'} className="w-48 invert"><img src={logo} alt="" /></Link>
+        <p className="text-gray-400 w-3/4
+        ">
+          A platform designed to help individuals and teams grow their skills, build networks, and achieve success in personal and professional development.
+        </p>
+      </aside>
+      <div className='basis-1/5
+       flex-col flex'>
         <h6 className="footer-title">Services</h6>
         <a className="link link-hover">Branding</a>
         <a className="link link-hover">Design</a>
         <a className="link link-hover">Marketing</a>
         <a className="link link-hover">Advertisement</a>
-      </nav>
-      <nav>
+      </div>
+      <div className='basis-1/5
+       flex-col flex'>
         <h6 className="footer-title">Company</h6>
         <a className="link link-hover">About us</a>
         <a className="link link-hover">Contact</a>
         <a className="link link-hover">Jobs</a>
         <a className="link link-hover">Press kit</a>
-      </nav>
-      <nav>
+      </div>
+      <div className='basis-1/5
+       flex-col flex'>
         <h6 className="footer-title">Legal</h6>
         <a className="link link-hover">Terms of use</a>
         <a className="link link-hover">Privacy policy</a>
         <a className="link link-hover">Cookie policy</a>
-      </nav>
-      <form>
-        <h6 className="footer-title">Newsletter</h6>
-        <fieldset className="form-control w-80">
-          <label className="label">
-            <span className="label-text">Enter your email address</span>
-          </label>
-          <div className="join">
-            <input
-              type="text"
-              placeholder="username@site.com"
-              className="input input-bordered join-item"
-            />
-            <button className="btn btn-primary join-item">Subscribe</button>
-          </div>
-        </fieldset>
-      </form>
-    </footer>
+      </div>
+    </footer >
   );
 };
 
