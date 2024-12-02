@@ -4,7 +4,7 @@ const EventSlider = () => {
   return (
     <>
       <div className="md:my-6">
-        <h1 className="text-center font-bold md:text-[50px] text-2xl md:my-10">
+        <h1 className="text-center text-[#2B6777] font-bold md:text-[50px] text-2xl md:my-10">
           Upcoming Events
         </h1>
         <div className="flex md:flex-row flex-col md:mx-10 gap-4">
@@ -21,7 +21,7 @@ const EventSlider = () => {
                 and services. Do not miss the chance to enhance your skills and
                 grow with us.
               </p>
-              <button className="btn text-white bg-[#F2A154] border-none">
+              <button className="btn text-white bg-secondary border-none">
                 View Details
               </button>
             </div>
@@ -40,7 +40,7 @@ const EventSlider = () => {
                 and services. Do not miss the chance to enhance your skills and
                 grow with us.
               </p>
-              <button className="btn text-white bg-[#F2A154] border-none">
+              <button className="btn text-white bg-secondary border-none">
                 View Details
               </button>
             </div>
