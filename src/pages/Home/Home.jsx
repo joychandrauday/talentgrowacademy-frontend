@@ -5,6 +5,7 @@ import EventSlider from '../../components/HomeComponents/EventSlider'
 import BookSection from '../../components/HomeComponents/BookSection'
 import FaqSection from '../../components/HomeComponents/FaqSection'
 import EmailSection from '../../components/HomeComponents/EmailSection'
+import Heading from '../../components/Shared/Heading'
 
 const Home = () => {
   return (
@@ -14,7 +15,7 @@ const Home = () => {
       </Helmet>
 
       {/* Banner Section */}
-      <BannerSlider/>
+      <BannerSlider />
 
       {/* Icon Section */}
       <IconSection />
@@ -23,10 +24,11 @@ const Home = () => {
       <EventSlider />
 
       {/* Book Section */}
+      <Heading title={'E-Book Library'} />
       <BookSection />
 
       {/* FAQ section */}
-      <FaqSection/>
+      <FaqSection />
 
       {/* ContactMail */}
       <EmailSection />
