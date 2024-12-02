@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "title": "React for Beginners",
+        "description": "Learn React from scratch.",
+        "category": "web-development",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 2,
+        "title": "Data Science with Python",
+        "description": "Master data analysis with Python.",
+        "category": "data-science",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 3,
+        "title": "UX/UI Design Fundamentals",
+        "description": "Learn the basics of UX and UI design.",
+        "category": "design",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 4,
+        "title": "Full-Stack JavaScript",
+        "description": "Become a full-stack developer with JavaScript.",
+        "category": "web-development",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 5,
+        "title": "Machine Learning with TensorFlow",
+        "description": "Dive into machine learning using TensorFlow.",
+        "category": "data-science",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 6,
+        "title": "Graphic Design Masterclass",
+        "description": "Learn advanced graphic design techniques.",
+        "category": "design",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 7,
+        "title": "Node.js & Express Bootcamp",
+        "description": "Build server-side applications with Node.js.",
+        "category": "web-development",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 8,
+        "title": "Deep Learning for AI",
+        "description": "Explore deep learning concepts for AI projects.",
+        "category": "data-science",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 9,
+        "title": "Mobile App Design",
+        "description": "Design intuitive and engaging mobile apps.",
+        "category": "design",
+        "image": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 10,
+        "title": "JavaScript Algorithms and Data Structures",
+        "description": "Strengthen your JS skills with algorithms.",
+        "category": "web-development",
+        "image": "https://via.placeholder.com/300"
+    }
+]
