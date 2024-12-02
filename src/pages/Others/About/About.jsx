@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import { ScrollRestoration } from 'react-router-dom';
 import IconSection from '../../../components/HomeComponents/IconSection';
+import Heading from '../../../components/Shared/Heading';
 
 const About = () => {
     return (
-        <div className="bg-gray-100 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-32">
             <div className="w-4/5 mx-auto bg-white shadow-lg rounded-lg p-8 space-y-6">
-                <h1 className="text-3xl font-bold text-blue-600 mb-4 text-center">
+                {/* <h1 className="text-3xl font-bold text-blue-600 mb-4 text-center">
                     About Us
-                </h1>
+                </h1> */}
+                <Heading title='About Us' />
                 <p className="text-gray-700 text-lg leading-relaxed">
                     TalentGrowAcademy is a trusted and innovative online platform designed to empower individuals to learn and earn from the comfort of their homes using just their smartphones. It offers a simple and effective way to utilize your free time productively, helping you build a sustainable career while enhancing your skills.
                 </p>
