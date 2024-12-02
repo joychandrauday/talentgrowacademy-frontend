@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async'
-import BannerSlider from '../../components/HomeComponents/BannerSlider'
-import IconSection from '../../components/HomeComponents/IconSection'
-import EventSlider from '../../components/HomeComponents/EventSlider'
-import BookSection from '../../components/HomeComponents/BookSection'
-import FaqSection from '../../components/HomeComponents/FaqSection'
-import EmailSection from '../../components/HomeComponents/EmailSection'
-import Heading from '../../components/Shared/Heading'
+import BannerSlider from '../../../components/HomeComponents/BannerSlider'
+import IconSection from '../../../components/HomeComponents/IconSection'
+import EventSlider from '../../../components/HomeComponents/EventSlider'
+import BookSection from '../../../components/HomeComponents/BookSection'
+import FaqSection from '../../../components/HomeComponents/FaqSection'
+import EmailSection from '../../../components/HomeComponents/EmailSection'
+import Heading from '../../../components/Shared/Heading'
 
 const Home = () => {
   return (
