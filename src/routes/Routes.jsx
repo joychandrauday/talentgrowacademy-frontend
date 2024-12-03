@@ -12,6 +12,7 @@ import TermsCondition from "../pages/Others/Utilitiy-Pages/TermsCondition";
 import PrivacyPolicy from "../pages/Others/Utilitiy-Pages/PrivacyPolicy";
 import CookiePolicy from "../pages/Others/Utilitiy-Pages/Cookie-policy";
 import Dashboard from "../layouts/Dashboard";
+import DashboardHolder from "../pages/Dashboard/DashboardHome/DashboardHolder";
 
 
 export const router = createBrowserRouter([
@@ -70,15 +71,33 @@ export const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       {
-        path: "/dashboard/",
-        element: <h1>Dashboard</h1>,
+        path: "",
+        element: <DashboardHolder />,
       },
       {
-        path: "/dashboard/courses",
+        path: "profile",
         element: <h1>Dashboard Courses</h1>,
       },
       {
-      }
+        path: "passbook",
+        element: <h1>Dashboard passbook</h1>,
+      },
+      {
+        path: "withdrawal",
+        element: <h1>Dashboard passbook</h1>,
+      },
+      {
+        path: "reference-history",
+        element: <h1>Dashboard passbook</h1>,
+      },
+      {
+        path: "courses",
+        element: <h1>Dashboard Courses</h1>,
+      },
+      {
+        path: "chyange-password",
+        element: <h1>Dashboard passbook</h1>,
+      },
     ]
   }
 

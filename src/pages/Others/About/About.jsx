@@ -10,7 +10,7 @@ const About = () => {
                 {/* <h1 className="text-3xl font-bold text-blue-600 mb-4 text-center">
                     About Us
                 </h1> */}
-                <Heading title='About Us' />
+                <Heading title='About Us' />r
                 <p className="text-gray-700 text-lg leading-relaxed">
                     TalentGrowAcademy is a trusted and innovative online platform designed to empower individuals to learn and earn from the comfort of their homes using just their smartphones. It offers a simple and effective way to utilize your free time productively, helping you build a sustainable career while enhancing your skills.
                 </p>

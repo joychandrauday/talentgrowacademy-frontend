@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Heading from '../../../components/Shared/Heading';
+import { ScrollRestoration } from 'react-router-dom';
 
 // Function to fetch courses
 const fetchCourses = async () => {
@@ -68,6 +69,7 @@ const Courses = () => {
                     </div>
                 ))}
             </div>
+            <ScrollRestoration />
         </div>
     );
 };
