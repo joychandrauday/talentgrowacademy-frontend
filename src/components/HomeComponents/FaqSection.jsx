@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Heading from "../Shared/Heading";
 
 const FaqSection = () => {
     return (
-        <div className="md:my-10 container mx-auto">
-            <h1 className="text-center uppercase md:text-[50px] text-2xl md:my-5 font-bold text-[#2B6777] ">
-                Frequently Asked Questions
-            </h1>
+        <div className="md:my-20 container mx-auto">
+
+            <Heading title="Frequently Asked Questions" />
             <div className="join join-vertical w-full mt-6">
                 <div className="collapse collapse-arrow join-item border-base-300 border">
                     <input type="radio" name="my-accordion-4" defaultChecked />

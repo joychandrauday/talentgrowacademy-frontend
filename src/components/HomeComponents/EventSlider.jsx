@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
+import Heading from "../Shared/Heading";
 
 const EventSlider = () => {
   return (
     <>
       <div className="md:my-6">
-        <h1 className="text-center text-[#2B6777] font-bold md:text-[50px] text-2xl md:my-10">
-          Upcoming Events
-        </h1>
+
+        <Heading title="Upcoming Events" />
         <div className="flex md:flex-row flex-col md:mx-10 gap-4">
           <div className="bg-slate-200 md:p-4 p-2 md:flex gap-3 items-center justify-center shadow rounded-xl">
             <div className="stat bg-[#2B6777] text-white flex-1 rounded-xl  ">

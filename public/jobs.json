@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "title": "Frontend Developer",
+        "location": "Dhaka, Bangladesh",
+        "type": "Full-time",
+        "description": "We are looking for a passionate frontend developer with experience in React and Tailwind CSS.",
+        "status": "active",
+        "postedAt": "2024-12-01T08:30:00.000Z",
+        "modifiedAt": "2024-12-01T10:00:00.000Z",
+        "jobResponsibilities": [
+            "Develop and maintain user interfaces using React.js.",
+            "Implement responsive designs with Tailwind CSS.",
+            "Collaborate with backend developers to integrate APIs.",
+            "Ensure cross-browser compatibility and performance optimization."
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Backend Developer",
+        "location": "Chittagong, Bangladesh",
+        "type": "Part-time",
+        "description": "Join our team as a backend developer. Proficiency in Node.js and MongoDB is required.",
+        "status": "active",
+        "postedAt": "2024-11-28T09:00:00.000Z",
+        "modifiedAt": "2024-11-29T14:30:00.000Z",
+        "jobResponsibilities": [
+            "Develop and manage server-side logic using Node.js.",
+            "Design and maintain databases with MongoDB.",
+            "Ensure data security and system scalability.",
+            "Collaborate with frontend developers for seamless integration."
+        ]
+    },
+    {
+        "id": 3,
+        "title": "UI/UX Designer",
+        "location": "Remote",
+        "type": "Contract",
+        "description": "Seeking a creative UI/UX designer with a strong portfolio of modern designs.",
+        "status": "inactive",
+        "postedAt": "2024-11-25T07:45:00.000Z",
+        "modifiedAt": "2024-11-27T11:15:00.000Z",
+        "jobResponsibilities": [
+            "Create wireframes, prototypes, and user flows.",
+            "Collaborate with developers to implement designs.",
+            "Conduct user research and usability testing.",
+            "Maintain and update design systems and guidelines."
+        ]
+    }
+]

@@ -121,13 +121,13 @@ const Register = () => {
                                 className="mr-2"
                             />
                             <label htmlFor="agree" className="text-sm text-gray-700">
-                                I agree with the <a href="#" className="text-blue-500">terms and conditions</a>
+                                I agree with the <a href="/terms" className="text-secondary link">terms and conditions</a>
                             </label>
                         </div>
                         {errors.agree && <p className="text-red-500 text-sm mt-1">{errors.agree.message}</p>}
                         <button
                             type="submit"
-                            className="w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             Register
                         </button>
