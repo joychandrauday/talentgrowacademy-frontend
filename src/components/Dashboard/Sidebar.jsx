@@ -1,98 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom'; // Use NavLink for active link functionality
-import { FaTachometerAlt, FaUserAlt, FaRegFileAlt, FaRegMoneyBillAlt, FaHistory, FaChalkboardTeacher, FaLock, FaSignOutAlt } from 'react-icons/fa'; // Import relevant icons
+import { NavLink } from 'react-router-dom';
+import {
+    FaTachometerAlt,
+    FaUserAlt,
+    FaRegFileAlt,
+    FaRegMoneyBillAlt,
+    FaHistory,
+    FaChalkboardTeacher,
+    FaLock,
+    FaSignOutAlt,
+    FaBars,
+} from 'react-icons/fa';
 import logo from '../../assets/logo.png';
 
 const Sidebar = ({ user }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen);
+    };
+
     return (
-        <div className="bg-white border shadow rounded-xl text-primary w-full md:w-64 md:min-h-screen p-5">
-            {/* Logo */}
-            <div className="logo mb-6">
-                <img src={logo} alt="Logo" />
+        <div>
+            {/* Hamburger Menu */}
+            <div className="md:hidden flex justify-between items-center p-5">
+                <img src={logo} alt="Logo" className="w-16" />
+                <button onClick={toggleSidebar} className="text-2xl">
+                    <FaBars />
+                </button>
             </div>
 
-            {/* User Info Section */}
-            <div className="flex items-center mb-6">
-                <img
-                    src={user?.image || 'https://via.placeholder.com/150'}
-                    alt="User Avatar"
-                    className="w-16 h-16 rounded-full mr-4"
-                />
-                <div>
-                    <div className="text-xl font-semibold">{user?.name || 'John Doe'}</div>
-                    <div className="text-sm">{user?.email || 'user@example.com'}</div>
-                    <div className="text-sm mt-2">Balance: {user?.balance || '0.00'} USD</div>
+            {/* Sidebar */}
+            <div
+                className={`fixed rounded-lg top-0 left-0 z-40 bg-white border shadow-md text-primary w-64 p-5 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'
+                    } md:translate-x-0 md:relative  md:block transition-transform duration-300`}
+            >
+                {/* Close button for mobile */}
+                <button
+                    onClick={toggleSidebar}
+                    className="md:hidden text-lg absolute top-4 right-4"
+                >
+                    ✖
+                </button>
+
+                {/* Logo */}
+                <div className="logo mb-6 hidden md:block">
+                    <img src={logo} alt="Logo" />
                 </div>
+
+                {/* User Info Section */}
+                <div className="flex justify-start items-center mb-6">
+                    <img
+                        src={user?.image || 'https://via.placeholder.com/150'}
+                        alt="User Avatar"
+                        className="w-16 h-16 rounded-full mr-4"
+                    />
+                    <div>
+                        <div className="text-xl font-semibold">{user?.name || 'John Doe'}</div>
+                        <div className="text-sm mt-2">Balance: {user?.balance || '0.00'} USD</div>
+                    </div>
+                </div>
+
+                {/* Navigation Links */}
+                <nav className="space-y-2 font-semibold">
+                    {[
+                        { to: '/dashboard/', label: 'Dashboard', icon: <FaTachometerAlt /> },
+                        { to: '/dashboard/profile', label: 'Profile', icon: <FaUserAlt /> },
+                        { to: '/dashboard/passbook', label: 'Passbook', icon: <FaRegFileAlt /> },
+                        { to: '/dashboard/withdrawal', label: 'Withdrawal', icon: <FaRegMoneyBillAlt /> },
+                        { to: '/dashboard/reference-history', label: 'Reference History', icon: <FaHistory /> },
+                        { to: '/dashboard/courses', label: 'Courses', icon: <FaChalkboardTeacher /> },
+                        { to: '/dashboard/change-password', label: 'Change Password', icon: <FaLock /> },
+                        { to: '/signout', label: 'Sign Out', icon: <FaSignOutAlt /> },
+                    ].map(({ to, label, icon }) => (
+                        <NavLink
+                            key={to}
+                            to={to}
+                            end={to === '/dashboard/'}
+                            className={({ isActive }) =>
+                                `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? 'bg-secondary text-white' : ''
+                                }`
+                            }
+                        >
+                            {icon} {label}
+                        </NavLink>
+                    ))}
+                </nav>
             </div>
 
-            {/* Navigation Links */}
-            <nav className="space-y-4">
-                <NavLink
-                    to="/dashboard"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white" // Adds the active background class
-                >
-                    <FaTachometerAlt className="mr-2" />
-                    Dashboard
-                </NavLink>
-                <NavLink
-                    to="/dashboard/profile"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaUserAlt className="mr-2" />
-                    Profile
-                </NavLink>
-                <NavLink
-                    to="/dashboard/passbook"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaRegFileAlt className="mr-2" />
-                    Passbook
-                </NavLink>
-                <NavLink
-                    to="/dashboard/withdrawal"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaRegMoneyBillAlt className="mr-2" />
-                    Withdrawal
-                </NavLink>
-                <NavLink
-                    to="/dashboard/reference-history"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaHistory className="mr-2" />
-                    Reference History
-                </NavLink>
-                <NavLink
-                    to="/dashboard/courses"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaChalkboardTeacher className="mr-2" />
-                    Courses
-                </NavLink>
-                <NavLink
-                    to="/dashboard/change-password"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaLock className="mr-2" />
-                    Change Password
-                </NavLink>
-                <NavLink
-                    to="/signout"
-                    className="flex items-center p-2 rounded-md hover:bg-secondary"
-                    activeClassName="bg-secondary text-white"
-                >
-                    <FaSignOutAlt className="mr-2" />
-                    Sign Out
-                </NavLink>
-            </nav>
+            {/* Overlay for mobile */}
+            {isOpen && (
+                <div
+                    onClick={toggleSidebar}
+                    className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+                ></div>
+            )}
         </div>
     );
 };
@@ -103,8 +106,8 @@ Sidebar.propTypes = {
         name: PropTypes.string,
         email: PropTypes.string,
         image: PropTypes.string,
-        balance: PropTypes.number
-    }).isRequired
+        balance: PropTypes.number,
+    }).isRequired,
 };
 
 export default Sidebar;
