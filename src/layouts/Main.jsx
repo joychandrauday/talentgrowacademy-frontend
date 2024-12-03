@@ -4,7 +4,10 @@ import Footer from '../components/Shared/Footer/Footer'
 const Main = () => {
   return (
     <div>
-      <Navbar />
+      <div className=" mx-auto absolute w-full top-0 z-50">
+
+        <Navbar />
+      </div>
       <div className='min-h-screen'>
         <Outlet />
       </div>
