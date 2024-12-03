@@ -24,7 +24,6 @@ const Home = () => {
       <EventSlider />
 
       {/* Book Section */}
-      <Heading title='E-Book Library' />
       <BookSection />
 
       {/* FAQ section */}
