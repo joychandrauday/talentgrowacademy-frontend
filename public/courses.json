@@ -1,72 +1,119 @@
 [
     {
-        "id": 1,
-        "title": "React for Beginners",
-        "description": "Learn React from scratch.",
-        "category": "web-development",
-        "image": "https://via.placeholder.com/300"
+        "name": "Digital Marketing",
+        "description": "Learn how to effectively promote products and services using digital channels, including social media, email marketing, and SEO strategies.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942943/DMfinal_fihstl.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 2,
-        "title": "Data Science with Python",
-        "description": "Master data analysis with Python.",
-        "category": "data-science",
-        "image": "https://via.placeholder.com/300"
+        "name": "Video Editing",
+        "description": "Master the art of video editing with tools like Adobe Premiere Pro and Final Cut Pro. Learn to create compelling visual stories.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942936/VideoEditing_yndlwz.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 3,
-        "title": "UX/UI Design Fundamentals",
-        "description": "Learn the basics of UX and UI design.",
-        "category": "design",
-        "image": "https://via.placeholder.com/300"
+        "name": "Photo Editing",
+        "description": "Enhance your photos with professional editing techniques using tools like Adobe Photoshop and Lightroom. Learn retouching and color correction.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942936/PhotoEditing_aqb45r.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 4,
-        "title": "Full-Stack JavaScript",
-        "description": "Become a full-stack developer with JavaScript.",
-        "category": "web-development",
-        "image": "https://via.placeholder.com/300"
+        "name": "Basic Grammar With Spoken English",
+        "description": "Improve your English grammar and speaking skills through practical exercises and real-life conversations. Build confidence in communication.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942935/SpokenEnglish_hg9fol.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 5,
-        "title": "Machine Learning with TensorFlow",
-        "description": "Dive into machine learning using TensorFlow.",
-        "category": "data-science",
-        "image": "https://via.placeholder.com/300"
+        "name": "Earn Extra Money",
+        "description": "Explore various ways to earn extra income, including freelancing, online gigs, and side hustles. Learn tips to boost your earnings.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942933/EarnMoney_ijdkyw.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 6,
-        "title": "Graphic Design Masterclass",
-        "description": "Learn advanced graphic design techniques.",
-        "category": "design",
-        "image": "https://via.placeholder.com/300"
+        "name": "Graphic Design",
+        "description": "Learn the principles of graphic design, including layout, typography, and color theory. Create stunning visuals using popular design tools.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942933/GraphicsDesign_jilgc9.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 7,
-        "title": "Node.js & Express Bootcamp",
-        "description": "Build server-side applications with Node.js.",
-        "category": "web-development",
-        "image": "https://via.placeholder.com/300"
+        "name": "Social Media Marketing",
+        "description": "Gain insights into social media platforms and learn how to craft engaging content, run campaigns, and analyze performance metrics.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942933/SocialMediaMarketing_u0dg0u.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 8,
-        "title": "Deep Learning for AI",
-        "description": "Explore deep learning concepts for AI projects.",
-        "category": "data-science",
-        "image": "https://via.placeholder.com/300"
+        "name": "General Knowledge",
+        "description": "Expand your knowledge across various topics, including history, science, and current affairs. Stay informed and prepared for quizzes and exams.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942932/GeneralKnowledge_mwruab.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     },
     {
-        "id": 9,
-        "title": "Mobile App Design",
-        "description": "Design intuitive and engaging mobile apps.",
-        "category": "design",
-        "image": "https://via.placeholder.com/300"
-    },
-    {
-        "id": 10,
-        "title": "JavaScript Algorithms and Data Structures",
-        "description": "Strengthen your JS skills with algorithms.",
-        "category": "web-development",
-        "image": "https://via.placeholder.com/300"
+        "name": "Shahih Holy Qurwan",
+        "description": "Understand the teachings and interpretations of the Holy Qur'an. Learn to recite and reflect on its verses with proper guidance.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942932/SahihHolyQurwan_gyzxjz.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
     }
 ]
