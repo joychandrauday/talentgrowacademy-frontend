@@ -85,6 +85,7 @@ export const router = createBrowserRouter([
         path: "",
         element: <DashboardHolder />,
       },
+      // common routes
       {
         path: "profile",
         element: <Profile />,
@@ -109,6 +110,13 @@ export const router = createBrowserRouter([
         path: "change-password",
         element: <ChangePass />,
       },
+      //role based routes
+      {
+        path: "manage-clients",
+        element: <ConsultantUserManagement />,
+      },
+      {
+      }
     ]
   }
 
