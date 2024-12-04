@@ -1,8 +1,10 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import { AuthContext } from '../../../Provider/AuthProvider';
 
 const Login = () => {
+ const {signInUser}=useContext(AuthContext);
     const {
         register,
         handleSubmit,
@@ -11,6 +13,7 @@ const Login = () => {
 
     const onSubmit = (data) => {
         console.log(data);
+        signInUser(data.email,data.password);
     };
 
     return (
