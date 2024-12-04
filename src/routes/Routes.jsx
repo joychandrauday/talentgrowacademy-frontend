@@ -19,6 +19,7 @@ import Withdrawal from "../pages/Dashboard/DashboardCommon/Withdrawal";
 import ReferenceHistory from "../pages/Dashboard/DashboardCommon/ReferenceHistory";
 import CoursesDash from "../pages/Dashboard/DashboardCommon/CoursesDash";
 import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
+import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/ConsultantDashboard/ConsultantUserManagement";
 
 
 export const router = createBrowserRouter([
@@ -80,6 +81,7 @@ export const router = createBrowserRouter([
         path: "",
         element: <DashboardHolder />,
       },
+      // common routes
       {
         path: "profile",
         element: <Profile />,
@@ -104,6 +106,13 @@ export const router = createBrowserRouter([
         path: "change-password",
         element: <ChangePass />,
       },
+      //role based routes
+      {
+        path: "manage-clients",
+        element: <ConsultantUserManagement />,
+      },
+      {
+      }
     ]
   }
 

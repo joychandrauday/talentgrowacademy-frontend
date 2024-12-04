@@ -7,7 +7,7 @@ const Dashboard = () => {
     const user = {
         name: 'John Doe',
         email: 'john.doe@example.com',
-        role: 'user',
+        role: 'consultant',
         image: 'https://via.placeholder.com/150', // Replace with the actual user image
         balance: '120.50',
     };

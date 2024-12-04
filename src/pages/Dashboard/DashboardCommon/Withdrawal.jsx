@@ -15,6 +15,7 @@ const Withdrawal = () => {
     };
     const [selectedMethod, setSelectedMethod] = useState('');
     const [amount, setAmount] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [methods, setMethods] = useState([
         { id: 'method1', number: '01711111111', method: 'bkash' },
         { id: 'method2', number: '01722222222', method: 'nagad' },
@@ -51,6 +52,7 @@ const Withdrawal = () => {
         setShowForm(false); // Hide the form after adding a method
         alert('New method added!');
     };
+    console.log(selectedMethod);
 
     return (
         <div className="p-6 text-white min-h-screen">
@@ -67,13 +69,13 @@ const Withdrawal = () => {
             </header>
             <div className="space-y-6">
                 <h1 className="text-xl text-primary capitalize italic font-semibold">select withdraw method :</h1>
-                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 items-center justify-center">
                     {methods.map((method) => (
                         <div
                             key={method.id}
                             className={`p-4 border rounded-lg text-primary shadow-md cursor-pointer ${selectedMethod.id === method.id
                                 ? 'border bg-white shadow-lg shadow-gray-700 text-secondary'
-                                : 'border shadow opacity-55 hover:border-primary'
+                                : 'border shadow opacity-40 hover:border-primary'
                                 }`}
                             onClick={() => setSelectedMethod(method)}
                         >
@@ -93,32 +95,76 @@ const Withdrawal = () => {
                             </div>
                         </div>
                     ))}
+                    <button
+                        onClick={() => setShowForm(!showForm)} // Toggle form visibility
+                        className="w-full h-12 p-3 bg-secondary text-white rounded-md hover:bg-primary transition"
+                    >
+                        {showForm ? 'Cancel Adding Method' : 'Add New Withdrawal Method'}
+                    </button>
                 </div>
 
-                <div>
-                    <label className="block text-sm text-gray-400 mb-2">Enter Amount (৳)</label>
-                    <input
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        className="w-full p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                        placeholder="Enter withdrawal amount"
-                    />
+
+                <div className="flex justify-between w-full items-center" >
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-2">Enter Amount (৳)</label>
+                        <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => {
+                                const inputAmount = e.target.value;
+                                setAmount(inputAmount);
+
+                                if (inputAmount < 100) {
+                                    setErrorMessage('Withdrawal amount must be at least 100 ৳.');
+                                } else if (inputAmount > user.balance) {
+                                    setErrorMessage('You have insufficient balance.');
+                                } else {
+                                    setErrorMessage(''); // Clear the error message
+                                }
+                            }}
+                            className="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            placeholder="Enter withdrawal amount"
+                            disabled={!selectedMethod}
+                        />
+                        {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
+                    </div>
+
+                    <div className="selectedMethod">
+                        <div className="card-body">
+                            <div className="flex justify-between max-w-fit items-center gap-4
+                        ">
+                                <div className="mehtodText">
+                                    <h3 className="text-lg font-bold text-primary capitalize">{selectedMethod.method}</h3>
+                                    <p className="text-sm text-gray-400">Number: {selectedMethod.number}</p>
+                                </div>
+                                <div className="selectedMethodLogo">
+                                    {
+                                        selectedMethod.method === 'bkash' && <img src={bkash} alt="" className='w-32' />
+                                    }
+                                    {
+                                        selectedMethod.method === 'nagad' && <img src={nagad} alt="" className='w-32' />
+                                    }
+                                </div>
+                            </div>
+                            {/* amount */}
+                            {
+                                amount && <h2 className="text-lg italic text-primary capitalize font-bold">total Amount: {amount} (৳)</h2>
+                            }
+                        </div>
+                    </div>
+                    <button
+                        onClick={handleWithdraw}
+                        className="btn p-3 bg-primary text-white  rounded-md font-bold hover:bg-secondary transition"
+                        disabled={!selectedMethod || !amount || amount < 100 || amount > user.balance}
+                    >
+                        Proceed to Withdraw
+                    </button>
+                    {
+
+                    }
                 </div>
 
-                <button
-                    onClick={handleWithdraw}
-                    className="w-full p-3 bg-primary text-gray-900 rounded-md font-bold hover:bg-opacity-80 transition"
-                >
-                    Proceed to Withdraw
-                </button>
 
-                <button
-                    onClick={() => setShowForm(!showForm)} // Toggle form visibility
-                    className="w-full mt-4 p-3 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition"
-                >
-                    {showForm ? 'Cancel Adding Method' : 'Add New Withdrawal Method'}
-                </button>
 
                 {showForm && (
                     <form onSubmit={handleAddMethod} className="space-y-4 mt-4 p-4 bg-gray-800 rounded-md">
