@@ -19,6 +19,7 @@ import Withdrawal from "../pages/Dashboard/DashboardCommon/Withdrawal";
 import ReferenceHistory from "../pages/Dashboard/DashboardCommon/ReferenceHistory";
 import CoursesDash from "../pages/Dashboard/DashboardCommon/CoursesDash";
 import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
+import Departments from "../pages/Others/Departments/Departments";
 
 
 export const router = createBrowserRouter([
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
       {
         path: "/career",
         element: <Career />
+      },
+      {
+       path:"/departments",
+       element:<Departments/>
       },
       {
         path: "/terms",
