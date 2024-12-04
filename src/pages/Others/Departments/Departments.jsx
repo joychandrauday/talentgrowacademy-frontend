@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { ScrollRestoration } from 'react-router-dom';
 
 const Departments = () => {
   const [data, setData] = useState([]);
@@ -50,6 +51,7 @@ const Departments = () => {
           </div>
         ))}
       </div>
+      <ScrollRestoration></ScrollRestoration>
     </section>
   );
 };
