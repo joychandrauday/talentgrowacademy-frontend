@@ -1,4 +1,3 @@
-import React from 'react';
 import UserManagementTable from '../../../../components/Dashboard/UserManagementTable';
 
 const ConsultantUserManagement = () => {

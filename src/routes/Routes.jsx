@@ -20,6 +20,9 @@ import ReferenceHistory from "../pages/Dashboard/DashboardCommon/ReferenceHistor
 import CoursesDash from "../pages/Dashboard/DashboardCommon/CoursesDash";
 import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
 import Departments from "../pages/Others/Departments/Departments";
+import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/ConsultantDashboard/ConsultantUserManagement";
+import PrivateRoute from "./PrivateRoute";
+
 
 
 export const router = createBrowserRouter([
@@ -49,8 +52,8 @@ export const router = createBrowserRouter([
         element: <Career />
       },
       {
-       path:"/departments",
-       element:<Departments/>
+        path: "/departments",
+        element: <Departments />
       },
       {
         path: "/terms",
@@ -79,7 +82,9 @@ export const router = createBrowserRouter([
   // dashboard routes
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <PrivateRoute>
+      <Dashboard />
+    </PrivateRoute>,
     children: [
       {
         path: "",
@@ -115,8 +120,6 @@ export const router = createBrowserRouter([
         path: "manage-clients",
         element: <ConsultantUserManagement />,
       },
-      {
-      }
     ]
   }
 
