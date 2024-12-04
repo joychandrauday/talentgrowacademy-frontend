@@ -1,64 +1,63 @@
-import { createContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import auth from "../firebase/firebase.config";
-
 export const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+
+const Provider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // create a new user
-  const createUser = (email, password) => {
-    setLoading(true);
+  const userSignUp = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
-  //log in an existing user
+  const updateUser = (Name, photoURL) => {
+    return updateProfile(auth.currentUser, {
+      displayName: `${Name}`,
+      photoURL: `${photoURL}`,
+    });
+  };
+
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+
+      setLoading(false);
+    });
+    return () => {
+      unSubscribe();
+    };
+  }, []);
+
   const signInUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  //manage the user state
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser); // Update state with the signed-in user
-      } else {
-        setUser(null); // Clear user state when signed out
-      }
-    });
-    setLoading(false);
-    return () => unsubscribe(); // Cleanup on unmount
-  }, []);
 
-  //log out user
+  //log out
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
-  }
-
-  //pass the information through context api
-  const AuthInfo = {
-    createUser,
-    signInUser,
-    user,
-    loading,
-    logOut,
-
   };
 
+  const userInfo = {
+    user,
+    setUser,
+    userSignUp,
+    updateUser,
+    signInUser,
+    loading,
+    logOut
+  };
   return (
-    <AuthContext.Provider value={AuthInfo}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
   );
 };
-export default AuthProvider;
-AuthProvider.propTypes = {
-  children: PropTypes.node,
-};
+
+export default Provider;
