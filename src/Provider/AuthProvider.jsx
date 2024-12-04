@@ -12,12 +12,16 @@ export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   // create a new user
   const createUser = (email, password) => {
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
   //log in an existing user
   const signInUser = (email, password) => {
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -30,12 +34,13 @@ export const AuthProvider = ({ children }) => {
         setUser(null); // Clear user state when signed out
       }
     });
-
+    setLoading(false);
     return () => unsubscribe(); // Cleanup on unmount
   }, []);
 
   //log out user
-  const logOut =()=>{
+  const logOut = () => {
+    setLoading(true);
     return signOut(auth);
   }
 
@@ -44,7 +49,9 @@ export const AuthProvider = ({ children }) => {
     createUser,
     signInUser,
     user,
+    loading,
     logOut,
+
   };
 
   return (
