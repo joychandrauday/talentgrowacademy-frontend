@@ -3,6 +3,16 @@ import PropTypes from 'prop-types';
 import UserDashboard from './UserDashboard';
 
 const DashboardHolder = () => {
+    const user = {
+        name: "Joy Chandra Uday",
+        email: "joy@example.com",
+        image: "https://via.placeholder.com/150", // Replace with actual profile image URL if needed
+        balance: 120.75,
+        role: "user",
+        activeCourses: 4,
+        transactions: 12,
+        pendingTasks: 3
+    };
     const role = 'user'; // You can change this to 'controller', 'consultant', 'groupleader', or 'user'
 
 
@@ -21,7 +31,7 @@ const DashboardHolder = () => {
             {role === 'groupleader' && <p>You are a group leader. Oversee your team and tasks.</p>}
 
             {/* Content for general users */}
-            {role === 'user' && <UserDashboard />}
+            {role === 'user' && <UserDashboard user={user} />}
         </div>
     );
 };
