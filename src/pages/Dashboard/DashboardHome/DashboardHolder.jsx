@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import UserDashboard from './UserDashboard';
 import { ScrollRestoration } from 'react-router-dom';
-import ConsultantDashboard from '../DashboardRoleWise/ConsultantDashboard/ConsultantDashboard';
+import ConsultantDashboard from '../DashboardRoleWise/Consultant/ConsultantDashboard';
 
 const DashboardHolder = () => {
     const user = {

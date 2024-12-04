@@ -24,7 +24,7 @@ const UserManagementTable = ({ users, role }) => {
     const totalCount = users.length;
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6 ">
             {/* Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="card bg-primary text-primary-content">
@@ -83,7 +83,7 @@ const UserManagementTable = ({ users, role }) => {
 
             {/* Table */}
             <div className="overflow-x-scroll">
-                <table className="table table-zebra min-w-full">
+                <table className="table table-zebra w-auto">
                     <thead>
                         <tr>
                             <th className="whitespace-nowrap">Date</th>
