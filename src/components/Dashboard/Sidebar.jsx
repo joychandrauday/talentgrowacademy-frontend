@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, NavLink } from 'react-router-dom';
 import {
@@ -16,8 +16,10 @@ import { IoMdArrowDropright } from "react-icons/io";
 import logo from '../../assets/logo.png';
 import { RxCountdownTimer } from 'react-icons/rx';
 import { MdRequestPage } from 'react-icons/md';
+import { AuthContext } from '../../Provider/AuthProvider';
 
 const Sidebar = ({ user }) => {
+    const { logOut } = useContext(AuthContext)
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleSidebar = () => setIsOpen(!isOpen);
@@ -116,7 +118,7 @@ const Sidebar = ({ user }) => {
                     )}
 
                     {/* Additional Navigation */}
-                    {['profile', 'passbook', 'withdrawal', 'reference-history', 'courses', 'change-password', 'signout'].map((path, idx) => (
+                    {['profile', 'passbook', 'withdrawal', 'reference-history', 'courses', 'change-password'].map((path, idx) => (
                         <NavLink
                             key={idx}
                             to={`/dashboard/${path}`}
@@ -127,7 +129,17 @@ const Sidebar = ({ user }) => {
                             {getIconForPath(path)} {capitalize(path.replace('-', ' '))}
                         </NavLink>
                     ))}
+                    <NavLink
+                        onClick={logOut}
+
+                        className={({ isActive }) =>
+                            `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? 'bg-secondary text-white' : ''}`
+                        }
+                    >
+                        <FaSignOutAlt /> Sign out
+                    </NavLink>
                 </nav>
+
             </div>
 
             {/* Overlay for mobile */}
@@ -156,8 +168,6 @@ const getIconForPath = (path) => {
             return <FaChalkboardTeacher />;
         case 'change-password':
             return <FaLock />;
-        case 'signout':
-            return <FaSignOutAlt />;
         default:
             return null;
     }

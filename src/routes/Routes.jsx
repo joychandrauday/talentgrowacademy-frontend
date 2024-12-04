@@ -20,7 +20,7 @@ import ReferenceHistory from "../pages/Dashboard/DashboardCommon/ReferenceHistor
 import CoursesDash from "../pages/Dashboard/DashboardCommon/CoursesDash";
 import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
 import Departments from "../pages/Others/Departments/Departments";
-import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/ConsultantDashboard/ConsultantUserManagement";
+import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/Consultant/ConsultantUserManagement";
 import PrivateRoute from "./PrivateRoute";
 
 
@@ -83,7 +83,7 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <PrivateRoute>
-      <Dashboard />
+      <Dashboard></Dashboard>
     </PrivateRoute>,
     children: [
       {
