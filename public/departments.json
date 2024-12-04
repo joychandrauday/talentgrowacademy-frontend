@@ -1,0 +1,66 @@
+[
+    {
+      "title": "Controller",
+      "description": "Responsible for managing the overall operations of the department.",
+      "responsibilities": [
+        "Oversee departmental budgets and expenses.",
+        "Ensure compliance with financial regulations.",
+        "Prepare reports for senior management."
+      ]
+    },
+    {
+      "title": "Accountant",
+      "description": "Manages financial transactions and ensures accurate reporting.",
+      "responsibilities": [
+        "Prepare monthly and yearly financial statements.",
+        "Monitor and reconcile accounts.",
+        "Advise on financial planning and tax matters."
+      ]
+    },
+    {
+      "title": "Consultant",
+      "description": "Provides expert advice to optimize departmental performance.",
+      "responsibilities": [
+        "Conduct audits and assessments.",
+        "Provide strategic business advice.",
+        "Help implement new technologies to improve efficiency."
+      ]
+    },
+    {
+      "title": "Group Leader",
+      "description": "Leads and coordinates the team within the department.",
+      "responsibilities": [
+        "Motivate and guide team members.",
+        "Set goals and ensure team meets objectives.",
+        "Monitor team performance and provide feedback."
+      ]
+    },
+    {
+      "title": "Trainer",
+      "description": "Responsible for training team members and new employees.",
+      "responsibilities": [
+        "Create and implement training programs.",
+        "Assess the skills and needs of team members.",
+        "Provide ongoing support and feedback to trainees."
+      ]
+    },
+    {
+      "title": "Manager",
+      "description": "Manages the daily operations and resources of the department.",
+      "responsibilities": [
+        "Coordinate projects and assign tasks.",
+        "Ensure timely completion of department objectives.",
+        "Maintain a productive work environment."
+      ]
+    },
+    {
+      "title": "Senior Group Leader",
+      "description": "Leads multiple teams and ensures high-level coordination across the department.",
+      "responsibilities": [
+        "Manage multiple group leaders and ensure project alignment.",
+        "Develop strategies to improve team collaboration.",
+        "Monitor the overall department performance."
+      ]
+    }
+  ]
+  
