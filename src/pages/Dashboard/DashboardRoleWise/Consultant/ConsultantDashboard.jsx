@@ -1,4 +1,3 @@
-import React from 'react';
 import ConsultantUserManagement from './ConsultantUserManagement';
 
 const ConsultantDashboard = () => {
