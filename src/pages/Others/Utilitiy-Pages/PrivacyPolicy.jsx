@@ -1,4 +1,3 @@
-import React from 'react';
 import { ScrollRestoration } from 'react-router-dom';
 
 const PrivacyPolicy = () => {
@@ -58,11 +57,11 @@ const PrivacyPolicy = () => {
                     <ul className="list-inside list-disc">
                         <li><strong>Access and Correction:</strong> You can request access to the personal data we hold about you and request corrections if the information is inaccurate.</li>
                         <li><strong>Deletion:</strong> You can request the deletion of your personal data, subject to certain conditions (e.g., if required for legal compliance).</li>
-                        <li><strong>Opt-out of Marketing:</strong> You can opt-out of receiving marketing communications by clicking the "unsubscribe" link in our emails.</li>
+                        <li><strong>Opt-out of Marketing:</strong> You can opt-out of receiving marketing communications by clicking the &quot;unsubscribe&quot; link in our emails.</li>
                         <li><strong>Cookie Preferences:</strong> You can manage your cookie preferences through your browser settings or through our cookie management tool.</li>
                     </ul>
 
-                    <h2 className="text-2xl font-semibold text-secondary mt-6">6. Children's Privacy</h2>
+                    <h2 className="text-2xl font-semibold text-secondary mt-6">6. Children&apos;s Privacy</h2>
                     <p>
                         **TalentGrow Academy** does not knowingly collect or solicit personal information from children under the age of 18. If we learn that we have collected personal information from a child under 18, we will take steps to delete such information as quickly as possible.
                     </p>
