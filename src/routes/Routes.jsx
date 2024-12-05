@@ -13,6 +13,16 @@ import PrivacyPolicy from "../pages/Others/Utilitiy-Pages/PrivacyPolicy";
 import CookiePolicy from "../pages/Others/Utilitiy-Pages/Cookie-policy";
 import Dashboard from "../layouts/Dashboard";
 import DashboardHolder from "../pages/Dashboard/DashboardHome/DashboardHolder";
+import Passbook from "../pages/Dashboard/DashboardCommon/Passbook";
+import Profile from "../pages/Dashboard/DashboardCommon/Profile";
+import Withdrawal from "../pages/Dashboard/DashboardCommon/Withdrawal";
+import ReferenceHistory from "../pages/Dashboard/DashboardCommon/ReferenceHistory";
+import CoursesDash from "../pages/Dashboard/DashboardCommon/CoursesDash";
+import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
+import Departments from "../pages/Others/Departments/Departments";
+import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/Consultant/ConsultantUserManagement";
+import PrivateRoute from "./PrivateRoute";
+
 
 
 export const router = createBrowserRouter([
@@ -42,6 +52,10 @@ export const router = createBrowserRouter([
         element: <Career />
       },
       {
+        path: "/departments",
+        element: <Departments />
+      },
+      {
         path: "/terms",
         element: <TermsCondition />
       },
@@ -68,35 +82,43 @@ export const router = createBrowserRouter([
   // dashboard routes
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <PrivateRoute>
+      <Dashboard></Dashboard>
+    </PrivateRoute>,
     children: [
       {
         path: "",
         element: <DashboardHolder />,
       },
+      // common routes
       {
         path: "profile",
-        element: <h1>Dashboard Courses</h1>,
+        element: <Profile />,
       },
       {
         path: "passbook",
-        element: <h1>Dashboard passbook</h1>,
+        element: <Passbook />,
       },
       {
         path: "withdrawal",
-        element: <h1>Dashboard passbook</h1>,
+        element: <Withdrawal />,
       },
       {
         path: "reference-history",
-        element: <h1>Dashboard passbook</h1>,
+        element: <ReferenceHistory />,
       },
       {
         path: "courses",
-        element: <h1>Dashboard Courses</h1>,
+        element: <CoursesDash />,
       },
       {
-        path: "chyange-password",
-        element: <h1>Dashboard passbook</h1>,
+        path: "change-password",
+        element: <ChangePass />,
+      },
+      //role based routes
+      {
+        path: "manage-clients",
+        element: <ConsultantUserManagement />,
       },
     ]
   }

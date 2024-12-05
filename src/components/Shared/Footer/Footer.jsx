@@ -17,7 +17,7 @@ const footerLinks = [
       { name: 'About us', path: '/about' },
       { name: 'Contact', path: '/contact' },
       { name: 'Career', path: '/career' },
-      { name: 'Press kit', path: '/press-kit' },
+      { name: 'Departments', path: '/departments' },
     ],
   },
   {

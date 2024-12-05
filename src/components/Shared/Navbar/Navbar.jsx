@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from '../../../assets/logo.webp';
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../Provider/AuthProvider";
 const Navbar = () => {
   const NavLinks = {
     '/': 'Home',
@@ -8,7 +9,8 @@ const Navbar = () => {
     '/courses': 'Courses',
     '/contact': 'Contact',
   };
-  const user = null;
+  const { user, logOut } = useContext(AuthContext)
+  console.log(user);
   return (
     <div className="navbar container mx-auto 
     ">
@@ -35,8 +37,7 @@ const Navbar = () => {
                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
                     <img
-                      alt="Tailwind CSS Navbar component"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                      alt={user.photoURL} />
                   </div>
                 </div>
                 <ul
@@ -48,8 +49,8 @@ const Navbar = () => {
                       <span className="badge">New</span>
                     </a>
                   </li>
-                  <li><a>Settings</a></li>
-                  <li><a>Logout</a></li>
+                  <li><a href="/dashboard">Dashboard</a></li>
+                  <li><a onClick={logOut}>Logout</a></li>
                 </ul>
               </div>
             </> :

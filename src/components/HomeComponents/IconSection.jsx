@@ -5,7 +5,7 @@ const IconSection = () => {
 
   return (
     <div className="flex md:flex-row flex-col justify-center items-center gap-8 my-2 md:my-6 md:mx-20 mx-3">
-      <Link to={'/courses'} className="w-full bg-white border gap-4 flex items-center justify-center md:p-5 p-2 shadow-lg rounded-xl hover:scale-105 hover:bg-secondary hover:text-white">
+      <Link to={'/courses'} className="w-full bg-slate-200 border gap-4 flex items-center justify-center md:p-5 p-2 shadow-lg rounded-xl hover:scale-105 hover:bg-secondary hover:text-white">
         <div className="">
           <img
             className="w-[96px] h-[96px]"
