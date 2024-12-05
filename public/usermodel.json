@@ -1,0 +1,18 @@
+{
+    "name": "John Doe",
+    "userID": "334255",
+    "email": "john.doe@example.com",
+    "password": "$hashed_password",
+    "phone": "1234567890",
+    "whatsapp": "1234567890",
+    "status": "active",
+    "role": "user",
+    "referrence": "443422",
+    "balance": 150,
+    "paymentMethods": [],
+    "groupLeader": "225633",
+    "consultant": "775899",
+    "seniorGroupLeader": "665699",
+    "trainer": "223344",
+    "createdAt": "2024-11-30T12:00:00.000Z"
+}

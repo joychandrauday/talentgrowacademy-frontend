@@ -1,0 +1,128 @@
+[
+    {
+        "title": "Digital Marketing",
+        "category": "Marketing",
+        "description": "Learn how to effectively promote products and services using digital channels, including social media, email marketing, and SEO strategies.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942943/DMfinal_fihstl.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Video Editing",
+        "category": "Media & Arts",
+        "description": "Master the art of video editing with tools like Adobe Premiere Pro and Final Cut Pro. Learn to create compelling visual stories.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942936/VideoEditing_yndlwz.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Photo Editing",
+        "category": "Media & Arts",
+        "description": "Enhance your photos with professional editing techniques using tools like Adobe Photoshop and Lightroom. Learn retouching and color correction.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942936/PhotoEditing_aqb45r.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Basic Grammar With Spoken English",
+        "category": "Language",
+        "description": "Improve your English grammar and speaking skills through practical exercises and real-life conversations. Build confidence in communication.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942935/SpokenEnglish_hg9fol.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Earn Extra Money",
+        "category": "Finance",
+        "description": "Explore various ways to earn extra income, including freelancing, online gigs, and side hustles. Learn tips to boost your earnings.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942933/EarnMoney_ijdkyw.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Graphic Design",
+        "category": "Design",
+        "description": "Learn the principles of graphic design, including layout, typography, and color theory. Create stunning visuals using popular design tools.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942933/GraphicsDesign_jilgc9.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Social Media Marketing",
+        "category": "Marketing",
+        "description": "Gain insights into social media platforms and learn how to craft engaging content, run campaigns, and analyze performance metrics.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942933/SocialMediaMarketing_u0dg0u.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "General Knowledge",
+        "category": "Education",
+        "description": "Expand your knowledge across various topics, including history, science, and current affairs. Stay informed and prepared for quizzes and exams.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942932/GeneralKnowledge_mwruab.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    },
+    {
+        "title": "Shahih Holy Qurwan",
+        "category": "Religious Studies",
+        "description": "Understand the teachings and interpretations of the Holy Qur'an. Learn to recite and reflect on its verses with proper guidance.",
+        "image": "https://res.cloudinary.com/dab8rppoj/image/upload/v1732942932/SahihHolyQurwan_gyzxjz.png",
+        "teacherName": "",
+        "teacherId": "",
+        "classLinks": [
+            {
+                "link": "",
+                "createdAt": ""
+            }
+        ]
+    }
+]

@@ -1,0 +1,92 @@
+[
+    {
+        "title": "The Art of War",
+        "file": "",
+        "description": "An ancient Chinese military treatise by Sun Tzu, focusing on strategies and tactics in warfare.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.8,
+        "premium": false,
+        "viewCount": 1500
+    },
+    {
+        "title": "Atomic Habits",
+        "file": "",
+        "description": "A guide by James Clear on building good habits, breaking bad ones, and mastering small, incremental improvements.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.9,
+        "premium": true,
+        "viewCount": 2000
+    },
+    {
+        "title": "The Alchemist",
+        "file": "",
+        "description": "A philosophical story by Paulo Coelho about a shepherd's journey to find his personal legend.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.7,
+        "premium": false,
+        "viewCount": 1800
+    },
+    {
+        "title": "1984",
+        "file": "",
+        "description": "A dystopian novel by George Orwell, depicting a totalitarian society under constant surveillance.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.6,
+        "premium": true,
+        "viewCount": 2500
+    },
+    {
+        "title": "To Kill a Mockingbird",
+        "file": "",
+        "description": "Harper Lee's classic novel exploring themes of racial injustice and moral growth in the Deep South.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.9,
+        "premium": false,
+        "viewCount": 3000
+    },
+    {
+        "title": "Rich Dad Poor Dad",
+        "file": "",
+        "description": "Robert Kiyosaki's book on personal finance, comparing two fathers' approaches to wealth-building.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.5,
+        "premium": true,
+        "viewCount": 2700
+    },
+    {
+        "title": "Sapiens: A Brief History of Humankind",
+        "file": "",
+        "description": "Yuval Noah Harari's exploration of the history and impact of Homo sapiens on the world.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.8,
+        "premium": true,
+        "viewCount": 3200
+    },
+    {
+        "title": "Think and Grow Rich",
+        "file": "",
+        "description": "Napoleon Hill's classic self-help book on achieving success through visualization and belief.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.7,
+        "premium": false,
+        "viewCount": 4000
+    },
+    {
+        "title": "The Power of Now",
+        "file": "",
+        "description": "Eckhart Tolle's spiritual guide to mindfulness and living in the present moment.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.8,
+        "premium": true,
+        "viewCount": 2200
+    },
+    {
+        "title": "The Subtle Art of Not Giving a F*ck",
+        "file": "",
+        "description": "Mark Manson's unconventional advice on living a good life by focusing on what truly matters.",
+        "image": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630683326i/10534.jpg",
+        "rating": 4.6,
+        "premium": false,
+        "viewCount": 3500
+    }
+]
