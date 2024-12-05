@@ -2,8 +2,11 @@ import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { AuthContext } from '../../../Provider/AuthProvider';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const navigate = useNavigate()
     const { signInUser } = useContext(AuthContext);
     const {
         register,
@@ -12,8 +15,14 @@ const Login = () => {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log(data);
-        signInUser(data.email, data.password);
+        // signing in the user 
+        try {
+            signInUser(data.email, data.password);
+            toast.success('You are Logged in successfully')
+            navigate('/dashboard')
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (

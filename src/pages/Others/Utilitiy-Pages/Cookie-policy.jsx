@@ -1,4 +1,3 @@
-import React from 'react';
 import { ScrollRestoration } from 'react-router-dom';
 
 const CookiePolicy = () => {
@@ -34,7 +33,7 @@ const CookiePolicy = () => {
                     </p>
                     <ul className="list-inside list-disc">
                         <li><strong>To Enhance User Experience:</strong> Cookies help us provide a better, more personalized experience by remembering your preferences and settings.</li>
-                        <li><strong>To Analyze Website Traffic:</strong> We use cookies to track website usage and analyze user behavior in order to improve our website's performance and usability.</li>
+                        <li><strong>To Analyze Website Traffic:</strong> We use cookies to track website usage and analyze user behavior in order to improve our website&apos;s performance and usability.</li>
                         <li><strong>To Serve Relevant Advertisements:</strong> Advertising cookies help us show you ads that are relevant to your interests, both on our website and across other websites.</li>
                         <li><strong>To Provide Social Media Features:</strong> Some cookies enable the integration of social media platforms, allowing you to share content from our website directly to your social media accounts.</li>
                     </ul>
@@ -44,7 +43,7 @@ const CookiePolicy = () => {
                         You have the right to accept or reject cookies when you visit our website. You can manage your cookie preferences by:
                     </p>
                     <ul className="list-inside list-disc">
-                        <li><strong>Cookie Settings:</strong> You can adjust your browser settings to accept or reject cookies. Most browsers allow you to block or delete cookies, and you can adjust your preferences in the browser's settings menu.</li>
+                        <li><strong>Cookie Settings:</strong> You can adjust your browser settings to accept or reject cookies. Most browsers allow you to block or delete cookies, and you can adjust your preferences in the browser&apos;s settings menu.</li>
                         <li><strong>Opting-Out of Advertising Cookies:</strong> You can opt-out of targeted advertising cookies by visiting the following links: <a href="https://www.aboutads.info/choices" className="text-blue-500 hover:underline">AdChoices</a> and <a href="https://optout.networkadvertising.org" className="text-blue-500 hover:underline">Network Advertising Initiative</a>.</li>
                         <li><strong>Clearing Your Browser Cookies:</strong> You can clear cookies from your browser at any time. This may impact your experience on our website, such as remembering your preferences.</li>
                     </ul>
@@ -61,7 +60,7 @@ const CookiePolicy = () => {
 
                     <h2 className="text-2xl font-semibold text-secondary mt-6">7. Changes to This Cookie Policy</h2>
                     <p>
-                        We may update this Cookie Policy from time to time. When we make changes, we will update the "Last Updated" date at the top of this page. We encourage you to review this policy periodically to stay informed about how we use cookies and how you can manage your preferences.
+                        We may update this Cookie Policy from time to time. When we make changes, we will update the &quot;Last Updated&quot; date at the top of this page. We encourage you to review this policy periodically to stay informed about how we use cookies and how you can manage your preferences.
                     </p>
 
                     <h2 className="text-2xl font-semibold text-secondary mt-6">8. Contact Us</h2>

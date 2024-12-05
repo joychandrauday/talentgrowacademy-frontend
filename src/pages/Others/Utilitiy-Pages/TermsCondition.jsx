@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ScrollRestoration } from 'react-router-dom';
 
 const TermsCondition = () => {
@@ -11,7 +11,6 @@ const TermsCondition = () => {
                     <p>
                         <strong>Age Requirement:</strong> Applicants must be at least 18 years old to join **TalentGrow Academy** as an online part-time student. Those under 18 can apply but will only be eligible for learning and earning programs.
                     </p>
-
                     <p>
                         <strong>Training Period:</strong> All applicants must undergo a six-month training period before receiving certification for online part-time work from **TalentGrow Academy**.
                     </p>
@@ -21,7 +20,7 @@ const TermsCondition = () => {
                     </p>
 
                     <p>
-                        <strong>Social Media Profile:</strong> A steady social media presence is necessary as it plays a crucial role in **TalentGrow Academy's** operations and goodwill promotion.
+                        <strong>Social Media Profile:</strong> A steady social media presence is necessary as it plays a crucial role in **TalentGrow Academy&apos;s** operations and goodwill promotion.
                     </p>
 
                     <p>
@@ -29,7 +28,7 @@ const TermsCondition = () => {
                     </p>
 
                     <p>
-                        <strong>Points System:</strong> Points may be awarded to encourage learning, but these points are subject to change based on **TalentGrow Academy's** needs.
+                        <strong>Points System:</strong> Points may be awarded to encourage learning, but these points are subject to change based on **TalentGrow Academy&apos;s** needs.
                     </p>
 
                     <p>

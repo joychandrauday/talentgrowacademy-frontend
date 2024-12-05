@@ -14,8 +14,6 @@ import {
 } from 'react-icons/fa';
 import { IoMdArrowDropright } from "react-icons/io";
 import logo from '../../assets/logo.png';
-import { RxCountdownTimer } from 'react-icons/rx';
-import { MdRequestPage } from 'react-icons/md';
 import { AuthContext } from '../../Provider/AuthProvider';
 
 const Sidebar = ({ user }) => {
