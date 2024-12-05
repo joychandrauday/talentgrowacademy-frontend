@@ -15,7 +15,9 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen container mx-auto pt-10 flex flex-col md:flex-row">
             {/* Sidebar */}
-            <Sidebar user={user} />
+            <div>
+             <Sidebar user={user} />
+            </div>
 
             {/* Main Content */}
             <div className="flex-1">
