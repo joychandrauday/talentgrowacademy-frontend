@@ -1,50 +1,114 @@
 [
     {
         "id": 1,
-        "title": "Frontend Developer",
+        "title": "Controller",
         "location": "Dhaka, Bangladesh",
         "type": "Full-time",
-        "description": "We are looking for a passionate frontend developer with experience in React and Tailwind CSS.",
+        "description": "We are seeking a detail-oriented Controller to oversee financial reporting and compliance.",
         "status": "active",
-        "postedAt": "2024-12-01T08:30:00.000Z",
-        "modifiedAt": "2024-12-01T10:00:00.000Z",
+        "postedAt": "2024-12-01T09:00:00.000Z",
+        "modifiedAt": "2024-12-03T12:00:00.000Z",
         "jobResponsibilities": [
-            "Develop and maintain user interfaces using React.js.",
-            "Implement responsive designs with Tailwind CSS.",
-            "Collaborate with backend developers to integrate APIs.",
-            "Ensure cross-browser compatibility and performance optimization."
+            "Oversee financial reporting and budgeting processes.",
+            "Ensure compliance with financial regulations and standards.",
+            "Develop financial strategies and policies.",
+            "Collaborate with management on financial planning."
         ]
     },
     {
         "id": 2,
-        "title": "Backend Developer",
+        "title": "Accountant",
         "location": "Chittagong, Bangladesh",
         "type": "Part-time",
-        "description": "Join our team as a backend developer. Proficiency in Node.js and MongoDB is required.",
+        "description": "We are looking for an experienced Accountant to manage financial transactions and records.",
         "status": "active",
-        "postedAt": "2024-11-28T09:00:00.000Z",
-        "modifiedAt": "2024-11-29T14:30:00.000Z",
+        "postedAt": "2024-11-30T08:30:00.000Z",
+        "modifiedAt": "2024-12-02T10:00:00.000Z",
         "jobResponsibilities": [
-            "Develop and manage server-side logic using Node.js.",
-            "Design and maintain databases with MongoDB.",
-            "Ensure data security and system scalability.",
-            "Collaborate with frontend developers for seamless integration."
+            "Prepare and maintain financial records and reports.",
+            "Manage accounts payable and receivable.",
+            "Reconcile bank statements and financial discrepancies.",
+            "Assist in tax preparation and audits."
         ]
     },
     {
         "id": 3,
-        "title": "UI/UX Designer",
+        "title": "Consultant",
         "location": "Remote",
         "type": "Contract",
-        "description": "Seeking a creative UI/UX designer with a strong portfolio of modern designs.",
+        "description": "We are hiring a Consultant with expertise in business strategy and process improvement.",
         "status": "inactive",
-        "postedAt": "2024-11-25T07:45:00.000Z",
-        "modifiedAt": "2024-11-27T11:15:00.000Z",
+        "postedAt": "2024-11-29T09:45:00.000Z",
+        "modifiedAt": "2024-12-01T11:00:00.000Z",
         "jobResponsibilities": [
-            "Create wireframes, prototypes, and user flows.",
-            "Collaborate with developers to implement designs.",
-            "Conduct user research and usability testing.",
-            "Maintain and update design systems and guidelines."
+            "Analyze business processes and provide strategic advice.",
+            "Develop solutions to improve efficiency and productivity.",
+            "Assist in implementing new business strategies.",
+            "Provide ongoing support and recommendations."
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Group Leader",
+        "location": "Sylhet, Bangladesh",
+        "type": "Full-time",
+        "description": "We are seeking a motivated Group Leader to guide and manage a team of professionals.",
+        "status": "active",
+        "postedAt": "2024-11-28T10:00:00.000Z",
+        "modifiedAt": "2024-12-02T13:00:00.000Z",
+        "jobResponsibilities": [
+            "Lead and manage a team to achieve project goals.",
+            "Coordinate tasks and ensure timely completion.",
+            "Foster a positive and productive work environment.",
+            "Report progress and address any challenges."
+        ]
+    },
+    {
+        "id": 5,
+        "title": "Trainer",
+        "location": "Khulna, Bangladesh",
+        "type": "Part-time",
+        "description": "We are looking for a skilled Trainer to deliver engaging training sessions and workshops.",
+        "status": "active",
+        "postedAt": "2024-11-27T09:30:00.000Z",
+        "modifiedAt": "2024-12-01T12:00:00.000Z",
+        "jobResponsibilities": [
+            "Design and deliver training programs and workshops.",
+            "Evaluate training effectiveness and provide feedback.",
+            "Develop training materials and resources.",
+            "Support employees in skill development."
+        ]
+    },
+    {
+        "id": 6,
+        "title": "Manager",
+        "location": "Barisal, Bangladesh",
+        "type": "Full-time",
+        "description": "We are seeking an experienced Manager to oversee daily operations and ensure team performance.",
+        "status": "active",
+        "postedAt": "2024-11-26T11:00:00.000Z",
+        "modifiedAt": "2024-12-01T15:00:00.000Z",
+        "jobResponsibilities": [
+            "Manage daily operations and team performance.",
+            "Develop and implement business strategies.",
+            "Ensure compliance with company policies and procedures.",
+            "Lead and mentor team members."
+        ]
+    },
+    {
+        "id": 7,
+        "title": "Senior Group Leader",
+        "location": "Dhaka, Bangladesh",
+        "type": "Full-time",
+        "description": "We are hiring a Senior Group Leader to manage multiple teams and oversee project success.",
+        "status": "active",
+        "postedAt": "2024-11-25T12:00:00.000Z",
+        "modifiedAt": "2024-12-02T16:00:00.000Z",
+        "jobResponsibilities": [
+            "Oversee and manage multiple teams.",
+            "Ensure successful execution of projects.",
+            "Develop and implement strategic plans.",
+            "Provide mentorship and guidance to team leaders."
         ]
     }
 ]
