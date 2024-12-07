@@ -116,7 +116,7 @@ const UserManagementTable = ({ users, role }) => {
                 Group Leader
               </th>
               <th className="whitespace-nowrap hidden lg:table-cell">
-                Group Leader WhatsApp
+                GL WhatsApp
               </th>
               <th className="whitespace-nowrap">Message Done</th>
               <th className="whitespace-nowrap">Status</th>
