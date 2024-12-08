@@ -2,22 +2,65 @@ import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import { AuthContext } from '../../../Provider/AuthProvider';
+import toast from 'react-hot-toast';
+import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-    const {createUser}=useContext(AuthContext)
+    const { userSignUp } = useContext(AuthContext)
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const axiosPublic = useAxiosPublic()
+    const navigate = useNavigate()
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data);
-        createUser(data.email,data.password)
+
+        // Initialize the Axios instance
+
+        try {
+            const fullName = `${data.firstname} ${data.lastname}`;
+
+            // Prepare the user data, including the combined name
+            const userData = {
+                name: fullName,
+                email: data.email,
+                password: data.password,
+                country: data.country,
+                phone: data.phone,
+                whatsapp: data.whatsapp,
+                reference: data.reference,
+            };
+
+            // Create user with Firebase
+            const userCredential = await userSignUp(data.email, data.password);
+
+            if (userCredential?.user) {
+                // Send user data to the database
+                const response = await axiosPublic.post("/users/register", userData);
+                navigate('/dashboard')
+
+                if (response.status === 201) {
+                    toast.success("User registered successfully and added to the database!");
+                } else {
+                    toast.error("User creation successful, but failed to save to the database.");
+                }
+
+                console.log("Database Response:", response.data);
+            }
+
+        } catch (error) {
+            console.error("Error during registration:", error.message);
+            toast.error(`Registration failed: ${error.message}`);
+        }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-basic bg-no-repeat bg-cover pt-32 pb-12">
-            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3  backdrop-blur-sm border-gray-300 border">
+            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3 backdrop-blur-sm border-gray-300 border">
                 <h1 className="text-3xl font-bold text-left mb-6 text-primary">Create an Account</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2   gap-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {/* First Name Field */}
                     <div>
                         <input
@@ -56,13 +99,18 @@ const Register = () => {
 
                     {/* Country Field */}
                     <div>
-                        <input
+                        <select
                             id="country"
-                            type="text"
                             {...register('country', { required: 'Country is required' })}
-                            placeholder="Country"
                             className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.country ? 'border-red-500' : 'border-gray-300'}`}
-                        />
+                        >
+                            <option selected value="">Select Country</option>
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="India">India</option>
+                            <option value="Pakistan">Pakistan</option>
+                            <option value="Sri Lanka">Sri Lanka</option>
+                            <option value="Nepal">Nepal</option>
+                        </select>
                         {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>}
                     </div>
 
@@ -128,9 +176,13 @@ const Register = () => {
                             </label>
                         </div>
                         {errors.agree && <p className="text-red-500 text-sm mt-1">{errors.agree.message}</p>}
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="col-span-2 mt-4">
                         <button
                             type="submit"
-                            className="w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full sm:w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             Register
                         </button>

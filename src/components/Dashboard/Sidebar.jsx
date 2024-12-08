@@ -55,7 +55,7 @@ const Sidebar = ({ user }) => {
         {/* User Info Section */}
         <div className="flex justify-start items-center mb-6">
           <img
-            src={user?.image || "https://via.placeholder.com/150"}
+            src={user?.avatar || "https://via.placeholder.com/150"}
             alt="User Avatar"
             className="w-16 h-16 rounded-full mr-4"
           />
