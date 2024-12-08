@@ -26,7 +26,9 @@ const Provider = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-
+      if (!currentUser) {
+        localStorage.removeItem('authToken')
+      }
       setLoading(false);
     });
     return () => {
@@ -43,6 +45,7 @@ const Provider = ({ children }) => {
   //log out
   const logOut = () => {
     setLoading(true);
+    localStorage.removeItem("")
     return signOut(auth);
   };
 
