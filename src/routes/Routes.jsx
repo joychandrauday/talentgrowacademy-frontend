@@ -22,6 +22,13 @@ import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
 import Departments from "../pages/Others/Departments/Departments";
 import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/Consultant/ConsultantUserManagement";
 import PrivateRoute from "./PrivateRoute";
+import AdminDashboard from "../pages/Dashboard/DashboardRoleWise/Admin/AdminDashboard";
+import AddUser from "../components/Dashboard/AdminComponent/AddUser";
+import EditUser from "../components/Dashboard/AdminComponent/EditUser";
+import ManageAdminstration from "../components/Dashboard/AdminComponent/ManageAdminstration";
+import ControllerDashboard from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerDashboard";
+import UserManagementTable from "../components/Dashboard/UserManagementTable";
+import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerUserManage";
 
 
 
@@ -120,6 +127,35 @@ export const router = createBrowserRouter([
         path: "manage-clients",
         element: <ConsultantUserManagement />,
       },
+      //admin rooutes
+      {
+        path: "admin",
+        element: <AdminDashboard />,
+        children: [
+          {
+            path: "add",
+            element: <AddUser />
+          },
+          {
+            path: "customize",
+            element: <EditUser />
+          },
+          {
+            path: "manage",
+            element: <ManageAdminstration />
+          }
+        ]
+      },
+      {
+        path: "controller",
+        element: <ControllerDashboard />,
+        children: [
+          {
+            path: "manage",
+            element: <ControllerUserManage />
+          }
+        ]
+      }
     ]
   }
 

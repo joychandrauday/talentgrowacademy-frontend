@@ -4,6 +4,8 @@ import UserDashboard from './UserDashboard';
 import { ScrollRestoration } from 'react-router-dom';
 import ConsultantDashboard from '../DashboardRoleWise/Consultant/ConsultantDashboard';
 import useUser from '../../Others/Register/useUser';
+import AdminDashboard from '../DashboardRoleWise/Admin/AdminDashboard';
+import ControllerDashboard from '../DashboardRoleWise/Controller/ControllerDashboard';
 
 const DashboardHolder = () => {
     const { userdb } = useUser()
@@ -23,10 +25,10 @@ const DashboardHolder = () => {
     return (
         <div>
             {/* Content for admin */}
-            {role === 'admin' && <p>You are an admin. You have full control over the system.</p>}
+            {role === 'admin' && <AdminDashboard />}
 
             {/* Content for controller */}
-            {role === 'controller' && <p>You are a controller. Manage and monitor system activities.</p>}
+            {role === 'controller' && <ControllerDashboard />}
 
             {/* Content for consultant */}
             {role === 'consultant' && <ConsultantDashboard />}

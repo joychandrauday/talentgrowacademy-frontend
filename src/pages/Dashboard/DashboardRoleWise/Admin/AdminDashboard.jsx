@@ -1,11 +1,18 @@
-import React from 'react';
+
+import { Outlet } from 'react-router-dom';
+
 
 const AdminDashboard = () => {
     return (
-        <div>
-            <h1>Admin Dashboard</h1>
+        <div className='p-6'>
+            <Outlet />
         </div>
     );
 }
+
+
+
+// prop validation
+
 
 export default AdminDashboard;

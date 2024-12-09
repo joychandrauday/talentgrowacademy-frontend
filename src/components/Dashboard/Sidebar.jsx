@@ -11,6 +11,12 @@ import {
   FaLock,
   FaSignOutAlt,
   FaBars,
+  FaSearch,
+  FaChartBar,
+  FaUsers,
+  FaCogs,
+  FaEdit,
+  FaPlusCircle,
 } from "react-icons/fa";
 import { IoMdArrowDropright } from "react-icons/io";
 import logo from "../../assets/logo.png";
@@ -24,6 +30,7 @@ const Sidebar = ({ user }) => {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
+
   return (
     <div>
       {/* Hamburger Menu */}
@@ -36,9 +43,8 @@ const Sidebar = ({ user }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed rounded-lg top-0 left-0 z-40 bg-white border shadow-md text-primary w-64 p-5 transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:relative md:block transition-transform duration-300`}
+        className={`fixed rounded-lg top-0 left-0 z-40 bg-white border shadow-md text-primary w-64 p-5 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:relative md:block transition-transform duration-300`}
       >
         {/* Close button for mobile */}
         <button
@@ -78,22 +84,91 @@ const Sidebar = ({ user }) => {
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
-              `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${
-                isActive ? "bg-secondary text-white" : ""
+              `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
               }`
             }
           >
             <FaTachometerAlt /> Dashboard
           </NavLink>
+          {user?.role === "admin" && (
+            <div className="ml-4 mt-2 space-y-2">
+              <NavLink
+                to="/dashboard/admin/add"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaPlusCircle /> Add Role
+              </NavLink>
+              <NavLink
+                to="/dashboard/admin/customize"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaEdit /> Edit Role
+              </NavLink>
+              <NavLink
+                to="/dashboard/admin/manage"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaCogs /> Manage Role
+              </NavLink>
+            </div>
+          )}
 
+          {user?.role === "controller" && (
+            <div className="ml-4 mt-2 space-y-2">
+              <NavLink
+                to="/dashboard/controller/manage"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaUsers /> Manage Users
+              </NavLink>
+              <NavLink
+                to="/dashboard/controller/count"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaChartBar /> Count
+              </NavLink>
+              <NavLink
+                to="/dashboard/controller/result"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaChartBar /> Result
+              </NavLink>
+              <NavLink
+                to="/dashboard/search"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaSearch /> Search
+              </NavLink>
+            </div>
+          )}
           {user?.role === "consultant" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
                 <NavLink
                   to="/dashboard/manage-clients"
                   className={({ isActive }) =>
-                    `flex gap-4 border  items-center p-2 hover:text-secondary ${
-                      isActive ? "bg-primary text-white" : ""
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
@@ -102,8 +177,7 @@ const Sidebar = ({ user }) => {
                 <NavLink
                   to="/dashboard/request"
                   className={({ isActive }) =>
-                    `flex gap-4 border  items-center p-2 hover:text-secondary ${
-                      isActive ? "bg-primary text-white" : ""
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
@@ -112,8 +186,7 @@ const Sidebar = ({ user }) => {
                 <NavLink
                   to="/dashboard/count"
                   className={({ isActive }) =>
-                    `flex gap-4 border  items-center p-2 hover:text-secondary ${
-                      isActive ? "bg-primary text-white" : ""
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
@@ -122,8 +195,7 @@ const Sidebar = ({ user }) => {
                 <NavLink
                   to="/dashboard/search"
                   className={({ isActive }) =>
-                    `flex gap-4 border  items-center p-2 hover:text-secondary ${
-                      isActive ? "bg-primary text-white" : ""
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
@@ -146,8 +218,7 @@ const Sidebar = ({ user }) => {
               key={idx}
               to={`/dashboard/${path}`}
               className={({ isActive }) =>
-                `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${
-                  isActive ? "bg-secondary text-white" : ""
+                `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
                 }`
               }
             >
@@ -157,8 +228,7 @@ const Sidebar = ({ user }) => {
           <NavLink
             onClick={logOut}
             className={({ isActive }) =>
-              `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${
-                isActive ? "bg-secondary text-white" : ""
+              `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
               }`
             }
           >
