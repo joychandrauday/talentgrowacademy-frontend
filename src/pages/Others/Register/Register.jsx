@@ -12,7 +12,6 @@ const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const axiosPublic = useAxiosPublic()
     const navigate = useNavigate()
-
     const onSubmit = async (data) => {
         console.log(data);
 
@@ -57,10 +56,10 @@ const Register = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-basic bg-no-repeat bg-cover pt-32 pb-12">
-            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3 backdrop-blur-sm border-gray-300 border">
+            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3  backdrop-blur-sm border-gray-300 border">
                 <h1 className="text-3xl font-bold text-left mb-6 text-primary">Create an Account</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2   gap-5">
                     {/* First Name Field */}
                     <div>
                         <input
@@ -113,6 +112,7 @@ const Register = () => {
                         </select>
                         {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>}
                     </div>
+
 
                     {/* Phone Field */}
                     <div>
@@ -176,13 +176,9 @@ const Register = () => {
                             </label>
                         </div>
                         {errors.agree && <p className="text-red-500 text-sm mt-1">{errors.agree.message}</p>}
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="col-span-2 mt-4">
                         <button
                             type="submit"
-                            className="w-full sm:w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             Register
                         </button>
