@@ -30,10 +30,9 @@ const Sidebar = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
-  console.log(user.status);
 
   return (
-    <div>
+    <div className="">
       {/* Hamburger Menu */}
       <div className="md:hidden flex justify-between items-center p-5">
         <img src={logo} alt="Logo" className="w-16" />
@@ -44,7 +43,7 @@ const Sidebar = ({ user }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed rounded-lg top-0 left-0 z-40 bg-white border shadow-md text-primary w-64 p-5 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed min-h-[90vh] rounded-lg top-0 left-0 z-40 bg-white border shadow-md text-primary w-64 p-5 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
           } md:translate-x-0 md:relative md:block transition-transform duration-300`}
       >
         {/* Close button for mobile */}

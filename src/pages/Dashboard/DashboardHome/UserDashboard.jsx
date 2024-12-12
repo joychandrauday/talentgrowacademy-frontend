@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const UserDashboard = ({ user }) => {
 
     return (
-        <div className="p-6 min-h-screen">
+        <div className="p-6 pt-0 min-h-screen">
             {/* Header Section */}
             <header className="flex justify-center items-center mb-6">
                 <h1 className="text-3xl flex items-center gap-2 font-bold text-primary">

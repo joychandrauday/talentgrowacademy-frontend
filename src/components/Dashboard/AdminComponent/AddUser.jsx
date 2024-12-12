@@ -9,6 +9,7 @@ const AddUser = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const axiosPublic = useAxiosPublic();
+    const { userSignUp } = useContext(AuthContext)
 
     const onSubmit = async (data) => {
 
@@ -23,7 +24,7 @@ const AddUser = () => {
                 phone: data.phone,
                 whatsapp: data.whatsapp,
                 password: data.password,
-                reference: "testadmin",
+                reference: "6759bef8f9a5249d9d87ef87",
                 status: 'active',
                 isAdminstration: true
             };
@@ -31,15 +32,26 @@ const AddUser = () => {
 
             // Add user to the database
             const response = await axiosPublic.post('/users/register', userData);
-            const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData);
+            if (userData.role != 'user') {
+                const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData);
 
-            if (response.status === 201 && response2.status === 201) {
-                toast.success("User added successfully!");
+                if (response.status === 201 && response2.status === 201) {
+                    await userSignUp(userData.email, userData.password)
+                    toast.success("User added successfully!");
+                } else {
+                    toast.error("Failed to add user to the database.");
+                }
+
+                console.log("Database Response:", response.data);
             } else {
-                toast.error("Failed to add user to the database.");
-            }
+                if (response.status === 201) {
+                    await userSignUp(userData.email, userData.password)
+                    toast.success("User added successfully!");
+                } else {
+                    toast.error("Failed to add user to the database.");
+                }
 
-            console.log("Database Response:", response.data);
+            }
         } catch (error) {
             console.error("Error adding user:", error.message);
             toast.error(`Adding user failed: ${error.message}`);
@@ -95,6 +107,7 @@ const AddUser = () => {
                             <option value="manager-teacher">Manager(Teacher)</option>
                             <option value="group-leader">Group Leader</option>
                             <option value="trainer">Trainer</option>
+                            <option value="user">User</option>
                         </select>
                         {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}
                     </div>
