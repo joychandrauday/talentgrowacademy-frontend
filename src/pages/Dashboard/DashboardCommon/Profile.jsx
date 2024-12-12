@@ -19,7 +19,7 @@ const Profile = () => {
     setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
   };
   return (
-    <div className="p-6">
+    <div className="p-6 pt-0">
 
       <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column: Avatar, Name, Email, and Balance */}
@@ -36,9 +36,6 @@ const Profile = () => {
             <p className="text-sm text-gray-600">{userdb.email}</p>
             <p className="text-sm text-gray-600">
               <strong>Balance:</strong> ${userdb.balance}
-            </p>
-            <p className="text-sm text-gray-600">
-              <strong>Role:</strong> {userdb.role}
             </p>
             <div className="flex items-center space-x-2 mt-2">
               {userdb.status === 'active' ? (
@@ -73,7 +70,7 @@ const Profile = () => {
               <strong>Role:</strong> {userdb.role}
             </p>
             <p className="flex gap-2 items-center">
-              <FaCircle className={`mr-2 ${userdb.status === 'active' ? 'text-green-500' : 'text-red-500'}`} />
+              <FaCircle className={`mr-2 ${userdb.status === 'active' ? 'text-green-500' : 'text-red-500 animate-pulse'} `} />
               <strong>Status:</strong> {userdb.status}
             </p>
             <p className="flex gap-2 items-center">

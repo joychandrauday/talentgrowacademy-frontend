@@ -20,7 +20,7 @@ const Register = () => {
         }
     }, [location]);
     console.log(referCode);
-    const { userSignUp } = useContext(AuthContext)
+    const { userSignUp, logOut } = useContext(AuthContext)
     const { register, handleSubmit, formState: { errors } } = useForm();
     const axiosPublic = useAxiosPublic()
     const navigate = useNavigate()
@@ -60,6 +60,8 @@ const Register = () => {
 
                 if (response.status === 201) {
                     toast.success("User registered successfully and added to the database!");
+                    logOut()
+                    navigate('/login')
                 } else {
                     toast.error("User creation successful, but failed to save to the database.");
                 }
