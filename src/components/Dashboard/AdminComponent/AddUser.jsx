@@ -7,7 +7,6 @@ import { AuthContext } from '../../../Provider/AuthProvider';
 
 const AddUser = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { userSignUp } = useContext(AuthContext)
 
     const axiosPublic = useAxiosPublic();
 
@@ -32,9 +31,9 @@ const AddUser = () => {
 
             // Add user to the database
             const response = await axiosPublic.post('/users/register', userData);
+            const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData);
 
-            if (response.status === 201) {
-                userSignUp(data.email, data.password)
+            if (response.status === 201 && response2.status === 201) {
                 toast.success("User added successfully!");
             } else {
                 toast.error("Failed to add user to the database.");

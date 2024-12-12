@@ -15,11 +15,11 @@ const ManageAdministration = () => {
     const { data, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['users', page, limit, searchTerm],  // include page and limit in queryKey to trigger re-fetch
         queryFn: async () => {
-            const response = await axiosPublic.get(`/users?searchTerm=${searchTerm}&page=${page}&limit=${limit}&isAdminstration=true`);
+            const response = await axiosPublic.get(`/admins`);
             return response.data;
         },
     });
-
+    console.log(data);
     if (isLoading) {
         return <p>Loading...</p>;
     }
@@ -122,7 +122,7 @@ const ManageAdministration = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data?.data.map((user) => (
+                    {data.data.admins.map((user) => (
                         <tr key={user.userID} className="hover:bg-gray-50 text-center">
                             <td>{user.name}</td>
                             <td>{user.email}</td>

@@ -6,6 +6,7 @@ const UserManagementTable = ({ users, role }) => {
   const [statusFilter, setStatusFilter] = useState("");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
 
+
   // Filtered users based on search and status
   const filteredUsers = users.filter((user) => {
     const matchesId = searchId ? user.userID.includes(searchId) : true;
@@ -13,7 +14,7 @@ const UserManagementTable = ({ users, role }) => {
     const matchesDate =
       dateRange.from && dateRange.to
         ? new Date(user.createdAt) >= new Date(dateRange.from) &&
-          new Date(user.createdAt) <= new Date(dateRange.to)
+        new Date(user.createdAt) <= new Date(dateRange.to)
         : true;
 
     return matchesId && matchesStatus && matchesDate;

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import useFetchUsers from '../../../../Hooks/useFetchUsers';
-import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
 import { FaUserClock } from 'react-icons/fa';
-import ControllerAssignModal from '../../../../components/Dashboard/ControllerCOmponent/ControllerAssignModal';
 import { LuUserCog } from 'react-icons/lu';
-import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
+import useFetchUsers from '../../Hooks/useFetchUsers';
+import useAxiosPublic from '../../Hooks/useAxiosPublic';
+import LoadingSpinner from '../Shared/LoadingSpinner';
 
-const ControllerUserManage = () => {
+const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
         searchTerm: '',
         role: 'user',
@@ -25,7 +24,7 @@ const ControllerUserManage = () => {
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null); // To store the user for assigning
-
+    console.log(users);
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
         refetch();
@@ -218,4 +217,4 @@ const ControllerUserManage = () => {
     );
 };
 
-export default ControllerUserManage;
+export default AllUserManagement;

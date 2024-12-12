@@ -1,25 +1,41 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import { AuthContext } from '../../../Provider/AuthProvider';
 import toast from 'react-hot-toast';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const location = useLocation();
+    const [referCode, setReferCode] = useState('');
+
+    // Extract the refer code from the URL
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const code = queryParams.get('refer');
+        if (code) {
+            setReferCode(code);
+        }
+    }, [location]);
+    console.log(referCode);
     const { userSignUp } = useContext(AuthContext)
     const { register, handleSubmit, formState: { errors } } = useForm();
     const axiosPublic = useAxiosPublic()
     const navigate = useNavigate()
+
     const onSubmit = async (data) => {
         console.log(data);
 
         // Initialize the Axios instance
 
         try {
+            //fetch refer user
+            const referUser = await axiosPublic.get(`/users/${referCode}`);
+            console.log(referUser.data.data);
             const fullName = `${data.firstname} ${data.lastname}`;
-
+            console.log(referUser.data.data._id);
             // Prepare the user data, including the combined name
             const userData = {
                 name: fullName,
@@ -28,9 +44,12 @@ const Register = () => {
                 country: data.country,
                 phone: data.phone,
                 whatsapp: data.whatsapp,
-                reference: data.reference,
+                reference: referUser.data.data._id,
+                seniorGroupLeader: referUser.data.data.seniorGroupLeader,
+                groupLeader: referUser.data.data.groupLeader,
+                trainer: referUser.data.data.trainer,
             };
-
+            console.log(userData);
             // Create user with Firebase
             const userCredential = await userSignUp(data.email, data.password);
 
@@ -155,7 +174,9 @@ const Register = () => {
                         <input
                             id="reference"
                             type="text"
-                            {...register('reference', { required: 'Reference is required' })}
+                            disabled
+                            defaultValue={referCode}
+                            {...register('reference')}
                             placeholder="Reference"
                             className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.reference ? 'border-red-500' : 'border-gray-300'}`}
                         />
