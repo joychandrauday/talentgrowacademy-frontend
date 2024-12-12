@@ -2,13 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import logo from '../../../assets/logo.png';
 import { FaWhatsapp } from 'react-icons/fa';
-import UseAdministration from '../../../Hooks/useAdminstraion';
 import { Link } from 'react-router-dom';
 
 const UserDashboard = ({ user }) => {
-    // Get the WhatsApp number and convert it to a valid number
-    const glWhatsappStr = UseAdministration('153140', "whatsapp");
-    const glWhatsapp = glWhatsappStr ? parseInt(glWhatsappStr, 10) : null;
 
     return (
         <div className="p-6 min-h-screen">
@@ -65,22 +61,11 @@ const UserDashboard = ({ user }) => {
                                                     Group Leader
                                                 </h1>
                                                 <h2 className="text-secondary font-semibold">
-                                                    <UseAdministration identifier={153140} fieldname={"name"} />
+
                                                 </h2>
                                             </div>
                                             <div className="buttonLink">
-                                                {glWhatsapp ? (
-                                                    <Link
-                                                        to={`https://wa.me/${glWhatsapp}`}
-                                                        className="btn bg-secondary"
-                                                    >
-                                                        <div className="flex gap-4 items-center text-white">
-                                                            Contact Now <FaWhatsapp className="text-2xl" />
-                                                        </div>
-                                                    </Link>
-                                                ) : (
-                                                    <p className="text-red-500">WhatsApp number unavailable</p>
-                                                )}
+
                                             </div>
                                         </div>
 
