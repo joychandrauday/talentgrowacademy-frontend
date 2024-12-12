@@ -10,7 +10,7 @@ const LoadingSpinner = ({ smallHeight }) => {
       justify-center 
       items-center `}
     >
-      <SyncLoader size={15} color='#15293E' />
+      <SyncLoader size={15} color='#F57231' />
     </div>
   )
 }

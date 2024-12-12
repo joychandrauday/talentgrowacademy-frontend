@@ -29,6 +29,9 @@ import ManageAdminstration from "../components/Dashboard/AdminComponent/ManageAd
 import ControllerDashboard from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerDashboard";
 import UserManagementTable from "../components/Dashboard/UserManagementTable";
 import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerUserManage";
+import ControllerCount from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerCount";
+import ProfileSearch from "../components/Others/ProfileSearch";
+import AllUserManagement from "../components/Others/AllUserManagement";
 
 
 
@@ -133,6 +136,10 @@ export const router = createBrowserRouter([
         element: <AdminDashboard />,
         children: [
           {
+            path: "",
+            element: <AllUserManagement />
+          },
+          {
             path: "add",
             element: <AddUser />
           },
@@ -143,6 +150,10 @@ export const router = createBrowserRouter([
           {
             path: "manage",
             element: <ManageAdminstration />
+          },
+          {
+            path: "users",
+            element: <AllUserManagement />
           }
         ]
       },
@@ -153,6 +164,14 @@ export const router = createBrowserRouter([
           {
             path: "manage",
             element: <ControllerUserManage />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
           }
         ]
       }

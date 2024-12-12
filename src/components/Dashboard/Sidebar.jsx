@@ -17,6 +17,7 @@ import {
   FaCogs,
   FaEdit,
   FaPlusCircle,
+  FaUser,
 } from "react-icons/fa";
 import { IoMdArrowDropright } from "react-icons/io";
 import logo from "../../assets/logo.png";
@@ -29,7 +30,7 @@ const Sidebar = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
-
+  console.log(user.status);
 
   return (
     <div>
@@ -82,7 +83,7 @@ const Sidebar = ({ user }) => {
         {/* Navigation Links */}
         <nav className="space-y-2 font-semibold">
           <NavLink
-            to="/dashboard"
+            to={`/dashboard/${user.role === !'user' ? user.role : ""}`}
             className={({ isActive }) =>
               `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
               }`
@@ -119,20 +120,20 @@ const Sidebar = ({ user }) => {
               >
                 <FaCogs /> Manage Role
               </NavLink>
-            </div>
-          )}
-
-          {user?.role === "controller" && (
-            <div className="ml-4 mt-2 space-y-2">
               <NavLink
-                to="/dashboard/controller/manage"
+                to="/dashboard/admin/users"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                   }`
                 }
               >
-                <FaUsers /> Manage Users
+                <FaUsers /> Manage All users
               </NavLink>
+            </div>
+          )}
+
+          {user?.role === "controller" && (
+            <div className="ml-4 mt-2 space-y-2">
               <NavLink
                 to="/dashboard/controller/count"
                 className={({ isActive }) =>
@@ -152,7 +153,7 @@ const Sidebar = ({ user }) => {
                 <FaChartBar /> Result
               </NavLink>
               <NavLink
-                to="/dashboard/search"
+                to="/dashboard/controller/search"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                   }`
@@ -204,27 +205,38 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+          <NavLink
+            to={'/dashboard/profile'}
+            className={({ isActive }) =>
+              `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
+              }`
 
+            }
+          >
+            <FaUser /> Profile
+          </NavLink>
           {/* Additional Navigation */}
-          {[
-            "profile",
-            "passbook",
-            "withdrawal",
-            "reference-history",
-            "courses",
-            "change-password",
-          ].map((path, idx) => (
-            <NavLink
-              key={idx}
-              to={`/dashboard/${path}`}
-              className={({ isActive }) =>
-                `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
-                }`
-              }
-            >
-              {getIconForPath(path)} {capitalize(path.replace("-", " "))}
-            </NavLink>
-          ))}
+          {user.status === 'active' && <>
+            {[
+              "passbook",
+              "withdrawal",
+              "reference-history",
+              "courses",
+              "change-password",
+            ].map((path, idx) => (
+              <NavLink
+                key={idx}
+                to={`/dashboard/${path}`}
+                className={({ isActive }) =>
+                  `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
+                  }`
+                }
+              >
+                {getIconForPath(path)} {capitalize(path.replace("-", " "))}
+              </NavLink>
+            ))}
+          </>}
+
           <NavLink
             onClick={logOut}
             className={({ isActive }) =>
@@ -238,13 +250,15 @@ const Sidebar = ({ user }) => {
       </div>
 
       {/* Overlay for mobile */}
-      {isOpen && (
-        <div
-          onClick={toggleSidebar}
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-        ></div>
-      )}
-    </div>
+      {
+        isOpen && (
+          <div
+            onClick={toggleSidebar}
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          ></div>
+        )
+      }
+    </div >
   );
 };
 
