@@ -73,17 +73,10 @@ const Profile = () => {
               <FaCircle className={`mr-2 ${userdb.status === 'active' ? 'text-green-500' : 'text-red-500 animate-pulse'} `} />
               <strong>Status:</strong> {userdb.status}
             </p>
-            <p className="flex gap-2 items-center">
-              <FaUserTie className="text-purple-500 mr-2" />
-              <strong>Consultant:</strong> {userdb.consultant ? userdb.consultant.userID : "***"}
-            </p>
+
             <p className="flex gap-2 items-center">
               <FaUsers className="text-yellow-500 mr-2" />
               <strong>Group Leader:</strong> {userdb.groupLeader?.userID}
-            </p>
-            <p className="flex gap-2 items-center">
-              <FaChessQueen className="text-pink-500 mr-2" />
-              <strong>Senior Group Leader:</strong> {userdb.seniorGroupLeader?.userID}
             </p>
             <p className="flex gap-2 items-center">
               <FaChalkboardTeacher className="text-indigo-500 mr-2" />
@@ -104,10 +97,6 @@ const Profile = () => {
             <p className="flex gap-2 items-center">
               <FaCalendarCheck className="text-blue-400 mr-2" />
               <strong>Joined:</strong> {new Date(userdb.createdAt).toLocaleDateString()}
-            </p>
-            <p className="flex gap-2 items-center">
-              <FaClock className="text-gray-400 mr-2" />
-              <strong>Last Updated:</strong> {new Date(userdb.updatedAt).toLocaleDateString()}
             </p>
           </div>
         </div>

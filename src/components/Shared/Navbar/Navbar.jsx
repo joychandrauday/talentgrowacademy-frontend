@@ -2,6 +2,7 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../../assets/logo.webp";
 import { AuthContext } from "../../../Provider/AuthProvider";
+import useUser from "../../../pages/Others/Register/useUser";
 
 const Navbar = () => {
   const NavLinks = {
@@ -10,12 +11,12 @@ const Navbar = () => {
     "/courses": "Courses",
     "/contact": "Contact",
   };
-
-  const { user, logOut } = useContext(AuthContext);
+  const { userdb } = useUser()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const dropdownRef = useRef(null);
+  console.log(userdb);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -35,7 +36,15 @@ const Navbar = () => {
   const handleLinkClick = () => {
     setIsMenuOpen(false);
   };
+  //handle logOut
+  const handleLogout = () => {
+    //removing token
+    localStorage.removeItem("authToken");
+    //redirect to login page
+    window.location.href = "/login";
+  };
 
+  // Dropdown menu for user profile
   return (
     <nav className="navbar container mx-auto flex flex-wrap items-center justify-between py-4 px-4 md:px-8">
       {/* Logo */}
@@ -80,9 +89,8 @@ const Navbar = () => {
 
       {/* Navigation Links (Mobile Sidebar) */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } md:static md:transform-none md:bg-transparent md:shadow-none md:h-auto md:w-auto md:flex md:items-center md:gap-4`}
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } md:static md:transform-none md:bg-transparent md:shadow-none md:h-auto md:w-auto md:flex md:items-center md:gap-4`}
       >
         <ul className="menu menu-vertical gap-4 p-4 md:menu-horizontal md:px-0">
           {Object.entries(NavLinks).map(([path, label]) => (
@@ -90,11 +98,10 @@ const Navbar = () => {
               <Link
                 to={path}
                 onClick={handleLinkClick}
-                className={`${
-                  location.pathname === path
-                    ? "text-primary font-semibold"
-                    : "text-secondary font-semibold"
-                }`}
+                className={`${location.pathname === path
+                  ? "text-primary font-semibold"
+                  : "text-secondary font-semibold"
+                  }`}
               >
                 {label}
               </Link>
@@ -104,7 +111,7 @@ const Navbar = () => {
 
         {/* User Actions */}
         <div className="flex flex-col md:flex-row items-center gap-4 mt-4 md:mt-0">
-          {user ? (
+          {userdb.email ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -112,8 +119,8 @@ const Navbar = () => {
               >
                 <div className="w-10 rounded-full">
                   <img
-                    alt={user.photoURL || "User"}
-                    src={user.photoURL || "https://via.placeholder.com/40"}
+                    alt={userdb.avatar || "User"}
+                    src={userdb.avatar || "https://via.placeholder.com/40"}
                   />
                 </div>
               </button>
@@ -139,7 +146,7 @@ const Navbar = () => {
                     <button
                       onClick={() => {
                         setIsDropdownOpen(false);
-                        logOut();
+                        handleLogout();
                       }}
                     >
                       Logout

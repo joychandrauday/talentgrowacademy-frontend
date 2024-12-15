@@ -31,21 +31,17 @@ const AddUser = () => {
             console.log(userData);
 
             // Add user to the database
-            const response = await axiosPublic.post('/users/register', userData);
             if (userData.role != 'user') {
                 const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData);
 
-                if (response.status === 201 && response2.status === 201) {
-                    await userSignUp(userData.email, userData.password)
-                    toast.success("User added successfully!");
+                if (response2.status === 201) {
+                    toast.success(`${userData.role} has been added successfully!!`);
                 } else {
                     toast.error("Failed to add user to the database.");
                 }
-
-                console.log("Database Response:", response.data);
             } else {
+                const response = await axiosPublic.post('/users/register', userData);
                 if (response.status === 201) {
-                    await userSignUp(userData.email, userData.password)
                     toast.success("User added successfully!");
                 } else {
                     toast.error("Failed to add user to the database.");
@@ -98,6 +94,7 @@ const AddUser = () => {
                             className={`w-full px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.role ? 'border-red-500' : 'border-gray-300'}`}
                         >
                             <option selected value="">Select Role</option>
+                            <option value="accountant">Accountant</option>
                             <option value="controller">Controller</option>
                             <option value="consultant">Consultant</option>
                             <option value="manager-consultant">Manager(consultant)</option>

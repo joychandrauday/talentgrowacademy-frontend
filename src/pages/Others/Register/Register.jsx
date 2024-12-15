@@ -4,76 +4,100 @@ import PropTypes from 'prop-types';
 import { AuthContext } from '../../../Provider/AuthProvider';
 import toast from 'react-hot-toast';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const Register = () => {
     const location = useLocation();
     const [referCode, setReferCode] = useState('');
 
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        // Redirect to dashboard if already logged in
+        if (localStorage.getItem('authToken')) {
+            navigate('/dashboard/');
+        }
+    }, [navigate]);
     // Extract the refer code from the URL
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const code = queryParams.get('refer');
-        if (code) {
-            setReferCode(code);
-        }
+        setReferCode(code || '435648');
     }, [location]);
+
+
     console.log(referCode);
     const { userSignUp, logOut } = useContext(AuthContext)
     const { register, handleSubmit, formState: { errors } } = useForm();
     const axiosPublic = useAxiosPublic()
-    const navigate = useNavigate()
 
     const onSubmit = async (data) => {
         console.log(data);
 
-        // Initialize the Axios instance
-
         try {
-            //fetch refer user
+            // Fetch refer user
             const referUser = await axiosPublic.get(`/users/${referCode}`);
-            console.log(referUser.data.data);
+            const referData = referUser.data.data;
+
             const fullName = `${data.firstname} ${data.lastname}`;
-            console.log(referUser.data.data._id);
-            // Prepare the user data, including the combined name
             const userData = {
                 name: fullName,
                 email: data.email,
                 password: data.password,
                 country: data.country,
                 phone: data.phone,
+                language: data.language,
                 whatsapp: data.whatsapp,
-                reference: referUser.data.data._id,
-                seniorGroupLeader: referUser.data.data.seniorGroupLeader,
-                groupLeader: referUser.data.data.groupLeader,
-                trainer: referUser.data.data.trainer,
+                reference: referData._id,
+                seniorGroupLeader: referData.seniorGroupLeader,
+                groupLeader: referData.groupLeader,
+                trainer: referData.trainer,
             };
+
             console.log(userData);
+
             // Create user with Firebase
             const userCredential = await userSignUp(data.email, data.password);
 
             if (userCredential?.user) {
                 // Send user data to the database
                 const response = await axiosPublic.post("/users/register", userData);
-                navigate('/dashboard')
 
                 if (response.status === 201) {
                     toast.success("User registered successfully and added to the database!");
-                    logOut()
-                    navigate('/login')
+
+                    // Display user credentials in a modal
+                    Swal.fire({
+                        title: "User Registered Successfully!",
+                        html: `
+                        <div style="text-align: left;">
+                            <p><strong>Name:</strong> ${userData.name}</p>
+                            <p><strong>Email:</strong> ${userData.email}</p>
+                            <p><strong>Password:</strong> ${userData.password}</p>
+                            <p><strong>Country:</strong> ${userData.country}</p>
+                            <p><strong>Phone:</strong> ${userData.phone}</p>
+                            <p><strong>WhatsApp:</strong> ${userData.whatsapp}</p>
+                            <p><strong>Group Leader:</strong> ${userData.groupLeader || "N/A"}</p>
+                            <p><strong>Trainer:</strong> ${userData.trainer || "N/A"}</p>
+                        </div>
+                    `,
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    });
+
+                    logOut(); // Log out the user
+                    navigate('/login'); // Navigate to login
                 } else {
                     toast.error("User creation successful, but failed to save to the database.");
                 }
-
-                console.log("Database Response:", response.data);
             }
-
         } catch (error) {
             console.error("Error during registration:", error.message);
             toast.error(`Registration failed: ${error.message}`);
         }
     };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-basic bg-no-repeat bg-cover pt-32 pb-12">
@@ -170,6 +194,20 @@ const Register = () => {
                         />
                         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                     </div>
+                    {/* Language Field */}
+                    <div>
+                        <select
+                            id="language"
+                            {...register('language', { required: 'Language is required' })}
+                            className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.language ? 'border-red-500' : 'border-gray-300'}`}
+                        >
+                            <option selected value="">Select Language</option>
+                            <option value="English">English</option>
+                            <option value="Bangla">Bangla</option>
+                            <option value="Hindi">Hindi</option>
+                        </select>
+                        {errors.language && <p className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
+                    </div>
 
                     {/* Reference Field */}
                     <div>
@@ -186,7 +224,7 @@ const Register = () => {
                     </div>
 
                     {/* Agree with Terms */}
-                    <div className="flex items-center justify-between col-span-2 gap-4">
+                    <div className="flex items-center justify-between col-span-1 gap-4">
                         <div className="wrapIn">
                             <input
                                 id="agree"
@@ -199,9 +237,12 @@ const Register = () => {
                             </label>
                         </div>
                         {errors.agree && <p className="text-red-500 text-sm mt-1">{errors.agree.message}</p>}
+                    </div>
+                    <div className="flex items-center justify-between col-span-2 w-full gap-4">
+
                         <button
                             type="submit"
-                            className="w-1/2 bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             Register
                         </button>
