@@ -5,7 +5,7 @@ import axios from 'axios';
 import Heading from '../../../components/Shared/Heading';
 import { ScrollRestoration } from 'react-router-dom';
 
-// Function to fetch courses
+   // Function to fetch courses
 const fetchCourses = async () => {
     const response = await axios.get('/courses.json');
     return response.data;
