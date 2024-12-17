@@ -32,6 +32,7 @@ import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controlle
 import ControllerCount from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerCount";
 import ProfileSearch from "../components/Others/ProfileSearch";
 import AllUserManagement from "../components/Others/AllUserManagement";
+import { CoursesDetails } from "../pages/Others/Courses/CoursesDetails";
 
 
 
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
       {
         path: "/courses",
         element: <Courses />,
+      },
+      {
+        path:"/courses/_id",
+        element:<CoursesDetails/>
       },
       {
         path: "/about",

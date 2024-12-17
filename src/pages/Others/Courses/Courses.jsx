@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Heading from '../../../components/Shared/Heading';
-import { ScrollRestoration } from 'react-router-dom';
+import { Link, ScrollRestoration } from 'react-router-dom';
 
    // Function to fetch courses
 const fetchCourses = async () => {
@@ -63,9 +63,11 @@ const Courses = () => {
                         <h4 className="italic capitalize text-gray-700 font-medium">{course.category}</h4>
                         <h2 className="text-xl text-primary font-semibold mb-2">{course.title}</h2>
                         <p className="text-gray-600 italic">{course.description}</p>
+                        <Link to={'/courses/_id'}>
                         <button className="mt-4 px-4 py-2 bg-secondary text-white rounded-lg w-full hover:bg-primary">
                             View Details
                         </button>
+                        </Link>
                     </div>
                 ))}
             </div>
