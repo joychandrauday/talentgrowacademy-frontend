@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
 import { TbClockCheck } from 'react-icons/tb';
-import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
-import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
 import useUser from '../../../Others/Register/useUser';
 import useFetchUsers from '../../../../Hooks/useFetchUsers';
-import toast from 'react-hot-toast';
+import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
 
-const ConsultantUserManagement = () => {
+const TrainerUserManagement = () => {
     const { userdb } = useUser()
+    console.log(userdb._id);
     const [queryParams, setQueryParams] = useState({
         searchTerm: '',
         role: 'user',
@@ -20,11 +20,13 @@ const ConsultantUserManagement = () => {
         fromDate: '',
         toDate: '',
     });
+
     useEffect(() => {
         if (userdb) {
-            setQueryParams((prevParams) => ({ ...prevParams, consultant: userdb._id }));
+            setQueryParams((prevParams) => ({ ...prevParams, trainer: userdb._id }));
         }
     }, [userdb]);
+
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
@@ -48,46 +50,6 @@ const ConsultantUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
 
-    const activateUser = async (userID) => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
-                cancelButtonText: 'Cancel',
-            });
-
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
-                refetch();
-            }
-        } catch (err) {
-            Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
-        }
-    };
-    const handleStatusChange = async (userId, isDone) => {
-        try {
-            // Prepare the new messageDate
-            const messageDate = isDone ? new Date().toISOString() : null;
-
-            // Send the patch request
-            const response = await axiosPublic.patch(`/users/${userId}`, {
-                isMessageDone: isDone,
-                r: messageDate,
-            });
-            console.log(response);
-            if (response.data.success) {
-                toast.success('Message status updated successfully!');
-                refetch();
-            }
-        } catch (error) {
-            console.error("Error updating message status", error);
-        }
-    };
 
 
 
@@ -150,14 +112,11 @@ const ConsultantUserManagement = () => {
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border px-4 py-2">Date</th>
+                        <th className="border px-4 py-2">Active Date</th>
                         <th className="border px-4 py-2">userID</th>
                         <th className="border px-4 py-2">Name</th>
                         <th className="border px-4 py-2">Phone</th>
                         <th className="border px-4 py-2">Whatsapp</th>
-                        <th className="border px-4 py-2">Refer</th>
-                        <th className="border px-4 py-2">R. GL</th>
-                        <th className="border px-4 py-2">Message</th>
-                        <th className="border px-4 py-2">Message Done</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -166,31 +125,19 @@ const ConsultantUserManagement = () => {
                             <td className="border px-4 py-2">
                                 {new Date(user.createdAt).toLocaleDateString()}
                             </td>
+                            <td className="border px-4 py-2">
+                                {
+                                    user.status === 'active' ? <>
+
+                                        {new Date(user.updatedAt).toLocaleDateString()}
+                                    </> : `${user.status}`
+                                }
+                            </td>
                             <td className="border px-4 py-2">{user.userID}</td>
                             <td className="border px-4 py-2">{user.name}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2" >{userdb.permission ? user.whatsapp : 'N/A'}</td>
-                            <td className="border px-4 py-2">{user.reference?.userID}</td>
-                            <td className="border px-4 py-2">{user.reference?.groupLeader.name}</td>
-                            <td className="border px-4 py-2">
-                                <select
-                                    className="border rounded px-2 py-1"
-                                    value={user.isMessageDone ? "true" : "false"} // Ensure value matches boolean
-                                    onChange={(e) => handleStatusChange(user.userID, e.target.value === "true")}
-                                >
-                                    <option value="true">Done</option>
-                                    <option value="false">Pending</option>
-                                </select>
-                            </td>
+                            <td className="border px-4 py-2" >{user.whatsapp}</td>
 
-
-                            <td className="border px-4 py-2">
-                                {user.messageDate ? (
-                                    new Date(user.messageDate).toLocaleDateString()
-                                ) : (
-                                    "No Date"
-                                )}
-                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -219,4 +166,4 @@ const ConsultantUserManagement = () => {
     );
 };
 
-export default ConsultantUserManagement;
+export default TrainerUserManagement;

@@ -6,6 +6,10 @@ import ConsultantDashboard from '../DashboardRoleWise/Consultant/ConsultantDashb
 import useUser from '../../Others/Register/useUser';
 import AdminDashboard from '../DashboardRoleWise/Admin/AdminDashboard';
 import ControllerDashboard from '../DashboardRoleWise/Controller/ControllerDashboard';
+import TrainerDashboard from '../DashboardRoleWise/Trainer/TrainerDashboard';
+import GroupLeaderDashboard from '../DashboardRoleWise/GroupLeader/GroupLeaderDashboard';
+import SeniorGroupLeaderDashboard from '../DashboardRoleWise/SeniorGroupLeader/SeniorGroupLeaderDashboard';
+import TeacherDashboard from '../DashboardRoleWise/Teacher/TeacherDashboard';
 
 const DashboardHolder = () => {
     const { userdb } = useUser()
@@ -26,17 +30,12 @@ const DashboardHolder = () => {
         <div>
             {/* Content for admin */}
             {role === 'admin' && <AdminDashboard />}
-
-            {/* Content for controller */}
             {role === 'controller' && <ControllerDashboard />}
-
-            {/* Content for consultant */}
             {role === 'consultant' && <ConsultantDashboard />}
-
-            {/* Content for group leader */}
-            {role === 'groupleader' && <p>You are a group leader. Oversee your team and tasks.</p>}
-
-            {/* Content for general users */}
+            {role === 'sgl' && <SeniorGroupLeaderDashboard />}
+            {role === 'group-leader' && <GroupLeaderDashboard />}
+            {role === 'trainer' && <TrainerDashboard user={userdb} />}
+            {role === 'teacher' && <TeacherDashboard />}
             {role === 'user' && <UserDashboard user={userdb} />}
             <ScrollRestoration />
         </div>

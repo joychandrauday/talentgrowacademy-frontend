@@ -1,9 +1,10 @@
 import React from 'react';
+import TrainerUserManagement from './TrainerUserManagement';
 
 const TrainerDashboard = () => {
     return (
         <div>
-            <h1>Trainer Dashboard</h1>
+            <TrainerUserManagement />
         </div>
     );
 }

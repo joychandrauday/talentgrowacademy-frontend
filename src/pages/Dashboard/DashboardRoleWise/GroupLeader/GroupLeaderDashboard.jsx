@@ -1,9 +1,10 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 const GroupLeaderDashboard = () => {
     return (
         <div>
-            <h1>Group Leader Dashboard</h1>
+            <Outlet />
         </div>
     );
 }

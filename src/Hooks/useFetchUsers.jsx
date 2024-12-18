@@ -21,10 +21,9 @@ const useFetchUsers = (queryParams) => {
         queryKey: ['users', queryParams],
         queryFn: fetchUsers,
         enabled: !!queryParams, // Ensure valid params before running query
-        staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+        staleTime: 60 * 60 * 1000, // Cache data for 5 minutes
         retry: 2, // Retry twice if fetching fails
     });
-    console.log('fetch', data?.data?.users);
     return {
         users: data?.data?.users || [], // Users data from response
         totalCount: data?.data?.totalCount || 0, // Total number of users

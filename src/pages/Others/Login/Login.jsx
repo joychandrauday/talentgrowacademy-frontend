@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../../Provider/AuthProvider';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -8,9 +8,14 @@ import axios from 'axios'; // Assuming you're using axios for database queries.
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 
 const Login = () => {
+    const { signInUser } = useContext(AuthContext)
     const navigate = useNavigate();
-    const { signInUser } = useContext(AuthContext);
-    const axiosPublic = useAxiosPublic()
+    useEffect(() => {
+        // Redirect to dashboard if already logged in
+        if (localStorage.getItem('authToken')) {
+            navigate('/dashboard/');
+        }
+    }, [navigate]);
     const {
         register,
         handleSubmit,
@@ -18,58 +23,23 @@ const Login = () => {
     } = useForm();
 
     const onSubmit = async (data) => {
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email); // Regex to validate email
-
         try {
-            if (isEmail) {
-                // firebase log in
-                signInUser(data.email, data.password);
+            const identifier = data.email
+            const password = data.password
+            const response = await signInUser(identifier, password)
+            console.log(response);
+            if (response.data.success) {
                 toast.success('You are logged in successfully!');
-
-                // Manual login for email via backend
-                const response = await axiosPublic.post("/users/login", {
-                    identifier: data.email, // Sending email and password to backend
-                    password: data.password,
-                });
-
-                console.log(response);
-                if (response.data.success) {
-                    // Store token in localStorage
-                    const token = response.data.data.token;
-                    localStorage.setItem('authToken', token);
-
-                    toast.success('You are logged in successfully!');
-                    navigate('/dashboard');
-                } else {
-                    toast.error('Invalid email or password');
-                }
+                navigate('/dashboard/');
             } else {
-                // Manual login for phone number
-                const response = await axiosPublic.post("/users/login", {
-                    identifier: data.email, // Note: Treating 'email' input as phone number
-                    password: data.password,
-                });
-
-                console.log(response);
-                if (response.data.success) {
-                    signInUser(response.data.data.user.email, data.password)
-                    // Store token in localStorage
-                    const token = response.data.data.token;
-                    localStorage.setItem('authToken', token);
-
-                    toast.success('You are logged in successfully!');
-                    navigate('/dashboard');
-                } else {
-                    toast.error('Invalid phone number or password');
-                }
+                toast.error('Invalid email or password.');
             }
         } catch (err) {
-            console.error(err);
+            console.error("Login Error:", err.message);
             toast.error('Login failed. Please try again.');
         }
-
-
     };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-basic bg-no-repeat bg-cover">
