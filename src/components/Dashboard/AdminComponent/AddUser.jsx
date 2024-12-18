@@ -4,12 +4,12 @@ import toast from 'react-hot-toast';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import { useContext } from 'react';
 import { AuthContext } from '../../../Provider/AuthProvider';
+import Swal from 'sweetalert2';
 
 const AddUser = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const axiosPublic = useAxiosPublic();
-    const { userSignUp } = useContext(AuthContext)
 
     const onSubmit = async (data) => {
 
@@ -35,7 +35,23 @@ const AddUser = () => {
                 const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData);
 
                 if (response2.status === 201) {
-                    toast.success(`${userData.role} has been added successfully!!`);
+                    Swal.fire({
+                        title: "User Registered Successfully!",
+                        html: `
+                                            <div style="text-align: left;">
+                                                <p><strong>Name:</strong> ${userData.name}</p>
+                                                <p><strong>Role:</strong> ${userData.role}</p>
+                                                <p><strong>UserID:</strong> ${response2.data.data.userID}</p>
+                                                <p><strong>Email:</strong> ${userData.email}</p>
+                                                <p><strong>Password:</strong> ${userData.password}</p>
+                                                <p><strong>Country:</strong> ${userData.country}</p>
+                                                <p><strong>Phone:</strong> ${userData.phone}</p>
+                                                <p><strong>WhatsApp:</strong> ${userData.whatsapp}</p>
+                                            </div>
+                                        `,
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    });
                 } else {
                     toast.error("Failed to add user to the database.");
                 }

@@ -23,7 +23,7 @@ const Register = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const code = queryParams.get('refer');
-        setReferCode(code || '435648');
+        setReferCode(code || '675b0806709959503eff3a65');
     }, [location]);
 
 
@@ -57,40 +57,34 @@ const Register = () => {
 
             console.log(userData);
 
-            // Create user with Firebase
-            const userCredential = await userSignUp(data.email, data.password);
+            // Send user data to the database
+            const response = await axiosPublic.post("/users/register", userData);
+            console.log(response);
+            if (response.status === 201) {
+                toast.success("User registered successfully and added to the database!");
 
-            if (userCredential?.user) {
-                // Send user data to the database
-                const response = await axiosPublic.post("/users/register", userData);
-
-                if (response.status === 201) {
-                    toast.success("User registered successfully and added to the database!");
-
-                    // Display user credentials in a modal
-                    Swal.fire({
-                        title: "User Registered Successfully!",
-                        html: `
+                // Display user credentials in a modal
+                Swal.fire({
+                    title: "User Registered Successfully!",
+                    html: `
                         <div style="text-align: left;">
-                            <p><strong>Name:</strong> ${userData.name}</p>
+                            <p><strong>Name:</strong> ${fullName}</p>
+                            <p><strong>UserID:</strong> ${response.data.data.userID}</p>
                             <p><strong>Email:</strong> ${userData.email}</p>
                             <p><strong>Password:</strong> ${userData.password}</p>
                             <p><strong>Country:</strong> ${userData.country}</p>
                             <p><strong>Phone:</strong> ${userData.phone}</p>
                             <p><strong>WhatsApp:</strong> ${userData.whatsapp}</p>
-                            <p><strong>Group Leader:</strong> ${userData.groupLeader || "N/A"}</p>
-                            <p><strong>Trainer:</strong> ${userData.trainer || "N/A"}</p>
                         </div>
                     `,
-                        icon: "success",
-                        confirmButtonText: "OK",
-                    });
+                    icon: "success",
+                    confirmButtonText: "OK",
+                });
 
-                    logOut(); // Log out the user
-                    navigate('/login'); // Navigate to login
-                } else {
-                    toast.error("User creation successful, but failed to save to the database.");
-                }
+                logOut(); // Log out the user
+                navigate('/login'); // Navigate to login
+            } else {
+                toast.error("User creation successful, but failed to save to the database.");
             }
         } catch (error) {
             console.error("Error during registration:", error.message);

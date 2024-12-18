@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
 import { TbClockCheck } from 'react-icons/tb';
-import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
-import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
 import useUser from '../../../Others/Register/useUser';
 import useFetchUsers from '../../../../Hooks/useFetchUsers';
-import toast from 'react-hot-toast';
+import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
 
-const ConsultantUserManagement = () => {
+const SGLUserManagement = () => {
     const { userdb } = useUser()
     const [queryParams, setQueryParams] = useState({
         searchTerm: '',
@@ -19,10 +18,11 @@ const ConsultantUserManagement = () => {
         page: 1,  // Start with the first page
         fromDate: '',
         toDate: '',
+        seniorGroupLeader: userdb._id
     });
     useEffect(() => {
         if (userdb) {
-            setQueryParams((prevParams) => ({ ...prevParams, consultant: userdb._id }));
+            setQueryParams((prevParams) => ({ ...prevParams, seniorGroupLeader: userdb._id }));
         }
     }, [userdb]);
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
@@ -67,25 +67,6 @@ const ConsultantUserManagement = () => {
         } catch (err) {
             Swal.fire('Error!', 'Failed to activate the user.', 'error');
             console.error(err);
-        }
-    };
-    const handleStatusChange = async (userId, isDone) => {
-        try {
-            // Prepare the new messageDate
-            const messageDate = isDone ? new Date().toISOString() : null;
-
-            // Send the patch request
-            const response = await axiosPublic.patch(`/users/${userId}`, {
-                isMessageDone: isDone,
-                r: messageDate,
-            });
-            console.log(response);
-            if (response.data.success) {
-                toast.success('Message status updated successfully!');
-                refetch();
-            }
-        } catch (error) {
-            console.error("Error updating message status", error);
         }
     };
 
@@ -150,14 +131,15 @@ const ConsultantUserManagement = () => {
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border px-4 py-2">Date</th>
+                        <th className="border px-4 py-2">Active Date</th>
                         <th className="border px-4 py-2">userID</th>
                         <th className="border px-4 py-2">Name</th>
+                        <th className="border px-4 py-2">Consultant</th>
+                        <th className="border px-4 py-2">G L</th>
+                        <th className="border px-4 py-2">Trainer</th>
                         <th className="border px-4 py-2">Phone</th>
                         <th className="border px-4 py-2">Whatsapp</th>
-                        <th className="border px-4 py-2">Refer</th>
-                        <th className="border px-4 py-2">R. GL</th>
-                        <th className="border px-4 py-2">Message</th>
-                        <th className="border px-4 py-2">Message Done</th>
+                        <th className="border px-4 py-2">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -166,31 +148,34 @@ const ConsultantUserManagement = () => {
                             <td className="border px-4 py-2">
                                 {new Date(user.createdAt).toLocaleDateString()}
                             </td>
+                            <td className="border px-4 py-2">
+                                {
+                                    user.status === 'active' ? <>
+
+                                        {new Date(user.updatedAt).toLocaleDateString()}
+                                    </> : `${user.status}`
+                                }
+                            </td>
                             <td className="border px-4 py-2">{user.userID}</td>
                             <td className="border px-4 py-2">{user.name}</td>
+                            <td className="border px-4 py-2">{user.consultant ? user.consultant?.userID : "N/A"}</td>
+                            <td className="border px-4 py-2">{user.groupLeader?.userID}</td>
+                            <td className="border px-4 py-2">{user.trainer?.userID}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2" >{userdb.permission ? user.whatsapp : 'N/A'}</td>
-                            <td className="border px-4 py-2">{user.reference?.userID}</td>
-                            <td className="border px-4 py-2">{user.reference?.groupLeader.name}</td>
-                            <td className="border px-4 py-2">
-                                <select
-                                    className="border rounded px-2 py-1"
-                                    value={user.isMessageDone ? "true" : "false"} // Ensure value matches boolean
-                                    onChange={(e) => handleStatusChange(user.userID, e.target.value === "true")}
-                                >
-                                    <option value="true">Done</option>
-                                    <option value="false">Pending</option>
-                                </select>
+                            <td className="border px-4 py-2" >{user.whatsapp}</td>
+                            <td className="border px-4 py-2" >
+                                {
+                                    // status
+                                    user.status === 'active' ? (
+                                        <span className="badge badge-warning"
+                                        > Active
+                                        </span>
+                                    ) : (
+                                        <span className="badge badge-error text-white capitalize">{user.status}</span>
+                                    )
+                                }
                             </td>
 
-
-                            <td className="border px-4 py-2">
-                                {user.messageDate ? (
-                                    new Date(user.messageDate).toLocaleDateString()
-                                ) : (
-                                    "No Date"
-                                )}
-                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -219,4 +204,4 @@ const ConsultantUserManagement = () => {
     );
 };
 
-export default ConsultantUserManagement;
+export default SGLUserManagement;
