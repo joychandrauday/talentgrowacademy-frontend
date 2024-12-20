@@ -32,6 +32,9 @@ import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controlle
 import ControllerCount from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerCount";
 import ProfileSearch from "../components/Others/ProfileSearch";
 import AllUserManagement from "../components/Others/AllUserManagement";
+
+import { CoursesDetails } from "../pages/Others/Courses/CoursesDetails";
+
 import TrainerDashboard from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerDashboard";
 import TrainerUserManagement from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerUserManagement";
 import GroupLeaderDashboard from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderDashboard";
@@ -50,6 +53,7 @@ import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admi
 
 
 
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -63,6 +67,11 @@ export const router = createBrowserRouter([
       {
         path: "/courses",
         element: <Courses />,
+      },
+      {
+        path:"/courses/:_id",
+        element:<CoursesDetails/>,
+        loader:({params})=>fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
       },
       {
         path: "/about",
