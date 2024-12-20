@@ -32,9 +32,9 @@ import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controlle
 import ControllerCount from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerCount";
 import ProfileSearch from "../components/Others/ProfileSearch";
 import AllUserManagement from "../components/Others/AllUserManagement";
-<<<<<<< HEAD
+
 import { CoursesDetails } from "../pages/Others/Courses/CoursesDetails";
-=======
+
 import TrainerDashboard from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerDashboard";
 import TrainerUserManagement from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerUserManagement";
 import GroupLeaderDashboard from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderDashboard";
@@ -50,7 +50,7 @@ import TeacherCourses from "../pages/Dashboard/DashboardRoleWise/Teacher/Teacher
 import AdminAllBoookManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllBoookManagement";
 import AdminAllCourseManagementt from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllCourseManagementt";
 import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllTeacherManagement";
->>>>>>> f021ce1b8aac281b029665edf18f1efdd1c72bc5
+
 
 
 
@@ -69,8 +69,9 @@ export const router = createBrowserRouter([
         element: <Courses />,
       },
       {
-        path:"/courses/_id",
-        element:<CoursesDetails/>
+        path:"/courses/:_id",
+        element:<CoursesDetails/>,
+        loader:({params})=>fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
       },
       {
         path: "/about",
