@@ -7,7 +7,12 @@ import { Link, ScrollRestoration } from 'react-router-dom';
 
 // Function to fetch courses
 const fetchCourses = async () => {
-    const response = await axios.get('https://talentgrowacademy-backend.vercel.app/courses'); // Corrected endpoint
+    const response = await axios.get('https://talentgrowacademy-backend.vercel.app/courses', {
+        withCredentials: true,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }); // Corrected endpoint
     return response.data.data; // Return data from API response
 };
 
@@ -36,7 +41,7 @@ const Courses = () => {
     return (
         <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 pt-32">
             <Heading title='All Courses' />
-            
+
             {/* Category Tabs */}
             <div className="mb-6 flex justify-center space-x-4">
                 {categories.map(category => (
