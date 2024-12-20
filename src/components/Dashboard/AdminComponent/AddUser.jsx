@@ -5,8 +5,15 @@ import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import { useContext } from 'react';
 import { AuthContext } from '../../../Provider/AuthProvider';
 import Swal from 'sweetalert2';
-
+const getToken = () => localStorage.getItem('authToken');
 const AddUser = () => {
+    const token = getToken(); // Retrieve the token
+
+    // Prepare the headers with the token
+    const headers = token ? {
+        'Authorization': `Bearer ${token}`,
+    } : {};
+
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const axiosPublic = useAxiosPublic();
@@ -32,7 +39,7 @@ const AddUser = () => {
 
             // Add user to the database
             if (userData.role != 'user') {
-                const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData);
+                const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData, { headers });
 
                 if (response2.status === 201) {
                     Swal.fire({
