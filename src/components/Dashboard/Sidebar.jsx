@@ -24,6 +24,11 @@ import logo from "../../assets/logo.png";
 import { RxCountdownTimer } from "react-icons/rx";
 import { MdRequestPage } from "react-icons/md";
 import { AuthContext } from "../../Provider/AuthProvider";
+import { FaUsersGear } from "react-icons/fa6";
+import { RiUserSearchFill } from "react-icons/ri";
+import { ImBooks } from "react-icons/im";
+import { GiTeacher } from "react-icons/gi";
+import { IoBookSharp } from "react-icons/io5";
 
 const Sidebar = ({ user }) => {
   const { logOut } = useContext(AuthContext);
@@ -120,19 +125,46 @@ const Sidebar = ({ user }) => {
                 <FaCogs /> Manage Role
               </NavLink>
               <NavLink
-                to="/dashboard/admin/users"
+                to="/dashboard/admin/teachers"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                   }`
                 }
               >
-                <FaUsers /> Manage All users
+                <GiTeacher /> Manage All Teachers
+              </NavLink>
+              <NavLink
+                to="/dashboard/admin/courses"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <IoBookSharp /> All courses
+              </NavLink>
+              <NavLink
+                to="/dashboard/admin/books"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <ImBooks /> All Books
               </NavLink>
             </div>
           )}
 
           {user?.role === "controller" && (
             <div className="ml-4 mt-2 space-y-2">
+              <NavLink
+                to="/dashboard/controller/consultants"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaUsersGear /> Consultants
+              </NavLink>
               <NavLink
                 to="/dashboard/controller/count"
                 className={({ isActive }) =>
@@ -200,6 +232,130 @@ const Sidebar = ({ user }) => {
                   }
                 >
                   <IoMdArrowDropright /> Search
+                </NavLink>
+              </div>
+            </div>
+          )}
+          {user?.role === "trainer" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/trainer/users"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsers /> All users
+                </NavLink>
+                <NavLink
+                  to="/dashboard/trainer/count"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count
+                </NavLink>
+              </div>
+            </div>
+          )}
+          {/* GL routes */}
+          {user?.role === "group-leader" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/group-leader/trainers"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsersGear /> Trainers
+                </NavLink>
+                <NavLink
+                  to="/dashboard/group-leader/users"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsers /> All users
+                </NavLink>
+                <NavLink
+                  to="/dashboard/group-leader/count"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count
+                </NavLink>
+                <NavLink
+                  to="/dashboard/group-leader/count-result"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count Result
+                </NavLink>
+              </div>
+            </div>
+          )}
+          {user?.role === "sgl" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/sgl/group-leaders"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsersGear /> Group Leaders
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/users"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsers /> All users
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/search"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <RiUserSearchFill /> Search
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/count"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count
+                </NavLink>
+              </div>
+            </div>
+          )}
+          {user?.role === "teacher" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/teacher/course"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <ImBooks /> Course
                 </NavLink>
               </div>
             </div>

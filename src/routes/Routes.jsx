@@ -32,7 +32,25 @@ import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controlle
 import ControllerCount from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerCount";
 import ProfileSearch from "../components/Others/ProfileSearch";
 import AllUserManagement from "../components/Others/AllUserManagement";
+<<<<<<< HEAD
 import { CoursesDetails } from "../pages/Others/Courses/CoursesDetails";
+=======
+import TrainerDashboard from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerDashboard";
+import TrainerUserManagement from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerUserManagement";
+import GroupLeaderDashboard from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderDashboard";
+import GroupLeaderUserManagement from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderUserManagement";
+import GroupLeaderTrainerManagement from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderTrainerManagement";
+import SeniorGroupLeaderDashboard from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SeniorGroupLeaderDashboard";
+import SGLglManagement from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SGLglManagement";
+import SGLUserManagement from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SGLUserManagement";
+import ControllerConsultantManagement from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerConsultantManagement";
+import ControllerSingleConsultant from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerSingleConsultant";
+import TeacherDashboard from "../pages/Dashboard/DashboardRoleWise/Teacher/TeacherDashboard";
+import TeacherCourses from "../pages/Dashboard/DashboardRoleWise/Teacher/TeacherCourses";
+import AdminAllBoookManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllBoookManagement";
+import AdminAllCourseManagementt from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllCourseManagementt";
+import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllTeacherManagement";
+>>>>>>> f021ce1b8aac281b029665edf18f1efdd1c72bc5
 
 
 
@@ -159,7 +177,19 @@ export const router = createBrowserRouter([
           {
             path: "users",
             element: <AllUserManagement />
-          }
+          },
+          {
+            path: "teachers",
+            element: <AdminAllTeacherManagement />
+          },
+          {
+            path: "books",
+            element: <AdminAllBoookManagement />
+          },
+          {
+            path: "courses",
+            element: <AdminAllCourseManagementt />
+          },
         ]
       },
       {
@@ -167,7 +197,15 @@ export const router = createBrowserRouter([
         element: <ControllerDashboard />,
         children: [
           {
-            path: "manage",
+            path: "consultants",
+            element: <ControllerConsultantManagement />
+          },
+          {
+            path: "consultant/:userID",
+            element: <ControllerSingleConsultant />
+          },
+          {
+            path: "users",
             element: <ControllerUserManage />
           },
           {
@@ -179,7 +217,77 @@ export const router = createBrowserRouter([
             element: <ProfileSearch />
           }
         ]
-      }
+      },
+      {
+        path: "group-leader",
+        element: <GroupLeaderDashboard />,
+        children: [
+          {
+            path: "trainers",
+            element: <GroupLeaderTrainerManagement />
+          },
+          {
+            path: "users",
+            element: <GroupLeaderUserManagement />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "count-result",
+            element: <ControllerCount />
+          }
+        ]
+      },
+      //trainer routes
+      {
+        path: "sgl",
+        element: <SeniorGroupLeaderDashboard />,
+        children: [
+          {
+            path: "group-leaders",
+            element: <SGLglManagement />
+          },
+          {
+            path: "users",
+            element: <SGLUserManagement />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
+        ]
+      },
+      {
+        path: "trainer",
+        element: <TrainerDashboard />,
+        children: [
+          {
+            path: "users",
+            element: <TrainerUserManagement />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+        ]
+      },
+      {
+        path: "teacher",
+        element: <TeacherDashboard />,
+        children: [
+          {
+            path: "course",
+            element: <TeacherCourses />
+          },
+        ]
+      },
+      // Group Leader
     ]
   }
 

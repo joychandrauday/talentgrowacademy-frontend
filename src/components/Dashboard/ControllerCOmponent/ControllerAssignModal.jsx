@@ -6,56 +6,105 @@ import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 
 const ControllerAssignModal = ({ user, onClose, refetch }) => {
     const queryParams = {
-        role: 'trainer',
+        role: 'user',
+        status: 'inactive',
+        consultant: 'null'
     };
+
     const { users } = useFetchUsers(queryParams);
-    const axiosPublic = useAxiosPublic()
-    const [selectedTrainer, setSelectedTrainer] = useState('');
+    const axiosPublic = useAxiosPublic();
+    const [selectedUsers, setSelectedUsers] = useState([]);
+
+    const handleCheckboxChange = (userId) => {
+        setSelectedUsers((prevSelected) =>
+            prevSelected.includes(userId)
+                ? prevSelected.filter((id) => id !== userId)
+                : [...prevSelected, userId]
+        );
+    };
 
     const handleAssign = async () => {
-        if (!selectedTrainer) {
-            Swal.fire('Error', 'Please select a trainer!', 'error');
+        if (selectedUsers.length === 0) {
+            Swal.fire('Error', 'Please select at least one user!', 'error');
             return;
         }
+
         try {
-            // Call API to assign user to the selected trainer
-            // Replace with your actual API logic
-            await axiosPublic.patch(`/users/${user.userID}`, { trainer: selectedTrainer });
-            Swal.fire('Success', `User ${user.name} has been assigned to trainer!`, 'success');
-            refetch()
-            onClose(); // Close the modal
+            // Create the payload structure
+            const payload = {
+                identifiers: selectedUsers, // Array of selected user IDs
+                data: {
+                    consultant: user._id
+                },
+            };
+            console.log(payload);
+            // Send the PATCH request to the backend
+            const response = await axiosPublic.post('/users/assignconsultant', payload);
+            console.log('Assign response', response);
+            console.log(response.status, response.data.status);
+            if (response.status === 200) {
+                Swal.fire(
+                    'Success',
+                    `${selectedUsers.length} user(s) have been assigned successfully to ${user.name}!`,
+                    'success'
+                );
+                // refetch(); // Refetch the user list
+                onClose(); // Close the modal
+            } else {
+                throw new Error('Failedddddd to assign users. Please try again.');
+            }
         } catch (error) {
-            Swal.fire('Error', 'Failed to assign trainer. Please try again.', 'error');
+            Swal.fire('Error', error.response?.data?.message || 'Failedsss to assign users. Please try again.', 'error');
         }
     };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                <h2 className="text-xl font-bold mb-4">Assign Trainer</h2>
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full">
+                <h2 className="text-xl font-bold mb-4">Assign Users to Consultant</h2>
                 <p className="text-gray-700 mb-4">
-                    Assign <span className="font-semibold">{user.name}</span> to a trainer.
+                    Select users to assign them to <span className="font-semibold">{user.name}</span>.
                 </p>
-                <div className="mb-4">
-                    <label htmlFor="trainerSelect" className="block text-gray-600 mb-2">
-                        Select Trainer
-                    </label>
-                    <select
-                        id="trainerSelect"
-                        value={selectedTrainer}
-                        onChange={(e) => setSelectedTrainer(e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-secondary"
-                    >
-                        <option value="" disabled>
-                            -- Choose a trainer --
-                        </option>
-                        {users?.map((trainer) => (
-                            <option key={trainer.userID} value={trainer.userID}>
-                                {trainer.name} ({trainer.userID})
-                            </option>
-                        ))}
-                    </select>
-                </div>
+
+                {/* Users Table */}
+                {users.length > 0 ? (
+                    <table className="table-auto w-full border border-gray-300 mb-4">
+                        <thead>
+                            <tr className="bg-gray-100">
+                                <th className="border px-4 py-2">Select</th>
+                                <th className="border px-4 py-2">Name</th>
+                                <th className="border px-4 py-2">Email</th>
+                                <th className="border px-4 py-2">userID</th>
+                                <th className="border px-4 py-2">Phone</th>
+                                <th className="border px-4 py-2">Whatsapp</th>
+                                <th className="border px-4 py-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user._id} className="hover:bg-gray-50">
+                                    <td className="border px-4 py-2 text-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedUsers.includes(user._id)}
+                                            onChange={() => handleCheckboxChange(user._id)}
+                                        />
+                                    </td>
+                                    <td className="border px-4 py-2">{user.name}</td>
+                                    <td className="border px-4 py-2">{user.email}</td>
+                                    <td className="border px-4 py-2">{user.userID}</td>
+                                    <td className="border px-4 py-2">{user.phone}</td>
+                                    <td className="border px-4 py-2">{user.whatsapp}</td>
+                                    <td className="border px-4 py-2">{user.status}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p className="text-gray-500">No users available to assign.</p>
+                )}
+
+                {/* Action Buttons */}
                 <div className="flex justify-end space-x-2">
                     <button
                         onClick={onClose}
@@ -79,6 +128,7 @@ ControllerAssignModal.propTypes = {
     user: PropTypes.object.isRequired, // The user being assigned
     onClose: PropTypes.func.isRequired, // Function to close the modal
     refetch: PropTypes.func.isRequired, // Function to refetch the users list
+    motherUser: PropTypes.string.isRequired, // The consultant ID to assign users to
 };
 
 export default ControllerAssignModal;

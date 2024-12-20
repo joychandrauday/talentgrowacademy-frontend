@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
-import { FaUserClock } from 'react-icons/fa';
-import { LuUserCog } from 'react-icons/lu';
 import useFetchUsers from '../../Hooks/useFetchUsers';
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import LoadingSpinner from '../Shared/LoadingSpinner';
+import { TbClockCheck } from 'react-icons/tb';
 
 const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
@@ -22,8 +21,6 @@ const AllUserManagement = () => {
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null); // To store the user for assigning
     console.log(users);
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
@@ -66,14 +63,11 @@ const AllUserManagement = () => {
         }
     };
 
-    const assignUser = (user) => {
-        setSelectedUser(user); // Set the selected user
-        setIsModalOpen(true); // Open the modal
-        refetch();
-    };
+
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
+    console.log(users);
 
     return (
         <div className="p-4">
@@ -133,7 +127,7 @@ const AllUserManagement = () => {
                         <th className="border px-4 py-2">Name</th>
                         <th className="border px-4 py-2">Email</th>
                         <th className="border px-4 py-2">Phone</th>
-                        <th className="border px-4 py-2">trainer</th>
+                        <th className="border px-4 py-2">Trainer</th>
                         <th className="border px-4 py-2">Role</th>
                         <th className="border px-4 py-2">Status</th>
                         <th className="border px-4 py-2">Actions</th>
@@ -146,40 +140,28 @@ const AllUserManagement = () => {
                             <td className="border px-4 py-2">{user.name}</td>
                             <td className="border px-4 py-2">{user.email}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2">{user.trainer}</td>
+                            <td className="border px-4 py-2">{user.trainer.name}</td>
                             <td className="border px-4 py-2">{user.role}</td>
                             <td className="border px-4 py-2">{user.status}</td>
                             <td className="border px-4 py-2">
-                                {user.status === 'pending' && (
+                                {user.status === 'inactive' ? (
                                     <div className="relative group">
                                         <button
                                             onClick={() => activateUser(user.userID)}
                                             className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
                                         >
-                                            <IoCheckmarkCircleSharp />
+                                            <TbClockCheck />
                                         </button>
                                     </div>
-                                )}
-                                {(user.status === 'active' && !user.trainer) && (
-                                    <div className="relative group tooltip" data-tip="Assign the user.">
-                                        <button
-                                            onClick={() => assignUser(user)} // Pass user to assignUser
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                        >
-                                            <FaUserClock />
-                                        </button>
-                                    </div>
-                                )}
-                                {(user.trainer && user.status === 'active') && (
-                                    <div className="relative group tooltip" data-tip="Reassign the user.">
-                                        <button
-                                            onClick={() => assignUser(user)} // Pass user to assignUser
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                        >
-                                            <LuUserCog />
-                                        </button>
-                                    </div>
-                                )}
+                                ) : <div className="relative group">
+                                    <button
+                                        className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                    >
+                                        <IoCheckmarkCircleSharp />
+                                    </button>
+                                </div>
+                                }
+
                             </td>
                         </tr>
                     ))}
@@ -205,15 +187,7 @@ const AllUserManagement = () => {
                 </div>
             </div>
 
-            {/* Modal */}
-            {isModalOpen && (
-                <ControllerAssignModal
-                    user={selectedUser}
-                    onClose={() => setIsModalOpen(false)}
-                    refetch={refetch}
-                />
-            )}
-        </div>
+        </div >
     );
 };
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Outlet } from 'react-router-dom';
 
 
-const SeniorGroupLeaderDashboard = () => {
+const TeacherDashboard = () => {
     return (
         <div>
             <Outlet />
@@ -12,9 +12,9 @@ const SeniorGroupLeaderDashboard = () => {
 };
 
 
-SeniorGroupLeaderDashboard.propTypes = {
+TeacherDashboard.propTypes = {
 
 };
 
 
-export default SeniorGroupLeaderDashboard;
+export default TeacherDashboard;
