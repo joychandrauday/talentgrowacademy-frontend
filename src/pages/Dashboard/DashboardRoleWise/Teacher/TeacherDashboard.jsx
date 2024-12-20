@@ -1,12 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Outlet } from 'react-router-dom';
 
-const ControllerDashboard = () => {
+
+const TeacherDashboard = () => {
     return (
         <div>
             <Outlet />
         </div>
     );
-}
+};
 
-export default ControllerDashboard;
+
+TeacherDashboard.propTypes = {
+
+};
+
+
+export default TeacherDashboard;

@@ -1,63 +1,69 @@
 import React, { createContext, useEffect, useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
-import auth from "../firebase/firebase.config";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+
+// Creating the AuthContext
 export const AuthContext = createContext(null);
 
-
 const Provider = ({ children }) => {
+  const axiosPublic = useAxiosPublic();  // Assuming you have a custom hook for making public API requests
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const userSignUp = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-  const updateUser = (Name, photoURL) => {
-    return updateProfile(auth.currentUser, {
-      displayName: `${Name}`,
-      photoURL: `${photoURL}`,
-    });
-  };
 
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-
-      setLoading(false);
-    });
-    return () => {
-      unSubscribe();
-    };
-  }, []);
-
-  const signInUser = (email, password) => {
+  // Simulate sign-in and sign-up process
+  const signInUser = async (identifier, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      // Make API call to log in
+      const response = await axiosPublic.post("/users/login", {
+        identifier,
+        password,
+      });
+
+      // Extract the authToken from the response
+      const authToken = response.data.data.token;
+
+      // Store the token in localStorage and set the user state
+      localStorage.setItem("authToken", authToken);
+      setUser({ email: response.data.data.email, authToken }); // Update with actual user data if available
+      setLoading(false);
+
+      // Return the full response
+      return response;
+    } catch (error) {
+      setLoading(false);
+      // Handle error, maybe throw it to be caught by the caller
+      throw error;
+    }
   };
 
 
-  //log out
+  // Log out user
   const logOut = () => {
     setLoading(true);
-    return signOut(auth);
+    localStorage.removeItem("authToken");  // Remove token on logout
+    setUser(null);
+    setLoading(false);
   };
+
+  // Check for authToken in localStorage when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      // Simulate retrieving user data based on the token
+      setUser({ email: "user@example.com", authToken: token });
+    }
+    setLoading(false);
+  }, []);
 
   const userInfo = {
     user,
     setUser,
-    userSignUp,
-    updateUser,
     signInUser,
+    logOut,
     loading,
-    logOut
   };
-  return (
-    <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
-  );
+
+  return <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>;
 };
 
 export default Provider;

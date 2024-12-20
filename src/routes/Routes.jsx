@@ -22,6 +22,35 @@ import ChangePass from "../pages/Dashboard/DashboardCommon/ChangePass";
 import Departments from "../pages/Others/Departments/Departments";
 import ConsultantUserManagement from "../pages/Dashboard/DashboardRoleWise/Consultant/ConsultantUserManagement";
 import PrivateRoute from "./PrivateRoute";
+import AdminDashboard from "../pages/Dashboard/DashboardRoleWise/Admin/AdminDashboard";
+import AddUser from "../components/Dashboard/AdminComponent/AddUser";
+import EditUser from "../components/Dashboard/AdminComponent/EditUser";
+import ManageAdminstration from "../components/Dashboard/AdminComponent/ManageAdminstration";
+import ControllerDashboard from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerDashboard";
+import UserManagementTable from "../components/Dashboard/UserManagementTable";
+import ControllerUserManage from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerUserManage";
+import ControllerCount from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerCount";
+import ProfileSearch from "../components/Others/ProfileSearch";
+import AllUserManagement from "../components/Others/AllUserManagement";
+
+import { CoursesDetails } from "../pages/Others/Courses/CoursesDetails";
+
+import TrainerDashboard from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerDashboard";
+import TrainerUserManagement from "../pages/Dashboard/DashboardRoleWise/Trainer/TrainerUserManagement";
+import GroupLeaderDashboard from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderDashboard";
+import GroupLeaderUserManagement from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderUserManagement";
+import GroupLeaderTrainerManagement from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GroupLeaderTrainerManagement";
+import SeniorGroupLeaderDashboard from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SeniorGroupLeaderDashboard";
+import SGLglManagement from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SGLglManagement";
+import SGLUserManagement from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SGLUserManagement";
+import ControllerConsultantManagement from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerConsultantManagement";
+import ControllerSingleConsultant from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerSingleConsultant";
+import TeacherDashboard from "../pages/Dashboard/DashboardRoleWise/Teacher/TeacherDashboard";
+import TeacherCourses from "../pages/Dashboard/DashboardRoleWise/Teacher/TeacherCourses";
+import AdminAllBoookManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllBoookManagement";
+import AdminAllCourseManagementt from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllCourseManagementt";
+import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllTeacherManagement";
+
 
 
 
@@ -38,6 +67,11 @@ export const router = createBrowserRouter([
       {
         path: "/courses",
         element: <Courses />,
+      },
+      {
+        path:"/courses/:_id",
+        element:<CoursesDetails/>,
+        loader:({params})=>fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
       },
       {
         path: "/about",
@@ -120,6 +154,141 @@ export const router = createBrowserRouter([
         path: "manage-clients",
         element: <ConsultantUserManagement />,
       },
+      //admin rooutes
+      {
+        path: "admin",
+        element: <AdminDashboard />,
+        children: [
+          {
+            path: "",
+            element: <AllUserManagement />
+          },
+          {
+            path: "add",
+            element: <AddUser />
+          },
+          {
+            path: "customize",
+            element: <EditUser />
+          },
+          {
+            path: "manage",
+            element: <ManageAdminstration />
+          },
+          {
+            path: "users",
+            element: <AllUserManagement />
+          },
+          {
+            path: "teachers",
+            element: <AdminAllTeacherManagement />
+          },
+          {
+            path: "books",
+            element: <AdminAllBoookManagement />
+          },
+          {
+            path: "courses",
+            element: <AdminAllCourseManagementt />
+          },
+        ]
+      },
+      {
+        path: "controller",
+        element: <ControllerDashboard />,
+        children: [
+          {
+            path: "consultants",
+            element: <ControllerConsultantManagement />
+          },
+          {
+            path: "consultant/:userID",
+            element: <ControllerSingleConsultant />
+          },
+          {
+            path: "users",
+            element: <ControllerUserManage />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
+        ]
+      },
+      {
+        path: "group-leader",
+        element: <GroupLeaderDashboard />,
+        children: [
+          {
+            path: "trainers",
+            element: <GroupLeaderTrainerManagement />
+          },
+          {
+            path: "users",
+            element: <GroupLeaderUserManagement />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "count-result",
+            element: <ControllerCount />
+          }
+        ]
+      },
+      //trainer routes
+      {
+        path: "sgl",
+        element: <SeniorGroupLeaderDashboard />,
+        children: [
+          {
+            path: "group-leaders",
+            element: <SGLglManagement />
+          },
+          {
+            path: "users",
+            element: <SGLUserManagement />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
+        ]
+      },
+      {
+        path: "trainer",
+        element: <TrainerDashboard />,
+        children: [
+          {
+            path: "users",
+            element: <TrainerUserManagement />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+        ]
+      },
+      {
+        path: "teacher",
+        element: <TeacherDashboard />,
+        children: [
+          {
+            path: "course",
+            element: <TeacherCourses />
+          },
+        ]
+      },
+      // Group Leader
     ]
   }
 

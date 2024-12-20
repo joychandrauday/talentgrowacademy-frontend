@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import useFetchUsers from '../../../../Hooks/useFetchUsers';
+import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
-import { TbClockCheck } from 'react-icons/tb';
-import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import { FaUserClock } from 'react-icons/fa';
+import ControllerAssignModal from '../../../../components/Dashboard/ControllerCOmponent/ControllerAssignModal';
+import { LuUserCog } from 'react-icons/lu';
 import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
-import useUser from '../../../Others/Register/useUser';
-import useFetchUsers from '../../../../Hooks/useFetchUsers';
-import toast from 'react-hot-toast';
 
-const ConsultantUserManagement = () => {
-    const { userdb } = useUser()
+const ControllerUserManage = () => {
     const [queryParams, setQueryParams] = useState({
         searchTerm: '',
         role: 'user',
@@ -20,15 +19,13 @@ const ConsultantUserManagement = () => {
         fromDate: '',
         toDate: '',
     });
-    useEffect(() => {
-        if (userdb) {
-            setQueryParams((prevParams) => ({ ...prevParams, consultant: userdb._id }));
-        }
-    }, [userdb]);
+
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
-    console.log(users);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null); // To store the user for assigning
+
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
         refetch();
@@ -69,31 +66,15 @@ const ConsultantUserManagement = () => {
             console.error(err);
         }
     };
-    const handleStatusChange = async (userId, isDone) => {
-        try {
-            // Prepare the new messageDate
-            const messageDate = isDone ? new Date().toISOString() : null;
 
-            // Send the patch request
-            const response = await axiosPublic.patch(`/users/${userId}`, {
-                isMessageDone: isDone,
-                r: messageDate,
-            });
-            console.log(response);
-            if (response.data.success) {
-                toast.success('Message status updated successfully!');
-                refetch();
-            }
-        } catch (error) {
-            console.error("Error updating message status", error);
-        }
+    const assignUser = (user) => {
+        setSelectedUser(user); // Set the selected user
+        setIsModalOpen(true); // Open the modal
+        refetch();
     };
-
-
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
-    console.log(users);
 
     return (
         <div className="p-4">
@@ -149,46 +130,56 @@ const ConsultantUserManagement = () => {
             <table className="table-auto w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">Date</th>
                         <th className="border px-4 py-2">userID</th>
                         <th className="border px-4 py-2">Name</th>
+                        <th className="border px-4 py-2">Email</th>
                         <th className="border px-4 py-2">Phone</th>
-                        <th className="border px-4 py-2">Whatsapp</th>
-                        <th className="border px-4 py-2">Refer</th>
-                        <th className="border px-4 py-2">R. GL</th>
-                        <th className="border px-4 py-2">Message</th>
-                        <th className="border px-4 py-2">Message Done</th>
+                        <th className="border px-4 py-2">trainer</th>
+                        <th className="border px-4 py-2">Role</th>
+                        <th className="border px-4 py-2">Status</th>
+                        <th className="border px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {users.map((user) => (
                         <tr key={user._id} className="hover:bg-gray-50">
-                            <td className="border px-4 py-2">
-                                {new Date(user.createdAt).toLocaleDateString()}
-                            </td>
                             <td className="border px-4 py-2">{user.userID}</td>
                             <td className="border px-4 py-2">{user.name}</td>
+                            <td className="border px-4 py-2">{user.email}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2" >{userdb.permission ? user.whatsapp : 'N/A'}</td>
-                            <td className="border px-4 py-2">{user.reference?.userID}</td>
-                            <td className="border px-4 py-2">{user.reference?.groupLeader.name}</td>
+                            <td className="border px-4 py-2">{user.trainer}</td>
+                            <td className="border px-4 py-2">{user.role}</td>
+                            <td className="border px-4 py-2">{user.status}</td>
                             <td className="border px-4 py-2">
-                                <select
-                                    className="border rounded px-2 py-1"
-                                    value={user.isMessageDone ? "true" : "false"} // Ensure value matches boolean
-                                    onChange={(e) => handleStatusChange(user.userID, e.target.value === "true")}
-                                >
-                                    <option value="true">Done</option>
-                                    <option value="false">Pending</option>
-                                </select>
-                            </td>
-
-
-                            <td className="border px-4 py-2">
-                                {user.messageDate ? (
-                                    new Date(user.messageDate).toLocaleDateString()
-                                ) : (
-                                    "No Date"
+                                {user.status === 'pending' && (
+                                    <div className="relative group">
+                                        <button
+                                            onClick={() => activateUser(user.userID)}
+                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                        >
+                                            <IoCheckmarkCircleSharp />
+                                        </button>
+                                    </div>
+                                )}
+                                {(user.status === 'active' && !user.trainer) && (
+                                    <div className="relative group tooltip" data-tip="Assign the user.">
+                                        <button
+                                            onClick={() => assignUser(user)} // Pass user to assignUser
+                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                        >
+                                            <FaUserClock />
+                                        </button>
+                                    </div>
+                                )}
+                                {(user.trainer && user.status === 'active') && (
+                                    <div className="relative group tooltip" data-tip="Reassign the user.">
+                                        <button
+                                            onClick={() => assignUser(user)} // Pass user to assignUser
+                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                        >
+                                            <LuUserCog />
+                                        </button>
+                                    </div>
                                 )}
                             </td>
                         </tr>
@@ -215,8 +206,16 @@ const ConsultantUserManagement = () => {
                 </div>
             </div>
 
-        </div >
+            {/* Modal */}
+            {isModalOpen && (
+                <ControllerAssignModal
+                    user={selectedUser}
+                    onClose={() => setIsModalOpen(false)}
+                    refetch={refetch}
+                />
+            )}
+        </div>
     );
 };
 
-export default ConsultantUserManagement;
+export default ControllerUserManage;
