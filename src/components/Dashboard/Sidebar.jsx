@@ -198,16 +198,16 @@ const Sidebar = ({ user }) => {
             <div>
               <div className="ml-4 mt-2 space-y-2">
                 <NavLink
-                  to="/dashboard/manage-clients"
+                  to="/dashboard/consultant/users"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
-                  <IoMdArrowDropright /> Manage Clients
+                  <IoMdArrowDropright /> Manage Users
                 </NavLink>
                 <NavLink
-                  to="/dashboard/request"
+                  to="/dashboard/consultant/request"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`

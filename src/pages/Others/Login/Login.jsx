@@ -36,7 +36,7 @@ const Login = () => {
             }
         } catch (err) {
             console.error("Login Error:", err.message);
-            toast.error('Login failed. Please try again.');
+            toast.error('Invalid email or password.');
         }
     };
 

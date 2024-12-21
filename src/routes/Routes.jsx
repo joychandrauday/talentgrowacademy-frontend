@@ -50,6 +50,7 @@ import TeacherCourses from "../pages/Dashboard/DashboardRoleWise/Teacher/Teacher
 import AdminAllBoookManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllBoookManagement";
 import AdminAllCourseManagementt from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllCourseManagementt";
 import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllTeacherManagement";
+import RequestConsultant from "../pages/Dashboard/DashboardRoleWise/Consultant/RequestUserConsultant";
 
 
 
@@ -69,9 +70,9 @@ export const router = createBrowserRouter([
         element: <Courses />,
       },
       {
-        path:"/courses/:_id",
-        element:<CoursesDetails/>,
-        loader:({params})=>fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
+        path: "/courses/:_id",
+        element: <CoursesDetails />,
+        loader: ({ params }) => fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
       },
       {
         path: "/about",
@@ -208,6 +209,28 @@ export const router = createBrowserRouter([
           {
             path: "users",
             element: <ControllerUserManage />
+          },
+          {
+            path: "count",
+            element: <ControllerCount />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
+        ]
+      },
+      {
+        path: "consultant",
+        element: <ControllerDashboard />,
+        children: [
+          {
+            path: "users",
+            element: <ConsultantUserManagement />
+          },
+          {
+            path: "request",
+            element: <RequestConsultant />
           },
           {
             path: "count",

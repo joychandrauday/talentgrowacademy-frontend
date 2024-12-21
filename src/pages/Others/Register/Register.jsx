@@ -10,8 +10,9 @@ import Swal from 'sweetalert2';
 const Register = () => {
     const location = useLocation();
     const [referCode, setReferCode] = useState('');
+    const [countryCode, setCountryCode] = useState('+88');
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Redirect to dashboard if already logged in
@@ -19,18 +20,23 @@ const Register = () => {
             navigate('/dashboard/');
         }
     }, [navigate]);
+
     // Extract the refer code from the URL
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const code = queryParams.get('refer');
-        setReferCode(code || '675b0806709959503eff3a65');
+        if (!code) {
+            toast('You will register under Admin.', {
+                icon: '❗',
+            });
+        }
+        setReferCode(code || '000000');
     }, [location]);
 
-
     console.log(referCode);
-    const { userSignUp, logOut } = useContext(AuthContext)
+    const { userSignUp, logOut } = useContext(AuthContext);
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const axiosPublic = useAxiosPublic()
+    const axiosPublic = useAxiosPublic();
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -46,8 +52,8 @@ const Register = () => {
                 email: data.email,
                 password: data.password,
                 country: data.country,
-                phone: data.phone,
-                language: data.language,
+                phone: `${countryCode}${data.phone}`,
+                language: `${countryCode}${data.whatsapp}`,
                 whatsapp: data.whatsapp,
                 reference: referData._id,
                 seniorGroupLeader: referData.seniorGroupLeader,
@@ -66,8 +72,8 @@ const Register = () => {
                 // Display user credentials in a modal
                 Swal.fire({
                     title: "User Registered Successfully!",
-                    html: `
-                        <div style="text-align: left;">
+                    html:
+                        `<div style="text-align: left;">
                             <p><strong>Name:</strong> ${fullName}</p>
                             <p><strong>UserID:</strong> ${response.data.data.userID}</p>
                             <p><strong>Email:</strong> ${userData.email}</p>
@@ -75,8 +81,7 @@ const Register = () => {
                             <p><strong>Country:</strong> ${userData.country}</p>
                             <p><strong>Phone:</strong> ${userData.phone}</p>
                             <p><strong>WhatsApp:</strong> ${userData.whatsapp}</p>
-                        </div>
-                    `,
+                        </div>`,
                     icon: "success",
                     confirmButtonText: "OK",
                 });
@@ -92,13 +97,36 @@ const Register = () => {
         }
     };
 
+    // Function to update country code based on selected country
+    const handleCountryChange = (event) => {
+        const selectedCountry = event.target.value;
+        switch (selectedCountry) {
+            case 'Bangladesh':
+                setCountryCode('+88');
+                break;
+            case 'India':
+                setCountryCode('+91');
+                break;
+            case 'Pakistan':
+                setCountryCode('+92');
+                break;
+            case 'Sri Lanka':
+                setCountryCode('+94');
+                break;
+            case 'Nepal':
+                setCountryCode('+977');
+                break;
+            default:
+                setCountryCode('');
+        }
+    };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-basic bg-no-repeat bg-cover pt-32 pb-12">
-            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3  backdrop-blur-sm border-gray-300 border">
-                <h1 className="text-3xl font-bold text-left mb-6 text-primary">Create an Account</h1>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-no-repeat bg-cover pt-32 pb-12">
+            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3 backdrop-blur-sm border-gray-300 border">
+                <h1 className="text-3xl font-bold text-left mb-6 text-white">Create an Account</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2   gap-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {/* First Name Field */}
                     <div>
                         <input
@@ -140,10 +168,11 @@ const Register = () => {
                         <select
                             id="country"
                             {...register('country', { required: 'Country is required' })}
+                            onChange={handleCountryChange}
                             className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.country ? 'border-red-500' : 'border-gray-300'}`}
                         >
-                            <option selected value="">Select Country</option>
-                            <option value="Bangladesh">Bangladesh</option>
+
+                            <option selected value="Bangladesh">Bangladesh</option>
                             <option value="India">India</option>
                             <option value="Pakistan">Pakistan</option>
                             <option value="Sri Lanka">Sri Lanka</option>
@@ -152,29 +181,35 @@ const Register = () => {
                         {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>}
                     </div>
 
-
                     {/* Phone Field */}
                     <div>
-                        <input
-                            id="phone"
-                            type="tel"
-                            {...register('phone', { required: 'Phone number is required' })}
-                            placeholder="Phone"
-                            className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
-                        />
+                        <div className="flex items-center">
+                            <span className="px-4 py-3 bg-gray-300 text-black rounded-l-lg">{countryCode}</span>
+                            <input
+                                id="phone"
+                                type="tel"
+                                {...register('phone', { required: 'Phone number is required' })}
+                                placeholder="Phone"
+                                className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+                            />
+                        </div>
                         {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
                     </div>
 
                     {/* WhatsApp Field */}
                     <div>
-                        <input
-                            id="whatsapp"
-                            type="tel"
-                            {...register('whatsapp', { required: 'WhatsApp number is required' })}
-                            placeholder="WhatsApp"
-                            className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'}`}
-                        />
-                        {errors.whatsapp && <p className="text-red-500 text-sm mt-1">{errors.whatsapp.message}</p>}
+                        <div className="flex items-center">
+
+                            <span className="px-4 py-3 bg-gray-300 text-black rounded-l-lg">{countryCode}</span>
+                            <input
+                                id="whatsapp"
+                                type="tel"
+                                {...register('whatsapp', { required: 'WhatsApp number is required' })}
+                                placeholder="WhatsApp"
+                                className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'}`}
+                            />
+                            {errors.whatsapp && <p className="text-red-500 text-sm mt-1">{errors.whatsapp.message}</p>}
+                        </div>
                     </div>
 
                     {/* Password Field */}
@@ -188,6 +223,7 @@ const Register = () => {
                         />
                         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                     </div>
+
                     {/* Language Field */}
                     <div>
                         <select
@@ -224,37 +260,27 @@ const Register = () => {
                                 id="agree"
                                 type="checkbox"
                                 {...register('agree', { required: 'You must agree to the terms and conditions' })}
-                                className="mr-2"
                             />
-                            <label htmlFor="agree" className="text-sm text-gray-700">
-                                I agree with the <a href="/terms" className="text-secondary link">terms and conditions</a>
-                            </label>
+                            <label htmlFor="agree" className="ml-2 text-white">I Agree with the <a href="/terms" className="text-blue-400">Terms & Conditions</a></label>
                         </div>
-                        {errors.agree && <p className="text-red-500 text-sm mt-1">{errors.agree.message}</p>}
-                    </div>
-                    <div className="flex items-center justify-between col-span-2 w-full gap-4">
-
-                        <button
-                            type="submit"
-                            className="w-full bg-secondary text-white py-2 px-4 rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            Register
-                        </button>
                     </div>
 
+                    {/* Register Button */}
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 py-3 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    >
+                        Register
+                    </button>
                 </form>
-
-                {/* Login Link */}
-                <p className="mt-4 text-sm text-center text-gray-500">
-                    Already have an account? <a href="/login" className="text-secondary hover:underline">Login</a>
-                </p>
             </div >
         </div >
     );
 };
 
 Register.propTypes = {
-    onSubmit: PropTypes.func,
+    referCode: PropTypes.string,
+    countryCode: PropTypes.string,
 };
 
 export default Register;
