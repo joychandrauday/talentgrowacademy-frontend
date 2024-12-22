@@ -34,7 +34,7 @@ const DashboardHolder = () => {
             {role === 'consultant' && <ConsultantDashboard />}
             {role === 'sgl' && <SeniorGroupLeaderDashboard />}
             {role === 'group-leader' && <GroupLeaderDashboard />}
-            {role === 'trainer' && <TrainerDashboard user={userdb} />}
+            {role === 'trainer' && <TrainerDashboard />}
             {role === 'teacher' && <TeacherDashboard />}
             {role === 'user' && <UserDashboard user={userdb} />}
             <ScrollRestoration />

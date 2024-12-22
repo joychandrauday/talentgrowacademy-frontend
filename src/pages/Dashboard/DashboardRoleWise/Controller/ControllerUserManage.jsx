@@ -24,7 +24,6 @@ const ControllerUserManage = () => {
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null); // To store the user for assigning
 
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
@@ -43,34 +42,6 @@ const ControllerUserManage = () => {
 
     const handleFilterChange = (e) => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
-    };
-
-    const activateUser = async (userID) => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
-                cancelButtonText: 'Cancel',
-            });
-
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
-                refetch();
-            }
-        } catch (err) {
-            Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
-        }
-    };
-
-    const assignUser = (user) => {
-        setSelectedUser(user); // Set the selected user
-        setIsModalOpen(true); // Open the modal
-        refetch();
     };
 
     if (isLoading) return <LoadingSpinner />;
@@ -137,7 +108,6 @@ const ControllerUserManage = () => {
                         <th className="border px-4 py-2">trainer</th>
                         <th className="border px-4 py-2">Role</th>
                         <th className="border px-4 py-2">Status</th>
-                        <th className="border px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,41 +117,10 @@ const ControllerUserManage = () => {
                             <td className="border px-4 py-2">{user.name}</td>
                             <td className="border px-4 py-2">{user.email}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2">{user.trainer}</td>
+                            <td className="border px-4 py-2">{user.trainer?.userID}</td>
                             <td className="border px-4 py-2">{user.role}</td>
                             <td className="border px-4 py-2">{user.status}</td>
-                            <td className="border px-4 py-2">
-                                {user.status === 'pending' && (
-                                    <div className="relative group">
-                                        <button
-                                            onClick={() => activateUser(user.userID)}
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                        >
-                                            <IoCheckmarkCircleSharp />
-                                        </button>
-                                    </div>
-                                )}
-                                {(user.status === 'active' && !user.trainer) && (
-                                    <div className="relative group tooltip" data-tip="Assign the user.">
-                                        <button
-                                            onClick={() => assignUser(user)} // Pass user to assignUser
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                        >
-                                            <FaUserClock />
-                                        </button>
-                                    </div>
-                                )}
-                                {(user.trainer && user.status === 'active') && (
-                                    <div className="relative group tooltip" data-tip="Reassign the user.">
-                                        <button
-                                            onClick={() => assignUser(user)} // Pass user to assignUser
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                        >
-                                            <LuUserCog />
-                                        </button>
-                                    </div>
-                                )}
-                            </td>
+
                         </tr>
                     ))}
                 </tbody>

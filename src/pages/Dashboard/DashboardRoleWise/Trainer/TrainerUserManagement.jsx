@@ -136,7 +136,11 @@ const TrainerUserManagement = () => {
                             <td className="border px-4 py-2">{user.userID}</td>
                             <td className="border px-4 py-2">{user.name}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2" >{user.whatsapp}</td>
+                            <td className="border px-4 py-2" >
+                                <a href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`} className='link'>
+                                    {user.whatsapp}
+                                </a>
+                            </td>
 
                         </tr>
                     ))}
