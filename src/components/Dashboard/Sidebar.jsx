@@ -22,7 +22,7 @@ import {
 import { IoMdArrowDropright } from "react-icons/io";
 import logo from "../../assets/logo.png";
 import { RxCountdownTimer } from "react-icons/rx";
-import { MdRequestPage } from "react-icons/md";
+import { MdPending, MdRequestPage } from "react-icons/md";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { FaUsersGear } from "react-icons/fa6";
 import { RiUserSearchFill } from "react-icons/ri";
@@ -125,6 +125,15 @@ const Sidebar = ({ user }) => {
                 <FaCogs /> Manage Role
               </NavLink>
               <NavLink
+                to="/dashboard/admin/users"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <FaUsers /> Manage Users
+              </NavLink>
+              <NavLink
                 to="/dashboard/admin/teachers"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
@@ -166,6 +175,15 @@ const Sidebar = ({ user }) => {
                 <FaUsersGear /> Consultants
               </NavLink>
               <NavLink
+                to="/dashboard/controller/request"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <MdPending /> Request List
+              </NavLink>
+              <NavLink
                 to="/dashboard/controller/count"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
@@ -173,15 +191,6 @@ const Sidebar = ({ user }) => {
                 }
               >
                 <FaChartBar /> Count
-              </NavLink>
-              <NavLink
-                to="/dashboard/controller/result"
-                className={({ isActive }) =>
-                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
-                  }`
-                }
-              >
-                <FaChartBar /> Result
               </NavLink>
               <NavLink
                 to="/dashboard/controller/search"
@@ -198,16 +207,16 @@ const Sidebar = ({ user }) => {
             <div>
               <div className="ml-4 mt-2 space-y-2">
                 <NavLink
-                  to="/dashboard/manage-clients"
+                  to="/dashboard/consultant/users"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
-                  <IoMdArrowDropright /> Manage Clients
+                  <IoMdArrowDropright /> Manage Users
                 </NavLink>
                 <NavLink
-                  to="/dashboard/request"
+                  to="/dashboard/consultant/requests"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`

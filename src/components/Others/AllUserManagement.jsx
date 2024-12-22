@@ -5,6 +5,8 @@ import useFetchUsers from '../../Hooks/useFetchUsers';
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import { TbClockCheck } from 'react-icons/tb';
+import { GiCaptainHatProfile } from 'react-icons/gi';
+import { RiAdminFill } from 'react-icons/ri';
 
 const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
@@ -63,6 +65,28 @@ const AllUserManagement = () => {
         }
     };
 
+    // assignAdminRefer
+    const assignAdminRefer = async (userID) => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "This will assign admin referral to the user.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, assign!',
+                cancelButtonText: 'Cancel',
+            });
+
+            if (result.isConfirmed) {
+                await axiosPublic.patch(`/users/${userID}`, { adminReferral: true });
+                Swal.fire('Assigned!', 'The user has been assigned admin referral.', 'success');
+                refetch();
+            }
+        } catch (err) {
+            Swal.fire('Error!', 'Failed to assign admin referral.', 'error');
+            console.error(err);
+        }
+    };
 
 
     if (isLoading) return <LoadingSpinner />;
@@ -120,53 +144,69 @@ const AllUserManagement = () => {
                 Search
             </button>
 
-            <table className="table-auto w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">userID</th>
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Email</th>
-                        <th className="border px-4 py-2">Phone</th>
-                        <th className="border px-4 py-2">Trainer</th>
-                        <th className="border px-4 py-2">Role</th>
-                        <th className="border px-4 py-2">Status</th>
-                        <th className="border px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user._id} className="hover:bg-gray-50">
-                            <td className="border px-4 py-2">{user.userID}</td>
-                            <td className="border px-4 py-2">{user.name}</td>
-                            <td className="border px-4 py-2">{user.email}</td>
-                            <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2">{user.trainer.name}</td>
-                            <td className="border px-4 py-2">{user.role}</td>
-                            <td className="border px-4 py-2">{user.status}</td>
-                            <td className="border px-4 py-2">
-                                {user.status === 'inactive' ? (
-                                    <div className="relative group">
-                                        <button
-                                            onClick={() => activateUser(user.userID)}
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                        >
-                                            <TbClockCheck />
-                                        </button>
-                                    </div>
-                                ) : <div className="relative group">
-                                    <button
-                                        className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                    >
-                                        <IoCheckmarkCircleSharp />
-                                    </button>
-                                </div>
-                                }
-
-                            </td>
+            <div className="overflow-x-auto">
+                <table className="table-auto w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr className="bg-gray-100">
+                            <th className="border px-4 py-2">User ID</th>
+                            <th className="border px-4 py-2">Name</th>
+                            <th className="border px-4 py-2">Email</th>
+                            <th className="border px-4 py-2">Phone</th>
+                            <th className="border px-4 py-2">Trainer</th>
+                            <th className="border px-4 py-2">Role</th>
+                            <th className="border px-4 py-2">Status</th>
+                            <th className="border px-4 py-2">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user._id} className="hover:bg-gray-50">
+                                <td className="border px-4 py-2">{user.userID}</td>
+                                <td className="border px-4 py-2">{user.name}</td>
+                                <td className="border px-4 py-2">{user.email}</td>
+                                <td className="border px-4 py-2">{user.phone}</td>
+                                <td className="border px-4 py-2">{user.trainer?.name}</td>
+                                <td className="border px-4 py-2">{user.role}</td>
+                                <td className="border px-4 py-2">{user.status}</td>
+                                <td className="border px-4 py-2">
+                                    {user.reference?.userID === '00000000' ? <>
+                                        <div className="relative group">
+                                            <button
+                                                onClick={() => assignAdminRefer(user.userID)}
+                                                className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                            >
+                                                <RiAdminFill />
+                                            </button>
+                                        </div>
+                                    </> :
+                                        <>
+                                            {user.status === 'inactive' ? (
+                                                <div className="relative group">
+                                                    <button
+                                                        onClick={() => activateUser(user.userID)}
+                                                        className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                    >
+                                                        <TbClockCheck />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="relative group">
+                                                    <button
+                                                        className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                    >
+                                                        <IoCheckmarkCircleSharp />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
+                                    }
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
 
             <div className="flex justify-between items-center mt-4">
                 <div className="space-x-2">

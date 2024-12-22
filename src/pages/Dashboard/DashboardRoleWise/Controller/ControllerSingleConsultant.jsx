@@ -109,6 +109,7 @@ const ControllerSingleConsultant = () => {
                         <th className="border px-4 py-2">Name</th>
                         <th className="border px-4 py-2">Phone</th>
                         <th className="border px-4 py-2">Whatsapp</th>
+                        <th className="border px-4 py-2">status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,6 +130,7 @@ const ControllerSingleConsultant = () => {
                             <td className="border px-4 py-2">{user.name}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
                             <td className="border px-4 py-2" >{user.whatsapp}</td>
+                            <td className="border px-4 py-2" >{user.status}</td>
 
                         </tr>
                     ))}

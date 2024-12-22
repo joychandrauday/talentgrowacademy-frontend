@@ -1,69 +1,69 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Fix the import
 import useAxiosPublic from '../Hooks/useAxiosPublic';
 
 const PrivateRoute = ({ children }) => {
   const location = useLocation();
   const axiosPublic = useAxiosPublic(); // Axios instance with refresh token logic
-  const [authToken, setAuthToken] = useState(localStorage.getItem('authToken')); // Initial state from localStorage
-  const [isTokenValid, setIsTokenValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isTokenValid, setIsTokenValid] = useState(false); // Valid token state
 
   useEffect(() => {
     const verifyToken = async () => {
-      if (authToken) {
+      const storedToken = localStorage.getItem('authToken'); // Retrieve the token
+      if (storedToken) {
         try {
-          const decodedToken = jwtDecode(authToken);
-          const expiryTime = decodedToken?.exp * 1000; // Decode expiry time from the token
+          const decodedToken = jwtDecode(storedToken);
+          const expiryTime = decodedToken?.exp * 1000;
 
-          // If the token is expired, attempt to refresh it
           if (expiryTime < Date.now()) {
-            await refreshToken();
+            await refreshToken(); // Try refreshing if expired
           } else {
-            setIsTokenValid(true); // Token is valid, proceed
+            setIsTokenValid(true); // Token is valid
           }
         } catch (error) {
           console.error('Invalid token:', error);
-          setIsTokenValid(false); // If decoding fails, treat it as an invalid token
+          setIsTokenValid(false);
         }
       } else {
-        setIsTokenValid(false); // No token present, consider it invalid
+        setIsTokenValid(false); // No token found
+      }
+      setIsLoading(false); // Stop loading
+    };
+
+    const refreshToken = async () => {
+      try {
+        const response = await axiosPublic.post('/refresh-token');
+        const newAccessToken = response.data?.data?.token;
+
+        if (newAccessToken) {
+          localStorage.setItem('authToken', newAccessToken); // Update token
+          setIsTokenValid(true);
+        } else {
+          setIsTokenValid(false);
+        }
+      } catch (error) {
+        console.error('Failed to refresh token:', error);
+        setIsTokenValid(false);
       }
     };
 
-    verifyToken();
-  }, [authToken]);
+    verifyToken(); // Start verification on mount
+  }, [axiosPublic]);
 
-  // Function to refresh the access token
-  const refreshToken = async () => {
-    try {
-      const response = await axiosPublic.post('/refresh-token'); // Call the refresh token endpoint
-      const newAccessToken = response.data?.data?.token;
-
-      // Update the local storage with the new token
-      if (newAccessToken) {
-        localStorage.setItem('authToken', newAccessToken);
-        setAuthToken(newAccessToken); // Update state with new token
-        setIsTokenValid(true); // Token refreshed and valid now
-      }
-    } catch (error) {
-      console.error('Failed to refresh token:', error);
-      setIsTokenValid(false); // If refresh fails, invalidate the token
-    }
-  };
-
-  // Show loading spinner while authentication is in progress
-  if (!isTokenValid) {
-    return <div className="flex items-center justify-center min-h-screen"><span className="loading loading-dots loading-lg"></span></div>;
+  if (isLoading) {
+    // Show a loader while verifying the token
+    return <div>Loading...</div>;
   }
 
-  // If there's no valid token, redirect to login
   if (!isTokenValid) {
+    // Redirect to login if the token is invalid
     return <Navigate state={{ from: location }} to="/login" />;
   }
 
-  // If there's a valid token, render the protected content
+  // Render protected children if token is valid
   return children;
 };
 

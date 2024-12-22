@@ -116,7 +116,7 @@ const ControllerAssignModal = ({ user, onClose, refetch }) => {
                         onClick={handleAssign}
                         className="px-4 py-2 bg-secondary text-white rounded hover:bg-primary"
                     >
-                        Assign
+                        Assign ({selectedUsers.length}) users
                     </button>
                 </div>
             </div>
