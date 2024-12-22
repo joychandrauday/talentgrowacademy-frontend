@@ -175,7 +175,7 @@ const ConsultantUserManagement = () => {
                             </td>
 
                             <td className="border px-4 py-2">{user.reference?.userID}</td>
-                            <td className="border px-4 py-2">{user.reference?.groupLeader.name}</td>
+                            <td className="border px-4 py-2">{user.reference?.groupLeader?.name}</td>
                             <td className="border px-4 py-2">
                                 <select
                                     className="border rounded px-2 py-1"

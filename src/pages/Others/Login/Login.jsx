@@ -4,8 +4,6 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../../Provider/AuthProvider';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Assuming you're using axios for database queries.
-import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 
 const Login = () => {
     const { signInUser } = useContext(AuthContext)
@@ -40,10 +38,18 @@ const Login = () => {
         }
     };
 
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-basic bg-no-repeat bg-cover">
-            <div className="p-8 rounded-lg shadow-lg w-2/4 backdrop-blur-sm border-gray-300 border space-y-8">
+        <div className="relative min-h-screen flex items-center justify-center bg-no-repeat bg-cover bg-gray-200 p-2
+        ">
+            {/* Background Shapes */}
+            <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full opacity-20"></div>
+            <div className="absolute bottom-20 right-10 w-64 h-64 bg-blue-300 rounded-full opacity-10"></div>
+            <div className="absolute top-1/3 left-1/4 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-400 opacity-10 clip-polygon"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-pink-300 rounded-full opacity-10"></div>
+            <div className="absolute bottom-10 left-5 w-28 h-28 bg-yellow-300 rounded-full opacity-20"></div>
+
+            {/* Login Form */}
+            <div className="p-8 rounded-lg shadow-lg w-full max-w-lg lg:w-3/4 backdrop-blur-sm border-gray-400 border space-y-8 ">
                 <h1 className="text-3xl font-bold text-left mb-6 text-primary">Welcome Back</h1>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

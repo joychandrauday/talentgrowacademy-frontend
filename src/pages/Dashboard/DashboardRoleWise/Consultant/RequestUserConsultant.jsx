@@ -48,24 +48,26 @@ const RequestUserConsultant = () => {
 
         try {
             const requestPayload = {
-                requestBy: userdb._id,  // Current user making the request
-                userId: userData._id,  // The user for whom the lead is being requested
-                status: 'pending'       // Request is in a pending state initially
+                requestBy: userdb._id, // Current user making the request
+                userId: userData._id, // The user for whom the lead is being requested
+                status: 'pending', // Request is in a pending state initially
             };
-            console.log(requestPayload.requestBy);
+
             const response = await axiosPublic.post('/requests', requestPayload); // Send the request to the backend
             if (response.status === 201) {
-
                 toast.success('Lead request sent successfully!');
-            } else {
-                toast.error('Lead request failed.')
             }
-
         } catch (err) {
-            toast.error('Failed to send lead request. Please try again.');
+            // Handle specific status codes
+            if (err.response && err.response.status === 400) {
+                toast.error('Lead request failed.');
+            } else {
+                toast.error('Failed to send lead request. Please try again.');
+            }
         } finally {
             setIsRequesting(false);
         }
+
     };
 
     return (
@@ -116,7 +118,7 @@ const RequestUserConsultant = () => {
                                     <strong>userID:</strong> {userData.userID || 'N/A'}
                                 </p>
                                 <p>
-                                    <strong>Consultant:</strong> {userData.consultant || 'N/A'}
+                                    <strong>Consultant:</strong> {userData.consultant?.name || 'N/A'}
                                 </p>
                                 <p>
                                     <strong>Role:</strong> {userData.role || 'N/A'}
@@ -127,9 +129,9 @@ const RequestUserConsultant = () => {
                         <button
                             onClick={handleRequestLead}
                             className="mt-4 border-none w-full btn bg-secondary"
-                            disabled={userdb._id === userData.consultant || isRequesting}
+                            disabled={userdb._id === userData.consultant?._id || isRequesting}
                         >
-                            {userdb._id === userData.consultant && "already yours"}
+                            {userdb._id === userData.consultant?._id && "already yours"}
                             {userData.consultant === null && (isRequesting ? "Requesting..." : "Request the Lead")}
                         </button>
                     </div>

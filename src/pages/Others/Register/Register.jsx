@@ -30,7 +30,7 @@ const Register = () => {
                 icon: '❗',
             });
         }
-        setReferCode(code || '000000');
+        setReferCode(code || '00000000');
     }, [location]);
 
     console.log(referCode);
@@ -44,6 +44,11 @@ const Register = () => {
         try {
             // Fetch refer user
             const referUser = await axiosPublic.get(`/users/${referCode}`);
+            if (!referUser) {
+                toast.error("Invalid refer code or user not found!");
+                return;
+            }
+            console.log(referUser);
             const referData = referUser.data.data;
 
             const fullName = `${data.firstname} ${data.lastname}`;
@@ -79,7 +84,7 @@ const Register = () => {
                             <p><strong>Email:</strong> ${userData.email}</p>
                             <p><strong>Password:</strong> ${userData.password}</p>
                             <p><strong>Country:</strong> ${userData.country}</p>
-                            <p><strong>Phone:</strong> ${userData.phone}</p>
+                            <p><strong>Phone:</strong> ${response.data.data.phone}</p>
                             <p><strong>WhatsApp:</strong> ${userData.whatsapp}</p>
                         </div>`,
                     icon: "success",
@@ -122,8 +127,19 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-no-repeat bg-cover pt-32 pb-12">
-            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3 backdrop-blur-sm border-gray-300 border">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-300 via-purple-500 to-indigo-500 bg-no-repeat bg-cover pt-32 pb-12 p-2">
+            <div className="absolute top-10 left-20 w-32 h-32 bg-white rounded-full opacity-20 animate-bounce"></div>
+            <div className="absolute bottom-20 right-10 w-64 h-64 bg-purple-300 rounded-full opacity-10"></div>
+            <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-400 opacity-10 clip-polygon"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-pink-300 rounded-full opacity-10"></div>
+            <div className="absolute bottom-10 left-5 w-28 h-28 bg-yellow-300 rounded-full opacity-20"></div>
+            <div className="absolute top-10 left-20 w-32 h-32 bg-white rounded-full opacity-20 animate-bounce"></div>
+            <div className="absolute bottom-20 right-10 w-64 h-64 bg-purple-300 rounded-full opacity-10"></div>
+            <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-400 opacity-10 clip-polygon"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-pink-300 rounded-full opacity-10"></div>
+            <div className="absolute bottom-10 left-5 w-28 h-28 bg-yellow-300 rounded-full opacity-20"></div>
+
+            <div className="p-8 rounded-lg shadow-lg w-full md:w-2/3 backdrop-blur-sm border-gray-300 border ">
                 <h1 className="text-3xl font-bold text-left mb-6 text-white">Create an Account</h1>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -184,7 +200,7 @@ const Register = () => {
                     {/* Phone Field */}
                     <div>
                         <div className="flex items-center">
-                            <span className="px-4 py-3 bg-gray-300 text-black rounded-l-lg">{countryCode}</span>
+                            <span className="shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-l-lg bg-secondary text-white">{countryCode}</span>
                             <input
                                 id="phone"
                                 type="tel"
@@ -200,13 +216,13 @@ const Register = () => {
                     <div>
                         <div className="flex items-center">
 
-                            <span className="px-4 py-3 bg-gray-300 text-black rounded-l-lg">{countryCode}</span>
+                            <span className="shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-l-lg bg-secondary text-white">{countryCode}</span>
                             <input
                                 id="whatsapp"
                                 type="tel"
                                 {...register('whatsapp', { required: 'WhatsApp number is required' })}
                                 placeholder="WhatsApp"
-                                className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'}`}
+                                className={`w-full shadow-md shadow-gray-500 px-4 py-3 mt-1 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'}`}
                             />
                             {errors.whatsapp && <p className="text-red-500 text-sm mt-1">{errors.whatsapp.message}</p>}
                         </div>

@@ -51,6 +51,8 @@ import AdminAllBoookManagement from "../pages/Dashboard/DashboardRoleWise/Admin/
 import AdminAllCourseManagementt from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllCourseManagementt";
 import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllTeacherManagement";
 import RequestConsultant from "../pages/Dashboard/DashboardRoleWise/Consultant/RequestUserConsultant";
+import ControllerRequest from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerRequest";
+import Count from "../components/Shared/Count";
 
 
 
@@ -211,6 +213,10 @@ export const router = createBrowserRouter([
             element: <ControllerUserManage />
           },
           {
+            path: "request",
+            element: <ControllerRequest />
+          },
+          {
             path: "count",
             element: <ControllerCount />
           },
@@ -229,12 +235,12 @@ export const router = createBrowserRouter([
             element: <ConsultantUserManagement />
           },
           {
-            path: "request",
+            path: "requests",
             element: <RequestConsultant />
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
           {
             path: "search",
@@ -256,11 +262,11 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
           {
             path: "count-result",
-            element: <ControllerCount />
+            element: <Count />
           }
         ]
       },
@@ -279,7 +285,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
           {
             path: "search",
@@ -297,7 +303,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
         ]
       },
