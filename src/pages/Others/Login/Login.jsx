@@ -28,7 +28,8 @@ const Login = () => {
             console.log(response);
             if (response.data.success) {
                 toast.success('You are logged in successfully!');
-                navigate('/dashboard/');
+                navigate(`/dashboard/${response.data.data.user.role}`);
+                // navigate(`/dashboard`);
             } else {
                 toast.error('Invalid email or password.');
             }

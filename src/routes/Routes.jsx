@@ -201,6 +201,10 @@ export const router = createBrowserRouter([
         element: <ControllerDashboard />,
         children: [
           {
+            path: "",
+            element: <ControllerUserManage />
+          },
+          {
             path: "consultants",
             element: <ControllerConsultantManagement />
           },
@@ -231,6 +235,10 @@ export const router = createBrowserRouter([
         element: <ControllerDashboard />,
         children: [
           {
+            path: "",
+            element: <ConsultantUserManagement />
+          },
+          {
             path: "users",
             element: <ConsultantUserManagement />
           },
@@ -252,6 +260,10 @@ export const router = createBrowserRouter([
         path: "group-leader",
         element: <GroupLeaderDashboard />,
         children: [
+          {
+            path: "",
+            element: <GroupLeaderTrainerManagement />
+          },
           {
             path: "trainers",
             element: <GroupLeaderTrainerManagement />
@@ -276,6 +288,10 @@ export const router = createBrowserRouter([
         element: <SeniorGroupLeaderDashboard />,
         children: [
           {
+            path: "",
+            element: <SGLglManagement />
+          },
+          {
             path: "group-leaders",
             element: <SGLglManagement />
           },
@@ -298,6 +314,10 @@ export const router = createBrowserRouter([
         element: <TrainerDashboard />,
         children: [
           {
+            path: "",
+            element: <TrainerUserManagement />
+          },
+          {
             path: "users",
             element: <TrainerUserManagement />
           },
@@ -311,6 +331,10 @@ export const router = createBrowserRouter([
         path: "teacher",
         element: <TeacherDashboard />,
         children: [
+          {
+            path: "",
+            element: <TeacherCourses />
+          },
           {
             path: "course",
             element: <TeacherCourses />
