@@ -50,6 +50,9 @@ import TeacherCourses from "../pages/Dashboard/DashboardRoleWise/Teacher/Teacher
 import AdminAllBoookManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllBoookManagement";
 import AdminAllCourseManagementt from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllCourseManagementt";
 import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admin/AdminAllTeacherManagement";
+import RequestConsultant from "../pages/Dashboard/DashboardRoleWise/Consultant/RequestUserConsultant";
+import ControllerRequest from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerRequest";
+import Count from "../components/Shared/Count";
 
 
 
@@ -69,9 +72,9 @@ export const router = createBrowserRouter([
         element: <Courses />,
       },
       {
-        path:"/courses/:_id",
-        element:<CoursesDetails/>,
-        loader:({params})=>fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
+        path: "/courses/:_id",
+        element: <CoursesDetails />,
+        loader: ({ params }) => fetch(`https://talentgrowacademy-backend.vercel.app/courses/${params._id}`)
       },
       {
         path: "/about",
@@ -210,8 +213,34 @@ export const router = createBrowserRouter([
             element: <ControllerUserManage />
           },
           {
+            path: "request",
+            element: <ControllerRequest />
+          },
+          {
             path: "count",
             element: <ControllerCount />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
+        ]
+      },
+      {
+        path: "consultant",
+        element: <ControllerDashboard />,
+        children: [
+          {
+            path: "users",
+            element: <ConsultantUserManagement />
+          },
+          {
+            path: "requests",
+            element: <RequestConsultant />
+          },
+          {
+            path: "count",
+            element: <Count />
           },
           {
             path: "search",
@@ -233,11 +262,11 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
           {
             path: "count-result",
-            element: <ControllerCount />
+            element: <Count />
           }
         ]
       },
@@ -256,7 +285,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
           {
             path: "search",
@@ -274,7 +303,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <ControllerCount />
+            element: <Count />
           },
         ]
       },

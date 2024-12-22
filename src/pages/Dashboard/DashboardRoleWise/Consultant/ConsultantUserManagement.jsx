@@ -47,28 +47,6 @@ const ConsultantUserManagement = () => {
     const handleFilterChange = (e) => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
-
-    const activateUser = async (userID) => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
-                cancelButtonText: 'Cancel',
-            });
-
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
-                refetch();
-            }
-        } catch (err) {
-            Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
-        }
-    };
     const handleStatusChange = async (userId, isDone) => {
         try {
             // Prepare the new messageDate
@@ -77,7 +55,7 @@ const ConsultantUserManagement = () => {
             // Send the patch request
             const response = await axiosPublic.patch(`/users/${userId}`, {
                 isMessageDone: isDone,
-                r: messageDate,
+                messageDate: messageDate,
             });
             console.log(response);
             if (response.data.success) {
@@ -138,6 +116,18 @@ const ConsultantUserManagement = () => {
                         className="border border-gray-300 rounded p-2 w-full"
                     />
                 </div>
+                <div>
+                    <select
+                        name="isMessageDone"
+                        value={queryParams.isMessageDone}
+                        onChange={handleFilterChange}
+                        className="border border-gray-300 rounded p-2 w-full"
+                    >
+                        <option value={null}>Filter by Message Done</option>
+                        <option value={true}>Done</option>
+                        <option value={false}>Pending</option>
+                    </select>
+                </div>
             </div>
             <button
                 onClick={handleSearch}
@@ -169,9 +159,23 @@ const ConsultantUserManagement = () => {
                             <td className="border px-4 py-2">{user.userID}</td>
                             <td className="border px-4 py-2">{user.name}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2" >{userdb.permission ? user.whatsapp : 'N/A'}</td>
+                            <td className="border px-4 py-2">
+                                {userdb.permission && user.whatsapp ? (
+                                    <a
+                                        href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-500 underline"
+                                    >
+                                        {user.whatsapp}
+                                    </a>
+                                ) : (
+                                    'N/A'
+                                )}
+                            </td>
+
                             <td className="border px-4 py-2">{user.reference?.userID}</td>
-                            <td className="border px-4 py-2">{user.reference?.groupLeader.name}</td>
+                            <td className="border px-4 py-2">{user.reference?.groupLeader?.name}</td>
                             <td className="border px-4 py-2">
                                 <select
                                     className="border rounded px-2 py-1"

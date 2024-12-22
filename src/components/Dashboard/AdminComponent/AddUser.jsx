@@ -2,9 +2,10 @@ import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../../Provider/AuthProvider';
 import Swal from 'sweetalert2';
+
 const getToken = () => localStorage.getItem('authToken');
 const AddUser = () => {
     const token = getToken(); // Retrieve the token
@@ -14,9 +15,23 @@ const AddUser = () => {
         'Authorization': `Bearer ${token}`,
     } : {};
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
     const axiosPublic = useAxiosPublic();
+
+    const [mobileCode, setMobileCode] = useState('');
+    const selectedCountry = watch('country');
+
+    useEffect(() => {
+        const countryCodes = {
+            Bangladesh: '+880',
+            India: '+91',
+            Pakistan: '+92',
+            'Sri Lanka': '+94',
+            Nepal: '+977',
+        };
+        setMobileCode(countryCodes[selectedCountry] || '');
+    }, [selectedCountry]);
 
     const onSubmit = async (data) => {
 
@@ -28,8 +43,8 @@ const AddUser = () => {
                 email: data.email,
                 role: data.role,
                 country: data.country,
-                phone: data.phone,
-                whatsapp: data.whatsapp,
+                phone: `${mobileCode}${data.phone}`,
+                whatsapp: `${mobileCode}${data.whatsapp}`,
                 password: data.password,
                 reference: "6759bef8f9a5249d9d87ef87",
                 status: 'active',
@@ -38,7 +53,7 @@ const AddUser = () => {
             console.log(userData);
 
             // Add user to the database
-            if (userData.role != 'user') {
+            if (userData.role !== 'user') {
                 const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData, { headers });
 
                 if (response2.status === 201) {
@@ -151,25 +166,31 @@ const AddUser = () => {
 
                     {/* Phone Field */}
                     <div>
-                        <input
-                            id="phone"
-                            type="tel"
-                            {...register('phone', { required: 'Phone number is required' })}
-                            placeholder="Phone"
-                            className={`w-full px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
-                        />
+                        <div className="flex items-center">
+                            <span className="px-3 py-3 bg-gray-200 border border-gray-300 rounded-l-lg">{mobileCode}</span>
+                            <input
+                                id="phone"
+                                type="tel"
+                                {...register('phone', { required: 'Phone number is required' })}
+                                placeholder="Phone"
+                                className={`w-full px-4 py-3 mt-1 border-t border-b border-r rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+                            />
+                        </div>
                         {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
                     </div>
 
                     {/* WhatsApp Field */}
                     <div>
-                        <input
-                            id="whatsapp"
-                            type="tel"
-                            {...register('whatsapp', { required: 'WhatsApp number is required' })}
-                            placeholder="WhatsApp"
-                            className={`w-full px-4 py-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'}`}
-                        />
+                        <div className="flex items-center">
+                            <span className="px-3 py-3 bg-gray-200 border border-gray-300 rounded-l-lg">{mobileCode}</span>
+                            <input
+                                id="whatsapp"
+                                type="tel"
+                                {...register('whatsapp', { required: 'WhatsApp number is required' })}
+                                placeholder="WhatsApp"
+                                className={`w-full px-4 py-3 mt-1 border-t border-b border-r rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'}`}
+                            />
+                        </div>
                         {errors.whatsapp && <p className="text-red-500 text-sm mt-1">{errors.whatsapp.message}</p>}
                     </div>
 
@@ -199,6 +220,7 @@ const AddUser = () => {
         </div>
     );
 };
+
 
 AddUser.propTypes = {
     onSubmit: PropTypes.func,
