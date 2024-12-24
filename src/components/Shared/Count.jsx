@@ -12,7 +12,7 @@ const Count = () => {
         role: 'user',
         status: '', // Filter by active or inactive
         sort: '-createdAt',
-        limit: 200,
+        limit: 10000,
         page: 1,
         fromDate: '',
         toDate: '',
@@ -24,6 +24,8 @@ const Count = () => {
     const [activeUsersCount, setActiveUsersCount] = useState(0);
     const [inactiveUsersCount, setInactiveUsersCount] = useState(0);
     const [totalUsersCount, setTotalUsersCount] = useState(0);
+    const [isTodaySelected, setIsTodaySelected] = useState(false); // Added state for Today checkbox
+    const [isLastMonthSelected, setIsLastMonthSelected] = useState(false); // Added state for Last Month checkbox
 
     useEffect(() => {
         if (userdb) {
@@ -85,6 +87,16 @@ const Count = () => {
         }));
     };
 
+    // Handle the "Show Today's Data" checkbox
+    const handleTodayCheckboxChange = (e) => {
+        setIsTodaySelected(e.target.checked);
+    };
+
+    // Handle the "Show Last Month's Data" checkbox
+    const handleLastMonthCheckboxChange = (e) => {
+        setIsLastMonthSelected(e.target.checked);
+    };
+
     // Update filtered users data whenever the tab is changed or new data is fetched
     useEffect(() => {
         let filtered = users;
@@ -115,13 +127,42 @@ const Count = () => {
             );
         }
 
-        setFilteredData(filtered);
+        // Apply today's data filter if checkbox is checked
+        if (isTodaySelected) {
+            const today = new Date().toLocaleDateString();
+            filtered = filtered.filter((user) => {
+                const createdDate = new Date(user.createdAt).toLocaleDateString();
+                const activateDate = new Date(user.activateDate).toLocaleDateString();
+                return createdDate === today || activateDate === today;
+            });
+        }
 
+        // Apply last 30 days' data filter if checkbox is checked
+        if (isLastMonthSelected) {
+            const now = new Date();
+            const thirtyDaysAgo = new Date(now);
+            thirtyDaysAgo.setDate(now.getDate() - 30); // Set the date to 30 days ago
+
+            filtered = filtered.filter((user) => {
+                const createdDate = new Date(user.createdAt);
+                const activateDate = new Date(user.activateDate);
+                return (
+                    (createdDate >= thirtyDaysAgo && createdDate <= now) ||
+                    (activateDate >= thirtyDaysAgo && activateDate <= now)
+                );
+            });
+        }
+
+
+
+
+        setFilteredData(filtered);
+        console.log(filtered);
         // Update the user counts
-        setActiveUsersCount(users.filter((user) => user.status === 'active').length);
-        setInactiveUsersCount(users.filter((user) => user.status === 'inactive').length);
-        setTotalUsersCount(users.length);
-    }, [activeTab, users, searchQuery, queryParams]);
+        setActiveUsersCount(filtered.filter((user) => user.status === 'active').length);
+        setInactiveUsersCount(filtered.filter((user) => user.status === 'inactive').length);
+        setTotalUsersCount(filtered.length);
+    }, [activeTab, users, searchQuery, queryParams, isTodaySelected, isLastMonthSelected]); // Added isLastMonthSelected dependency
 
     return (
         <div className='p-6'>
@@ -150,7 +191,6 @@ const Count = () => {
                 </div>
             </div>
 
-
             {/* Search Input */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
@@ -173,10 +213,9 @@ const Count = () => {
                         <option value="">Filter by Status</option>
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
-                        <option value="pending">Pending</option>
                     </select>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex">
                     <input
                         type="date"
                         name="fromDate"
@@ -191,7 +230,32 @@ const Count = () => {
                         onChange={handleDateRangeChange}
                         className="border border-gray-300 rounded p-2 w-full"
                     />
+
                 </div>
+                <div className="flex justify-between gap-4 items-center w-full p-4 bg-gray-100 rounded-lg shadow-md">
+                    {/* Today's Data Checkbox */}
+                    <label className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            checked={isTodaySelected}
+                            onChange={handleTodayCheckboxChange}
+                            className="form-checkbox h-8 w-8 text-blue-500 transition duration-200 ease-in-out"
+                        />
+                        <span className="text-sm text-gray-700 font-semibold">Show Today's Data</span>
+                    </label>
+
+                    {/* Last Month's Data Checkbox */}
+                    <label className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            checked={isLastMonthSelected}
+                            onChange={handleLastMonthCheckboxChange}
+                            className="form-checkbox h-8 w-8 text-blue-500 transition duration-200 ease-in-out"
+                        />
+                        <span className="text-sm text-gray-700 font-semibold">Show Last Month's Data</span>
+                    </label>
+                </div>
+
             </div>
 
             {/* Users Table */}
@@ -233,9 +297,7 @@ const Count = () => {
                 >
                     Previous
                 </button>
-                <span>
-                    Page {currentPage} of {totalPages}
-                </span>
+                <span>{currentPage}</span>
                 <button
                     className="btn"
                     disabled={currentPage === totalPages}
@@ -248,6 +310,8 @@ const Count = () => {
     );
 };
 
-Count.propTypes = {};
+Count.propTypes = {
+    // Add any props validation if necessary
+};
 
 export default Count;

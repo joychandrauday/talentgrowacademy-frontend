@@ -5,9 +5,16 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
+import useCard from '../../../Hooks/roleFetch/useCard';
 
 const UserDashboard = ({ user }) => {
     const axiosPublic = useAxiosPublic();
+    const { cards } = useCard()
+
+    const helpCard = cards.filter((card) => card.ID === 'userDashboardHelp');
+    const supportMeetCard = cards.filter((card) => card.ID === 'userDashboardSupportMeet');
+    const orientationCard = cards.filter((card) => card.ID === 'userDashboardOrientation');
+    console.log(helpCard, supportMeetCard, orientationCard);
 
     const fetchCourses = async () => {
         const response = await axiosPublic.get('/courses', {
@@ -52,20 +59,24 @@ const UserDashboard = ({ user }) => {
                             <div className="codeWrap flex flex-col gap-6 sm:w-1/2">
                                 <div className="card-body bg-white border shadow-md text-center p-6">
                                     <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                                        May I Help You?
+                                        {helpCard[0].title}
                                     </h2>
-                                    <button className="btn text-white hover:bg-primary bg-secondary">
-                                        Get Link
-                                    </button>
+                                    <Link to={`${helpCard[0].link1}`} className="btn text-white hover:bg-primary bg-secondary">
+
+                                        <div className="flex gap-2 items-center text-white">Get Link
+                                        </div>
+                                    </Link>
                                 </div>
 
                                 <div className="card-body bg-white border shadow-md text-center p-6">
                                     <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                                        TalentGrow Academy Support Meeting
+                                        {supportMeetCard[0].title}
                                     </h2>
-                                    <button className="btn text-white hover:bg-primary bg-secondary">
-                                        Get Meeting Link
-                                    </button>
+                                    <Link to={`${supportMeetCard[0].link1}`} className="btn text-white hover:bg-primary bg-secondary">
+
+                                        <div className="flex gap-2 items-center text-white">Get Metting Link
+                                        </div>
+                                    </Link>
                                 </div>
                             </div>
 
@@ -130,16 +141,17 @@ const UserDashboard = ({ user }) => {
                     <div className="orientationSection mt-12 w-full lg:w-4/5 mx-auto">
                         <div className="card-body bg-white border shadow-md text-center p-6">
                             <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                                Join Live Learning and Earning Classes<br />
-                                BD Time: 8am to 10pm
+                                {orientationCard[0].title}
                             </h2>
                             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-12">
                                 <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl">
-                                    Orientation Class
+                                    {orientationCard[0].linkHeading1}
                                 </h2>
-                                <button className="btn text-white hover:bg-primary bg-secondary">
-                                    Join Now
-                                </button>
+                                <Link to={`${orientationCard[0].link1}`} className="btn text-white hover:bg-primary bg-secondary">
+
+                                    <div className="flex gap-2 items-center text-white">Join Now
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     </div>

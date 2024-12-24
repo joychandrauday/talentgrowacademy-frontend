@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
@@ -6,7 +7,8 @@ import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import { TbClockCheck } from 'react-icons/tb';
 import { GiCaptainHatProfile } from 'react-icons/gi';
-import { RiAdminFill } from 'react-icons/ri';
+import useTrainers from '../../Hooks/roleFetch/useTrainers';
+import useGL from '../../Hooks/roleFetch/useGL';
 
 const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
@@ -24,6 +26,11 @@ const AllUserManagement = () => {
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
     console.log(users);
+
+    // fetch to assign
+    const { trainers } = useTrainers()
+    const { groupLeaders } = useGL()
+
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
         refetch();
@@ -43,50 +50,60 @@ const AllUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
 
-    const activateUser = async (userID) => {
+    const activateUser = async (userID, balance) => {
         try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
+            // Prepare options for the dropdowns
+            // const trainerOptions = trainers.map(trainer => `<option value="${trainer.id}">${trainer.name}</option>`).join('');
+            const groupLeaderOptions = groupLeaders.map(leader => `<option value="${leader._id}">${leader.name}</option>`).join('');
+
+            // Create the SweetAlert2 dialog with dropdowns
+            const { value: formValues } = await Swal.fire({
+                title: 'Assign Trainer & Group Leader',
+                html: `
+                   
+                    <label for="groupLeader" style="display: block; text-align: left;">Select Group Leader:</label>
+                    <select id="groupLeader" class="swal2-select">
+                        <option value="">--Select Group Leader--</option>
+                        ${groupLeaderOptions}
+                    </select>
+                `,
+                focusConfirm: false,
                 showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
+                confirmButtonText: 'Activate',
                 cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const groupLeader = document.getElementById('groupLeader').value;
+
+                    if (!groupLeader) {
+                        Swal.showValidationMessage('Both Trainer and Group Leader must be selected.');
+                        return null;
+                    }
+
+                    return { groupLeader };
+                },
             });
 
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
+            if (formValues) {
+                const { groupLeader } = formValues;
+
+                // Perform the activation with the selected trainer and group leader
+                const updatedBalance = (balance || 0) + 50;
+                await axiosPublic.patch(`/users/${userID}`, {
+                    status: 'active',
+                    balance: updatedBalance,
+                    groupLeader,
+                    activateDate: new Date()
+                });
+
+                Swal.fire('Activated!', 'The user has been activated and assigned.', 'success');
                 refetch();
             }
         } catch (err) {
             Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
         }
     };
 
-    // assignAdminRefer
-    const assignAdminRefer = async (userID) => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will assign admin referral to the user.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, assign!',
-                cancelButtonText: 'Cancel',
-            });
 
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { adminReferral: true });
-                Swal.fire('Assigned!', 'The user has been assigned admin referral.', 'success');
-                refetch();
-            }
-        } catch (err) {
-            Swal.fire('Error!', 'Failed to assign admin referral.', 'error');
-            console.error(err);
-        }
-    };
 
 
     if (isLoading) return <LoadingSpinner />;
@@ -175,7 +192,7 @@ const AllUserManagement = () => {
                                                 onClick={() => assignAdminRefer(user.userID)}
                                                 className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
                                             >
-                                                <RiAdminFill />
+                                                <GiCaptainHatProfile />
                                             </button>
                                         </div>
                                     </> :
@@ -183,7 +200,7 @@ const AllUserManagement = () => {
                                             {user.status === 'inactive' ? (
                                                 <div className="relative group">
                                                     <button
-                                                        onClick={() => activateUser(user.userID)}
+                                                        onClick={() => activateUser(user._id, user.balance)}
                                                         className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
                                                     >
                                                         <TbClockCheck />
