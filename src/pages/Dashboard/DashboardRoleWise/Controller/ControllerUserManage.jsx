@@ -12,7 +12,7 @@ const ControllerUserManage = () => {
     const [queryParams, setQueryParams] = useState({
         searchTerm: '',
         role: 'user',
-        status: '',
+        status: 'inactive',
         sort: '-createdAt',
         limit: 10,
         page: 1,  // Start with the first page

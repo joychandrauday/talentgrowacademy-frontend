@@ -47,23 +47,59 @@ const ConsultantUserManagement = () => {
     const handleFilterChange = (e) => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
-    const handleStatusChange = async (userId, isDone) => {
+    const handleStatusChange = async (userId, isDone, currentWhatsApp) => {
         try {
-            // Prepare the new messageDate
+            // Open the Swal modal for confirmation
+            const result = await Swal.fire({
+                title: 'Is WhatsApp Number Correct?',
+                text: 'Please confirm if the WhatsApp number is valid.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Correct',
+                cancelButtonText: 'Wrong',
+            });
+
+            // Determine the value for `isWhatsApp` based on user input
+            const isWhatsApp = result.isConfirmed;
+
+            // Set the message date if marked as done
             const messageDate = isDone ? new Date().toISOString() : null;
 
             // Send the patch request
             const response = await axiosPublic.patch(`/users/${userId}`, {
                 isMessageDone: isDone,
-                messageDate: messageDate,
+                messageDate,
+                isWhatsApp, // Update the isWhatsApp field based on Swal result
             });
-            console.log(response);
+
             if (response.data.success) {
                 toast.success('Message status updated successfully!');
-                refetch();
+                refetch(); // Ensure the UI updates after the data is fetched again
+            } else {
+                toast.error('Failed to update message status!');
             }
         } catch (error) {
-            console.error("Error updating message status", error);
+            console.error("Error updating message status:", error);
+            toast.error('An error occurred while updating the status.');
+        }
+    };
+
+
+    const handleDateChange = async (userId, newDate) => {
+        try {
+            const response = await axiosPublic.patch(`/users/${userId}`, {
+                messageDate: newDate,
+            });
+
+            if (response.data.success) {
+                toast.success('Message date updated successfully!');
+                refetch();
+            } else {
+                toast.error('Failed to update the message date!');
+            }
+        } catch (error) {
+            console.error("Error updating message date:", error);
+            toast.error('An error occurred while updating the date.');
         }
     };
 
@@ -125,7 +161,7 @@ const ConsultantUserManagement = () => {
                     >
                         <option value={null}>Filter by Message Done</option>
                         <option value={true}>Done</option>
-                        <option value={false}>Pending</option>
+                        <option value={false}>Not Done</option>
                     </select>
                 </div>
             </div>
@@ -136,69 +172,92 @@ const ConsultantUserManagement = () => {
                 Search
             </button>
 
-            <table className="table-auto w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">Date</th>
-                        <th className="border px-4 py-2">userID</th>
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Phone</th>
-                        <th className="border px-4 py-2">Whatsapp</th>
-                        <th className="border px-4 py-2">Refer</th>
-                        <th className="border px-4 py-2">R. GL</th>
-                        <th className="border px-4 py-2">Message</th>
-                        <th className="border px-4 py-2">Message Done</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user._id} className="hover:bg-gray-50">
-                            <td className="border px-4 py-2">
-                                {new Date(user.createdAt).toLocaleDateString()}
-                            </td>
-                            <td className="border px-4 py-2">{user.userID}</td>
-                            <td className="border px-4 py-2">{user.name}</td>
-                            <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2">
-                                {userdb.permission && user.whatsapp ? (
-                                    <a
-                                        href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-500 underline"
-                                    >
-                                        {user.whatsapp}
-                                    </a>
-                                ) : (
-                                    'N/A'
-                                )}
-                            </td>
-
-                            <td className="border px-4 py-2">{user.reference?.userID}</td>
-                            <td className="border px-4 py-2">{user.reference?.groupLeader?.name}</td>
-                            <td className="border px-4 py-2">
-                                <select
-                                    className="border rounded px-2 py-1"
-                                    value={user.isMessageDone ? "true" : "false"} // Ensure value matches boolean
-                                    onChange={(e) => handleStatusChange(user.userID, e.target.value === "true")}
-                                >
-                                    <option value="true">Done</option>
-                                    <option value="false">Pending</option>
-                                </select>
-                            </td>
-
-
-                            <td className="border px-4 py-2">
-                                {user.messageDate ? (
-                                    new Date(user.messageDate).toLocaleDateString()
-                                ) : (
-                                    "No Date"
-                                )}
-                            </td>
+            <div className="overflow-x-auto">
+                <table className="table-auto w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr className="bg-gray-100">
+                            <th className="border px-4 py-2">Date</th>
+                            <th className="border px-4 py-2">userID</th>
+                            <th className="border px-4 py-2">Name</th>
+                            <th className="border px-4 py-2">Phone</th>
+                            <th className="border px-4 py-2">Whatsapp</th>
+                            <th className="border px-4 py-2">Refer</th>
+                            <th className="border px-4 py-2">R. GL</th>
+                            <th className="border px-4 py-2">Message</th>
+                            <th className="border px-4 py-2">Message Done</th>
+                            <th className="border px-4 py-2">Set Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user._id} className="hover:bg-gray-50">
+                                <td className="border px-4 py-2">
+                                    {new Date(user.createdAt).toLocaleDateString()}
+                                </td>
+                                <td className="border px-4 py-2">{user.userID}</td>
+                                <td className="border px-4 py-2">{user.name}</td>
+                                <td className="border px-4 py-2">{user.phone}</td>
+                                <td className="border px-4 py-2">
+                                    {userdb.permission && user.whatsapp ? (
+                                        <a
+                                            href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 underline"
+                                        >
+                                            {user.whatsapp}
+                                        </a>
+                                    ) : (
+                                        'N/A'
+                                    )}
+                                </td>
+
+                                <td className="border px-4 py-2">{user.reference?.userID}</td>
+                                <td className="border px-4 py-2">{user.reference?.groupLeader?.name}</td>
+                                <td className="border px-4 py-2">
+                                    <select
+                                        className="border rounded px-2 py-1"
+                                        value={user.isMessageDone ? "true" : "false"} // Ensure value matches boolean
+                                        onChange={(e) => handleStatusChange(user._id, e.target.value === "true")}
+                                    >
+                                        <option value="true">Done</option>
+                                        <option value="false">Not Done</option>
+                                    </select>
+                                </td>
+
+                                <td className="border px-4 py-2">
+                                    {user.isWhatsApp && user.isMessageDone ? (
+                                        <div className="flex flex-col">
+                                            <div className="badge">Done</div>
+                                            {new Date(user.messageDate).toLocaleDateString()}
+                                        </div>
+                                    ) : (
+                                        "Wrong"
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2 text-center">
+                                    {user.isMessageDone ? (
+                                        <>
+                                            <input
+                                                type="date"
+                                                value={user.messageDate ? new Date(user.messageDate).toISOString().split('T')[0] : ''}
+                                                onChange={(e) =>
+                                                    handleDateChange(user._id, new Date(e.target.value).toISOString())
+                                                }
+                                                className="border rounded px-2 py-1"
+                                            />
+                                            <span className="badge badge-warning">update date</span>
+                                        </>
+                                    ) : (
+                                        "No Date"
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
 
             <div className="flex justify-between items-center mt-4">
                 <div className="space-x-2">

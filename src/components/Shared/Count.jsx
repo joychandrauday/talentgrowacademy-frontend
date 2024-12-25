@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetchUsers from '../../Hooks/useFetchUsers';
 import useUser from '../../pages/Others/Register/useUser';
+import { ScrollRestoration } from 'react-router-dom';
 
-const Count = () => {
+const Count = ({ countId, countRole }) => {
+    console.log(countId, countRole, 'meeeeeeeeee');
     const { userdb } = useUser();
     console.log(userdb?._id);
 
@@ -28,16 +30,31 @@ const Count = () => {
     const [isLastMonthSelected, setIsLastMonthSelected] = useState(false); // Added state for Last Month checkbox
 
     useEffect(() => {
-        if (userdb) {
-            const dynamicField = userdb.role;
+        if (userdb || countId) {
+            let dynamicField = countRole ? countRole : userdb.role;
+            if (dynamicField === 'group-leader') {
+                dynamicField = 'groupLeader'
+            } else if (userdb.role === 'manager-teacher') {
+                dynamicField = 'teacherManager'
+            } else if (userdb.role === 'sgl') {
+                dynamicField = 'seniorGroupLeader'
+            } else if (userdb.role === 'sgl-manager') {
+                dynamicField = 'seniorGroupLeaderManager'
+            } else if (userdb.role === 'consultant-managers') {
+                dynamicField = 'consultantManager'
+            } else if (userdb.role === 'teacher-manager') {
+                dynamicField = 'teacherManager'
+            } else if (userdb.role === 'controller') {
+                dynamicField = 'controller'
+            }
             if (dynamicField) {
                 setQueryParams((prevParams) => ({
                     ...prevParams,
-                    [dynamicField]: userdb._id,
+                    [dynamicField]: countId ? countId : userdb._id,
                 }));
             }
         }
-    }, [userdb]);
+    }, [countId, countRole, userdb]);
 
     // Fetching users based on queryParams
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
@@ -131,10 +148,27 @@ const Count = () => {
         if (isTodaySelected) {
             const today = new Date().toLocaleDateString();
             filtered = filtered.filter((user) => {
-                const createdDate = new Date(user.createdAt).toLocaleDateString();
-                const activateDate = new Date(user.activateDate).toLocaleDateString();
-                return createdDate === today || activateDate === today;
+                const today = new Date().toLocaleDateString(); // Ensure `today` is correctly formatted
+
+                // Parse and format the relevant dates
+                const createdDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : null;
+                const activateDate = user.activateDate ? new Date(user.activateDate).toLocaleDateString() : null;
+                const assignDate = user.consultantAssign ? new Date(user.consultantAssign).toLocaleDateString() : null;
+
+                // Log for debugging
+                console.log({
+                    userId: user._id,
+                    createdDate,
+                    activateDate,
+                    assignDate,
+                    today,
+                    match: createdDate === today || activateDate === today || assignDate === today
+                });
+
+                // Return true if any of the dates match `today`
+                return createdDate === today || activateDate === today || assignDate === today;
             });
+
         }
 
         // Apply last 30 days' data filter if checkbox is checked
@@ -152,12 +186,7 @@ const Count = () => {
                 );
             });
         }
-
-
-
-
         setFilteredData(filtered);
-        console.log(filtered);
         // Update the user counts
         setActiveUsersCount(filtered.filter((user) => user.status === 'active').length);
         setInactiveUsersCount(filtered.filter((user) => user.status === 'inactive').length);
@@ -264,7 +293,7 @@ const Count = () => {
                     <thead>
                         <tr className="bg-gray-100">
                             <th className="border px-4 py-2">Date</th>
-                            <th className="border px-4 py-2">Active Date</th>
+                            <th className="border px-4 py-2">Assign Date</th>
                             <th className="border px-4 py-2">User ID</th>
                             <th className="border px-4 py-2">Name</th>
                             <th className="border px-4 py-2">Phone</th>
@@ -276,7 +305,7 @@ const Count = () => {
                             <tr key={user._id} className="hover:bg-gray-50">
                                 <td className="border px-4 py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td className="border px-4 py-2">
-                                    {user.status === 'active' ? new Date(user.updatedAt).toLocaleDateString() : <span>{user.status}</span>}
+                                    {new Date(user.consultantAssign).toLocaleDateString()}
                                 </td>
                                 <td className="border px-4 py-2">{user.userID}</td>
                                 <td className="border px-4 py-2">{user.name}</td>
@@ -306,6 +335,7 @@ const Count = () => {
                     Next
                 </button>
             </div>
+            <ScrollRestoration />
         </div>
     );
 };

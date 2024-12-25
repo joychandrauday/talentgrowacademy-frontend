@@ -1,144 +1,280 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import useUser from '../../../Others/Register/useUser';
 import useFetchUsers from '../../../../Hooks/useFetchUsers';
-import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
 
 const ControllerCount = () => {
-    // State for managing the query parameters for fetching users
+    const { userdb } = useUser();
     const [queryParams, setQueryParams] = useState({
-        sort: '-createdAt',  // Default sort by creation date (descending)
+        searchTerm: '',
         role: 'user',
+        status: 'inactive', // Filter by active or inactive
+        sort: '-createdAt',
+        limit: 10,
+        page: 1,
+        fromDate: '',
+        toDate: '',
     });
 
-    // Custom hook to fetch users based on the query parameters
-    const { users, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState('all'); // State for active tab: 'all', 'active', 'inactive'
+    const [filteredData, setFilteredData] = useState([]);
+    const [isTodaySelected, setIsTodaySelected] = useState(false); // Added state for Today checkbox
+    const [isLastMonthSelected, setIsLastMonthSelected] = useState(false); // Added state for Last Month checkbox
 
-    // // Handle sorting change (if needed in the future)
-    // const handleSortChange = (newSort) => {
-    //     setQueryParams({ ...queryParams, sort: newSort });
-    //     refetch();
-    // };
-    // Overview data for users based on status
-    const countUsersByStatus = (status) => {
-        return users.filter((user) => user.status === status).length;
+
+    // Fetching users based on queryParams
+    const { users, totalPages, currentPage, totalInactive, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
+
+    // Handle search query
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
     };
-    const countUsersByAssign = () => {
-        return users.filter((user) => user.trainer).length;
+
+    // Handle sorting by different fields
+    const handleSort = (field) => {
+        setQueryParams((prevParams) => ({
+            ...prevParams,
+            sort: prevParams.sort === field ? `-${field}` : field,
+        }));
     };
-    const overviewData = [
-        { label: 'Active Users', count: countUsersByStatus('active') },
-        { label: 'Assigned Users', count: countUsersByAssign() },
-        { label: 'Pending Users', count: countUsersByStatus('pending') },
-        { label: 'Inactive Users', count: countUsersByStatus('inactive') },
-    ];
 
-    // Tab Management
-    const [activeTab, setActiveTab] = useState(overviewData[0].label); // Set the first tab as active
-    // Counting the users by their status
-    const activeUsers = users.filter((user) => user.status === 'active');
-    const assignedUsers = users.filter((user) => user.trainer)
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
+    // Handle page change
+    const handlePageChange = (page) => {
+        setQueryParams((prevParams) => ({
+            ...prevParams,
+            page,
+        }));
+    };
 
-    if (isError) {
-        return <div>Error: {error.message}</div>;
-    }
+    // Handle sorting by date
+    const handleDateSort = () => {
+        setQueryParams((prevParams) => ({
+            ...prevParams,
+            sort: prevParams.sort === 'createdAt' ? '-createdAt' : 'createdAt',
+        }));
+    };
 
+    // Handle status filter
+    const handleFilterChange = (e) => {
+        setQueryParams((prevParams) => ({
+            ...prevParams,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
+    // Handle date range filter
+    const handleDateRangeChange = (e) => {
+        setQueryParams((prevParams) => ({
+            ...prevParams,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
+    // Handle the "Show Today's Data" checkbox
+    const handleTodayCheckboxChange = (e) => {
+        setIsTodaySelected(e.target.checked);
+    };
+
+    // Handle the "Show Last Month's Data" checkbox
+    const handleLastMonthCheckboxChange = (e) => {
+        setIsLastMonthSelected(e.target.checked);
+    };
+
+    // Update filtered users data whenever the tab is changed or new data is fetched
+    useEffect(() => {
+        let filtered = users;
+
+        // Apply search query
+        if (searchQuery) {
+            filtered = filtered.filter((user) =>
+                user.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        // Apply tab filter (active, inactive, all)
+        if (activeTab === 'active') {
+            filtered = filtered.filter((user) => user.status === 'active');
+        } else if (activeTab === 'inactive') {
+            filtered = filtered.filter((user) => user.status === 'inactive');
+        }
+
+        // Apply date range filter
+        if (queryParams.fromDate) {
+            filtered = filtered.filter(
+                (user) => new Date(user.createdAt) >= new Date(queryParams.fromDate)
+            );
+        }
+        if (queryParams.toDate) {
+            filtered = filtered.filter(
+                (user) => new Date(user.createdAt) <= new Date(queryParams.toDate)
+            );
+        }
+
+        // Apply today's data filter if checkbox is checked
+        if (isTodaySelected) {
+            const today = new Date().toLocaleDateString();
+            filtered = filtered.filter((user) => {
+                const createdDate = new Date(user.createdAt).toLocaleDateString();
+                const activateDate = new Date(user.activateDate).toLocaleDateString();
+                return createdDate === today || activateDate === today;
+            });
+        }
+
+        // Apply last 30 days' data filter if checkbox is checked
+        if (isLastMonthSelected) {
+            const now = new Date();
+            const thirtyDaysAgo = new Date(now);
+            thirtyDaysAgo.setDate(now.getDate() - 30); // Set the date to 30 days ago
+
+            filtered = filtered.filter((user) => {
+                const createdDate = new Date(user.createdAt);
+                const activateDate = new Date(user.activateDate);
+                return (
+                    (createdDate >= thirtyDaysAgo && createdDate <= now) ||
+                    (activateDate >= thirtyDaysAgo && activateDate <= now)
+                );
+            });
+        }
+        setFilteredData(filtered);
+        // Update the user counts
+
+    }, [activeTab, users, searchQuery, queryParams, isTodaySelected, isLastMonthSelected]); // Added isLastMonthSelected dependency
+    console.log(totalInactive);
     return (
         <div className='p-6'>
-            {/* Tabs */}
-            <div className="mb-4 ">
-                <div className="flex space-x-4 ">
-                    {overviewData.map((data) => (
-                        <button
-                            key={data.label}
-                            className={`p-4 w-full rounded-lg font-semibold ${activeTab === data.label ? 'bg-secondary text-white' : 'bg-gray-200'
-                                }`}
-                            onClick={() => setActiveTab(data.label)}
-                        >
-                            <h4 className="text-xl font-semibold">{data.label}</h4>
-                            <p className="text-3xl">{data.count}</p>
-                        </button>
-                    ))}
+            {/* Tab Navigation */}
+            <div className="mb-4 flex justify-between gap-4">
+                <div
+                    className={`w-full  px-4 py-12 text-center rounded-lg transition duration-300 ease-in-out transform hover:scale-105 ${activeTab === 'all' ? 'bg-blue-500 text-white shadow-xl' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'}`}
+                    onClick={() => setActiveTab('all')}
+                >
+                    <h3 className="text-xl font-semibold">All inactive Users</h3>
+                    <p className="text-2xl">{totalInactive}</p>
+                </div>
+                <div className="flex justify-between gap-4 items-center w-full p-4 bg-gray-100 rounded-lg shadow-md">
+                    {/* Today's Data Checkbox */}
+                    <label className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            checked={isTodaySelected}
+                            onChange={handleTodayCheckboxChange}
+                            className="form-checkbox h-8 w-8 text-blue-500 transition duration-200 ease-in-out"
+                        />
+                        <span className="text-sm text-gray-700 font-semibold">Show Today's Data</span>
+                    </label>
+
+                    {/* Last Month's Data Checkbox */}
+                    <label className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            checked={isLastMonthSelected}
+                            onChange={handleLastMonthCheckboxChange}
+                            className="form-checkbox h-8 w-8 text-blue-500 transition duration-200 ease-in-out"
+                        />
+                        <span className="text-sm text-gray-700 font-semibold">Show Last Month's Data</span>
+                    </label>
                 </div>
             </div>
 
-            {/* active tab content */}
-            {
-                activeTab === overviewData[0].label && (
-                    <div className="flex flex-col space-y-4">
-                        <table className="table-auto w-full border-collapse border border-gray-300">
-                            <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="border px-4 py-2">Name</th>
-                                    <th className="border px-4 py-2">Email</th>
-                                    <th className="border px-4 py-2">Phone</th>
-                                    <th className="border px-4 py-2">trainer</th>
-                                    <th className="border px-4 py-2">Role</th>
-                                    <th className="border px-4 py-2">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {assignedUsers.map((user) => (
-                                    <tr key={user._id} className="hover:bg-gray-50">
-                                        <td className="border px-4 py-2">{user.name}</td>
-                                        <td className="border px-4 py-2">{user.email}</td>
-                                        <td className="border px-4 py-2">{user.phone}</td>
-                                        <td className="border px-4 py-2">{user.trainer}</td>
-                                        <td className="border px-4 py-2">{user.role}</td>
-                                        <td className="border px-4 py-2">{user.status}</td>
+            {/* Search Input */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <input
+                        type="text"
+                        name="searchTerm"
+                        placeholder="Search users"
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className="border border-gray-300 rounded p-2 w-full"
+                    />
+                </div>
+                {/* <div>
+                    <select
+                        name="status"
+                        value={queryParams.status}
+                        onChange={handleFilterChange}
+                        className="border border-gray-300 rounded p-2 w-full"
+                    >
+                        <option value="">Filter by Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div> */}
+                <div className="flex">
+                    <input
+                        type="date"
+                        name="fromDate"
+                        value={queryParams.fromDate}
+                        onChange={handleDateRangeChange}
+                        className="border border-gray-300 rounded p-2 w-full"
+                    />
+                    <input
+                        type="date"
+                        name="toDate"
+                        value={queryParams.toDate}
+                        onChange={handleDateRangeChange}
+                        className="border border-gray-300 rounded p-2 w-full"
+                    />
 
-                                    </tr>
-                                ))}
+                </div>
 
-                            </tbody>
-                        </table>
-                    </div>
-                )
-            }
-            {/* active tab content */}
-            {
-                activeTab === overviewData[1].label && (
-                    <div className="flex flex-col space-y-4">
-                        <table className="table-auto w-full border-collapse border border-gray-300">
-                            <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="border px-4 py-2">Name</th>
-                                    <th className="border px-4 py-2">Email</th>
-                                    <th className="border px-4 py-2">Phone</th>
-                                    <th className="border px-4 py-2">trainer</th>
-                                    <th className="border px-4 py-2">Role</th>
-                                    <th className="border px-4 py-2">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {activeUsers.map((user) => (
-                                    <tr key={user._id} className="hover:bg-gray-50">
-                                        <td className="border px-4 py-2">{user.name}</td>
-                                        <td className="border px-4 py-2">{user.email}</td>
-                                        <td className="border px-4 py-2">{user.phone}</td>
-                                        <td className="border px-4 py-2">{user.trainer}</td>
-                                        <td className="border px-4 py-2">{user.role}</td>
-                                        <td className="border px-4 py-2">{user.status}</td>
 
-                                    </tr>
-                                ))}
+            </div>
 
-                            </tbody>
-                        </table>
-                    </div>
-                )
-            }
+            {/* Users Table */}
+            <div className="overflow-x-auto">
+                <table className="table-auto w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr className="bg-gray-100">
+                            <th className="border px-4 py-2">Date</th>
+                            <th className="border px-4 py-2">Active Date</th>
+                            <th className="border px-4 py-2">User ID</th>
+                            <th className="border px-4 py-2">Name</th>
+                            <th className="border px-4 py-2">Phone</th>
+                            <th className="border px-4 py-2">Refer</th>
+                            <th className="border px-4 py-2">Whatsapp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredData.map((user) => (
+                            <tr key={user._id} className="hover:bg-gray-50">
+                                <td className="border px-4 py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
+                                <td className="border px-4 py-2">
+                                    {user.status === 'active' ? new Date(user.activateDate).toLocaleDateString() : <span>{user.status}</span>}
+                                </td>
+                                <td className="border px-4 py-2">{user.userID}</td>
+                                <td className="border px-4 py-2">{user.name}</td>
+                                <td className="border px-4 py-2">{user.phone}</td>
+                                <td className="border px-4 py-2">{user.reference?.userID}</td>
+                                <td className="border px-4 py-2">{user.whatsapp}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
+            {/* Pagination */}
+            <div className="flex justify-between items-center mt-4">
+                <button
+                    className="btn"
+                    disabled={currentPage === 1}
+                    onClick={() => handlePageChange(currentPage - 1)}
+                >
+                    Previous
+                </button>
+                <span>{currentPage}</span>
+                <button
+                    className="btn"
+                    disabled={currentPage === totalPages}
+                    onClick={() => handlePageChange(currentPage + 1)}
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 };
 
-ControllerCount.propTypes = {
-    // Define your PropTypes if needed
-};
 
 export default ControllerCount;

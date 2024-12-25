@@ -29,7 +29,7 @@ import { RiUserSearchFill } from "react-icons/ri";
 import { ImBooks } from "react-icons/im";
 import { GiTeacher } from "react-icons/gi";
 import { IoBookSharp } from "react-icons/io5";
-import { BiLink } from "react-icons/bi";
+import { BiLink, BiTask } from "react-icons/bi";
 
 const Sidebar = ({ user }) => {
   const { logOut } = useContext(AuthContext);
@@ -234,8 +234,18 @@ const Sidebar = ({ user }) => {
                 >
                   <IoMdArrowDropright /> Request
                 </NavLink>
+
                 <NavLink
-                  to="/dashboard/count"
+                  to="/dashboard/consultant/search"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Search
+                </NavLink>
+                <NavLink
+                  to="/dashboard/consultant/count"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
@@ -244,14 +254,15 @@ const Sidebar = ({ user }) => {
                   <IoMdArrowDropright /> Count
                 </NavLink>
                 <NavLink
-                  to="/dashboard/search"
+                  to="/dashboard/consultant/count-result"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
-                  <IoMdArrowDropright /> Search
+                  <IoMdArrowDropright /> Count Result
                 </NavLink>
+
               </div>
             </div>
           )}
@@ -361,6 +372,15 @@ const Sidebar = ({ user }) => {
                 >
                   <IoMdArrowDropright /> Count
                 </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/count-result"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count Result
+                </NavLink>
               </div>
             </div>
           )}
@@ -375,6 +395,15 @@ const Sidebar = ({ user }) => {
                   }
                 >
                   <ImBooks /> Manage Courses
+                </NavLink>
+                <NavLink
+                  to="/dashboard/teacher-manager/assignments"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <BiTask /> Manage Assignments
                 </NavLink>
                 <NavLink
                   to="/dashboard/teacher-manager/links"

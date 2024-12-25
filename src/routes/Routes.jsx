@@ -58,6 +58,9 @@ import TeacherManagerTeacherManage from "../pages/Dashboard/DashboardRoleWise/Te
 import TeacherManagerCourseManageMent from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerCourseManageMent";
 import TeacherManagerUtility from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerUtility";
 import AdminUtilities from "../pages/Dashboard/DashboardRoleWise/Admin/AdminUtilities";
+import CountResult from "../components/Shared/CountResult";
+import CourseDetailed from "../pages/Dashboard/DashboardCommon/CourseDetailed";
+import TeacherManagerAssignments from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerAssignments";
 
 
 
@@ -152,6 +155,10 @@ export const router = createBrowserRouter([
       {
         path: "courses",
         element: <CoursesDash />,
+      },
+      {
+        path: "courses/:id",
+        element: <CourseDetailed />,
       },
       {
         path: "change-password",
@@ -271,6 +278,10 @@ export const router = createBrowserRouter([
             element: <Count />
           },
           {
+            path: "count-result",
+            element: <CountResult />
+          },
+          {
             path: "search",
             element: <ProfileSearch />
           }
@@ -282,7 +293,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <GroupLeaderTrainerManagement />
+            element: <GroupLeaderUserManagement />
           },
           {
             path: "trainers",
@@ -298,7 +309,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count-result",
-            element: <Count />
+            element: <CountResult />
           }
         ]
       },
@@ -309,7 +320,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <SGLglManagement />
+            element: <SGLUserManagement />
           },
           {
             path: "group-leaders",
@@ -322,6 +333,10 @@ export const router = createBrowserRouter([
           {
             path: "count",
             element: <Count />
+          },
+          {
+            path: "count-result",
+            element: <CountResult />
           },
           {
             path: "search",
@@ -372,6 +387,10 @@ export const router = createBrowserRouter([
           {
             path: "course",
             element: <TeacherManagerCourseManageMent />
+          },
+          {
+            path: "assignments",
+            element: <TeacherManagerAssignments />
           },
           {
             path: "links",

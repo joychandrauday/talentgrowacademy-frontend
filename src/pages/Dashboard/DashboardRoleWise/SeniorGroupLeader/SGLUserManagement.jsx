@@ -50,28 +50,6 @@ const SGLUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
 
-    const activateUser = async (userID) => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
-                cancelButtonText: 'Cancel',
-            });
-
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
-                refetch();
-            }
-        } catch (err) {
-            Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
-        }
-    };
-
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
 
@@ -156,7 +134,7 @@ const SGLUserManagement = () => {
                                 <td className="border px-4 py-2">{user.userID}</td>
                                 <td className="border px-4 py-2">{user.name}</td>
                                 <td className="border px-4 py-2">{user.consultant?.userID || 'N/A'}</td>
-                                <td className="border px-4 py-2">{user.groupLeader?.userID}</td>
+                                <td className="border px-4 py-2">{user.groupLeader?.name}</td>
                                 <td className="border px-4 py-2">{user.trainer?.userID}</td>
                                 <td className="border px-4 py-2">{user.phone}</td>
                                 <td className="border px-4 py-2">{user.whatsapp}</td>
