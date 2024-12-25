@@ -3,12 +3,18 @@ import PropTypes from 'prop-types';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
 import useFetchAdmin from '../../../../Hooks/useFetchAdmin';
 import useUser from '../../../Others/Register/useUser';
+import AssignModal from '../../../../Hooks/AssignModal';
+import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 
 const GroupLeaderTrainerManagement = () => {
     const { userdb } = useUser()
     console.log(userdb._id);
     const [trainers, setTrainers] = useState([])
-
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState('');
+    const [assignedEndpoint, setAssignEndpoint] = useState('')
+    const [queryParams, setQueryParams] = useState({})
+    const axiosPublic = useAxiosPublic()
     useEffect(() => {
         if (!userdb || !userdb._id) {
             // If userdb or userdb._id is undefined, we return early and do not make the fetch request
@@ -18,13 +24,14 @@ const GroupLeaderTrainerManagement = () => {
 
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/admins/alladmins?role=trainer&groupLeader=${userdb._id}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setTrainers(data.data.results)
-                console.log('Fetched dataaaaa:', data.data.results);
+                const response = await axiosPublic.get(`/admins/alladmins`, {
+                    params: {
+                        role: 'trainer',
+                        groupLeader: userdb._id,
+                    },
+                });
+                setTrainers(response.data.data.results)
+                console.log('Fetched dataaaaa:', response.data.data.results);
                 // You can store data in state or do something with it
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -33,7 +40,25 @@ const GroupLeaderTrainerManagement = () => {
 
         fetchData(); // Call the async function
     }, [userdb]); // Add userdb as a dependency to re-run when userdb changes
+    // set up assignEndpoint route
+    useEffect(() => {
+        setAssignEndpoint(`/group-leaders/assigntrainer`);
+    }, [selectedUser]);
 
+    // Handle assign click event and open the modal
+    const handleAssignClick = (user) => {
+        setSelectedUser(user);
+        setModalOpen(true);
+    };
+    const handleConfirmAssign = async (user) => {
+        console.log('Assigning user:', user);
+        // Call the backend to assign the user
+
+    };
+    const handleModalClose = () => {
+        console.log("Closing modal...");
+        setModalOpen(false);
+    };
     // is loading 
     return (
         <div className="p-4">
@@ -111,9 +136,9 @@ const GroupLeaderTrainerManagement = () => {
                             <th className="border px-4 py-2">Name</th>
                             <th className="border px-4 py-2">Email</th>
                             <th className="border px-4 py-2">Phone</th>
-                            <th className="border px-4 py-2">Tra</th>
                             <th className="border px-4 py-2">Role</th>
                             <th className="border px-4 py-2">Status</th>
+                            <th className="border px-4 py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -123,34 +148,33 @@ const GroupLeaderTrainerManagement = () => {
                                 <td className="border px-4 py-2">{user.name}</td>
                                 <td className="border px-4 py-2">{user.email}</td>
                                 <td className="border px-4 py-2">{user.phone}</td>
-                                <td className="border px-4 py-2">{user.groupLeader?.name}</td>
                                 <td className="border px-4 py-2">{user.role}</td>
                                 <td className="border px-4 py-2">{user.status}</td>
+                                <td className="border px-4 py-2">
+                                    <button
+                                        className="px-4 py-2 border rounded text-white bg-blue-600 hover:bg-blue-700"
+                                        onClick={() => handleAssignClick(user._id)}
+                                    >
+                                        Assign
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {/* Pagination */}
-            {/* <div className="flex justify-between items-center mt-4">
-                <div className="space-x-2">
-                    <button
-                        onClick={() => handlePagination(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={() => handlePagination(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Next
-                    </button>
-                </div>
-            </div> */}
+            {/* Assign Modal */}
+            {isModalOpen && (
+                <AssignModal
+                    handleModalClose={handleModalClose}
+                    assignTo={selectedUser}
+                    assignEndpoint={assignedEndpoint}
+                    onConfirm={handleConfirmAssign}
+                    queryParams={{ groupLeader: userdb._id, status: 'active', trainer: 'null' }}
+                />
+            )}
+
         </div>
     );
 };

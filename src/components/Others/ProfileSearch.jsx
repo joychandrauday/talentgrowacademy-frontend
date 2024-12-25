@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios'; // You can use axios or your custom fetch function for API requests
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import { FaUserTag, FaCircle, FaUserTie, FaUsers, FaChessQueen, FaChalkboardTeacher, FaLink, FaPhoneAlt, FaWhatsapp, FaCalendarCheck, FaClock, FaAddressCard } from 'react-icons/fa';
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import { ScrollRestoration } from 'react-router-dom';
 import { GiWorld } from 'react-icons/gi';
 import { MdEmail } from 'react-icons/md';
+import useFetchUsers from '../../Hooks/useFetchUsers';
+import useUser from '../../pages/Others/Register/useUser';
 
 const ProfileSearch = () => {
+    const { userdb } = useUser();
     // State to manage search term and user details
+    const axiosPublic = useAxiosPublic();
     const [searchTerm, setSearchTerm] = useState('');
     const [user, setUser] = useState(null); // To store the found user details
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const axiosPublic = useAxiosPublic()
 
     // Handle search input change
     const handleSearchChange = (e) => {
@@ -22,7 +24,7 @@ const ProfileSearch = () => {
     };
 
     // Fetch user details by search term (ID, email, or name)
-    const handleSearch = async () => {
+    const handleSearchUser = async () => {
         setLoading(true);
         setError('');
         try {
@@ -49,7 +51,7 @@ const ProfileSearch = () => {
                     className="border p-2 rounded-lg w-64 shadow-md shadow-gray-400 px-4 "
                 />
                 <button
-                    onClick={handleSearch}
+                    onClick={handleSearchUser}
                     className="ml-2 px-4 py-2 bg-secondary drop-shadow-lg text-white rounded-lg hover:bg-primary transition duration-300"
                 >
                     Search
@@ -116,11 +118,11 @@ const ProfileSearch = () => {
                             </p>
                             <p className="flex gap-2 items-center">
                                 <FaUsers className="text-yellow-500 mr-2" />
-                                <strong>Group Leader:</strong> {user.groupLeader?.userID}
+                                <strong>Group Leader:</strong> {user.groupLeader?.name}({user.groupLeader?.userID})
                             </p>
                             <p className="flex gap-2 items-center">
                                 <FaChalkboardTeacher className="text-indigo-500 mr-2" />
-                                <strong>Trainer:</strong> {user.trainer?.userID}
+                                <strong>Trainer:</strong> {user.trainer?.name}({user.trainer?.userID})
                             </p>
                             <p className="flex gap-2 items-center">
                                 <FaCalendarCheck className="text-blue-400 mr-2" />
@@ -131,6 +133,7 @@ const ProfileSearch = () => {
                     </div>
                 </div>
             )}
+
             <ScrollRestoration />
         </div>
     );

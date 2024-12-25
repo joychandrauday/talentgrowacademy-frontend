@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useUser from '../../../Others/Register/useUser';
+import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import AssignModal from '../../../../Hooks/AssignModal';
 
 const SGLglManagement = () => {
     const { userdb } = useUser()
-    console.log(userdb._id);
-    const [trainers, setTrainers] = useState([])
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState('');
+    const [assignedEndpoint, setAssignEndpoint] = useState('')
+    const [gl, setGl] = useState([])
+    const axiosPublic = useAxiosPublic()
 
     useEffect(() => {
         if (!userdb || !userdb._id) {
@@ -16,13 +21,14 @@ const SGLglManagement = () => {
 
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/admins/alladmins?role=group-leader&seniorGroupLeader=${userdb._id}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setTrainers(data.data.results)
-                console.log('Fetched dataaaaa:', data.data.results);
+                const response = await axiosPublic.get(`/admins/alladmins`, {
+                    params: {
+                        role: 'group-leader',
+                        seniorGroupLeader: userdb._id,
+                    },
+                });
+                setGl(response.data.data.results)
+                console.log('Fetched dataaaaa:', response.data.data.results);
                 // You can store data in state or do something with it
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -31,7 +37,24 @@ const SGLglManagement = () => {
 
         fetchData(); // Call the async function
     }, [userdb]); // Add userdb as a dependency to re-run when userdb changes
+    // set up assignEndpoint route
+    useEffect(() => {
+        setAssignEndpoint(`/sgls/assigngl`);
+    }, [selectedUser]);
 
+    const handleAssignClick = (user) => {
+        setSelectedUser(user);
+        setModalOpen(true);
+    };
+    const handleConfirmAssign = async (user) => {
+        console.log('Assigning user:', user);
+        // Call the backend to assign the user
+
+    };
+    const handleModalClose = () => {
+        console.log("Closing modal...");
+        setModalOpen(false);
+    };
     // is loading 
     return (
         <div className="p-4">
@@ -111,10 +134,11 @@ const SGLglManagement = () => {
                             <th className="border px-4 py-2">Phone</th>
                             <th className="border px-4 py-2">Role</th>
                             <th className="border px-4 py-2">Status</th>
+                            <th className="border px-4 py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {trainers.map((user) => (
+                        {gl.map((user) => (
                             <tr key={user._id} className="hover:bg-gray-50">
                                 <td className="border px-4 py-2">{user.userID}</td>
                                 <td className="border px-4 py-2">{user.name}</td>
@@ -122,31 +146,32 @@ const SGLglManagement = () => {
                                 <td className="border px-4 py-2">{user.phone}</td>
                                 <td className="border px-4 py-2">{user.role}</td>
                                 <td className="border px-4 py-2">{user.status}</td>
+                                <td className="border px-4 py-2">
+                                    <button
+                                        className="px-4 py-2 border rounded text-white bg-blue-600 hover:bg-blue-700"
+                                        onClick={() => handleAssignClick(user._id)}
+                                    >
+                                        Assign
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {/* Pagination */}
-            {/* <div className="flex justify-between items-center mt-4">
-                <div className="space-x-2">
-                    <button
-                        onClick={() => handlePagination(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={() => handlePagination(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Next
-                    </button>
-                </div>
-            </div> */}
+            {/* Assign Modal */}
+            {isModalOpen && (
+                <AssignModal
+                    handleModalClose={handleModalClose}
+                    assignTo={selectedUser}
+                    assignEndpoint={assignedEndpoint}
+                    onConfirm={handleConfirmAssign}
+                    queryParams={{
+                        seniorGroupLeader: userdb._id, status: 'active', groupLeader: 'null'
+                    }}
+                />
+            )}
         </div>
     );
 };

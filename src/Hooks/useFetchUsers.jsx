@@ -27,6 +27,7 @@ const useFetchUsers = (queryParams) => {
     return {
         users: data?.data?.users || [], // Users data from response
         totalCount: data?.data?.totalCount || 0, // Total number of users
+        totalInactive: data?.data?.totalInactive,
         totalPages: data?.data?.totalPages || 0, // Total number of pages based on limit
         currentPage: data?.data?.currentPage || 1, // Current page number
         isLoading,
