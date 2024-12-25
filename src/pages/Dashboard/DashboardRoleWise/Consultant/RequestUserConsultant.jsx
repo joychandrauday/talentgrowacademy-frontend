@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import useUser from '../../../Others/Register/useUser';
 import toast from 'react-hot-toast';
+import useFetchUsers from '../../../../Hooks/useFetchUsers';
+import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
+import { ScrollRestoration } from 'react-router-dom';
 
 const RequestUserConsultant = () => {
     const [userId, setUserId] = useState('');
@@ -13,12 +16,28 @@ const RequestUserConsultant = () => {
 
     const axiosPublic = useAxiosPublic();
     const { userdb } = useUser();
+    const [requests, setRequests] = useState([]);
+    // Fetch requests from the backend API
+    useEffect(() => {
+        const fetchRequests = async () => {
+            try {
+                const response = await axiosPublic.get('/requests');  // Adjust API endpoint if needed
+                setRequests(response.data.data);  // Assuming response contains a 'data' field with requests
+            } catch (error) {
+                console.error('Error fetching requests:', error);
+            }
+        };
 
+        fetchRequests();
+    }, []);
+    const myRequests = requests.filter(request => request.requestBy._id === userdb._id);
+    console.log(myRequests);
+    if (isLoading) return <LoadingSpinner />;
     const handleSearchChange = (e) => {
         setUserId(e.target.value);
     };
 
-    const handleSearch = async () => {
+    const handleSearchRequst = async () => {
         if (!userId.trim()) {
             alert('Please enter a valid User ID, email, or name to search.');
             return;
@@ -30,6 +49,7 @@ const RequestUserConsultant = () => {
 
         try {
             const response = await axiosPublic.get(`/users/search/${userId}`); // Replace with your API endpoint to fetch user data
+            console.log(response.data.data);
             setUserData(response.data.data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch user data.');
@@ -37,9 +57,9 @@ const RequestUserConsultant = () => {
             setIsLoading(false);
         }
     };
-
+    console.log(userData);
     const handleRequestLead = async () => {
-        if (userdb._id === userData.consultant) {
+        if (userdb._id === userData.consultant?._id) {
             alert('This lead is already assigned to you!');
             return;
         }
@@ -52,7 +72,7 @@ const RequestUserConsultant = () => {
                 userId: userData._id, // The user for whom the lead is being requested
                 status: 'pending', // Request is in a pending state initially
             };
-
+            console.log(requestPayload);
             const response = await axiosPublic.post('/requests', requestPayload); // Send the request to the backend
             if (response.status === 201) {
                 toast.success('Lead request sent successfully!');
@@ -72,6 +92,14 @@ const RequestUserConsultant = () => {
 
     return (
         <div className="p-6">
+            <div className="mb-8">
+                <h1 className="text-primary italic text-2xl capitalize font-bold">
+                    Request an inactive user.
+                </h1>
+                <h4 className="text-sm text-primary italic">
+                    Manage your user Request.
+                </h4>
+            </div>
             <div className="mb-6 flex items-center">
                 <input
                     type="text"
@@ -81,7 +109,7 @@ const RequestUserConsultant = () => {
                     className="border p-2 rounded-lg w-64 shadow-md shadow-gray-400 px-4"
                 />
                 <button
-                    onClick={handleSearch}
+                    onClick={handleSearchRequst}
                     className="ml-2 px-4 py-2 bg-secondary drop-shadow-lg text-white rounded-lg hover:bg-primary transition duration-300"
                 >
                     Search
@@ -94,54 +122,130 @@ const RequestUserConsultant = () => {
             {error && (
                 <div className="text-center text-red-500">Error: {error}</div>
             )}
+            {userData ? (
 
-            <section className="bg-gray-800 p-6 text-white text-center rounded-lg shadow-lg">
-                <h1 className="text-3xl font-semibold p-6 mb-4">User Profile</h1>
-                {userData ? (
-                    <div className="space-y-4 text-center">
-                        <div className="flex flex-col items-center space-y-4">
-                            <div className="w-20 h-20 bg-gray-600 rounded-full overflow-hidden">
-                                <img
-                                    src={userData.avatar || '/default-avatar.png'}
-                                    alt="Profile"
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div>
-                                <p>
-                                    <strong>Name:</strong> {userData.name || 'N/A'}
-                                </p>
-                                <p>
-                                    <strong>Email:</strong> {userData.email || 'N/A'}
-                                </p>
-                                <p>
-                                    <strong>userID:</strong> {userData.userID || 'N/A'}
-                                </p>
-                                <p>
-                                    <strong>Consultant:</strong> {userData.consultant?.name || 'N/A'}
-                                </p>
-                                <p>
-                                    <strong>Role:</strong> {userData.role || 'N/A'}
-                                </p>
-                            </div>
+                <div className="max-w-md mx-auto bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 rounded-lg shadow-lg text-white p-6">
+                    {/* Profile Section */}
+                    <div className="flex flex-col items-center space-y-4">
+                        <div className="w-24 h-24 bg-gray-600 rounded-full overflow-hidden shadow-md">
+                            <img
+                                src={userData.avatar || '/default-avatar.png'}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
-
-                        <button
-                            onClick={handleRequestLead}
-                            className="mt-4 border-none w-full btn bg-secondary"
-                            disabled={userdb._id === userData.consultant?._id || isRequesting}
-                        >
-                            {userdb._id === userData.consultant?._id && "already yours"}
-                            {userData.consultant === null && (isRequesting ? "Requesting..." : "Request the Lead")}
-                        </button>
+                        <h2 className="text-2xl font-semibold">{userData.name || 'N/A'}</h2>
+                        <p className="text-sm text-gray-300">{`UserID: ${userData.userID || 'N/A'}`}</p>
                     </div>
-                ) : (
-                    <p className="text-gray-400">
-                        No user data available. Please search for a valid user.
-                    </p>
-                )}
-            </section>
-        </div>
+
+                    {/* Information Section */}
+                    <div className="mt-6 space-y-2">
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">Date:</span>
+                            <span>{userData.createdAt ? new Date(userData.createdAt).toLocaleDateString() : "N/A"}</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">Phone:</span>
+                            <span>{userData.phone || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">WhatsApp:</span>
+                            <span>{userData.whatsapp || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">Refer:</span>
+                            <span>{`${userData.reference?.name || 'N/A'} (${userData.reference?.userID || 'N/A'})`}</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">Consultant:</span>
+                            <span>{`${userData.consultant?.name || 'N/A'} (${userData.consultant?.phone || 'N/A'})`}</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">Group Leader:</span>
+                            <span>{userData.groupLeader?.name || 'N/A'} <br /> ({userData.groupLeader?.phone || 'N/A'})</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">Message Done:</span>
+                            <span className='flex justify-end'>{userData.isMessageDone ? new Date(userData.messageDate).toLocaleDateString() : 'No'}</span>
+                        </div>
+                        <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
+                            <span className="font-medium">WhatsApp Verified:</span>
+                            <span>{userData.isWhatsApp ? 'Right' : 'Wrong'}</span>
+                        </div>
+                    </div>
+
+                    {/* Button */}
+                    <button
+                        onClick={handleRequestLead}
+                        className={`mt-6 w-full py-2 rounded-lg shadow-md text-sm font-semibold transition ${userdb._id === userData.consultant?._id
+                            ? "bg-gray-600 cursor-not-allowed"
+                            : userData.consultant === null
+                                ? isRequesting
+                                    ? "bg-yellow-500 text-gray-800"
+                                    : "bg-secondary text-white hover:bg-secondary-focus"
+                                : "bg-red-500 cursor-not-allowed"
+                            }`}
+                        disabled={userdb._id === userData.consultant?._id || isRequesting}
+                    >
+                        {userdb._id === userData.consultant?._id
+                            ? "Already Yours"
+                            : "Request the Lead"
+                        }
+                    </button>
+                </div>
+
+
+            ) : (
+                <p className="text-gray-400">
+                    No user data available. Please search for a valid user.
+                </p>
+            )
+            }
+
+            <div className="overflow-x-auto mt-5">
+                <table className="table-auto w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr className="bg-gray-100">
+                            <th className="border px-4 py-2">Date</th>
+                            <th className="border px-4 py-2">userID</th>
+                            <th className="border px-4 py-2">Name</th>
+                            <th className="border px-4 py-2">Whatsapp</th>
+                            <th className="border px-4 py-2">R. Name</th>
+                            <th className="border px-4 py-2">Status</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {myRequests.map((request) => (
+                            <tr key={request._id} className="hover:bg-gray-50">
+                                <td className="border px-4 py-2">
+                                    {new Date(request.createdAt).toLocaleDateString()}
+                                </td>
+                                <td className="border px-4 py-2">{request.userId.userID}</td>
+                                <td className="border px-4 py-2">{request.userId.name}</td>
+                                <td className="border px-4 py-2">{request.userId.whatsapp}</td>
+                                <td className="border px-4 py-2">{request.requestBy?.name}</td>
+                                <td className="border px-4 py-2">
+                                    <span
+                                        className={`badge rounded-full ${request.status === "accept"
+                                            ? "bg-green-500"
+                                            : request.status === "reject"
+                                                ? "bg-red-800"
+                                                : "bg-yellow-500"
+                                            } text-white`}
+                                    >
+                                        {request.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+
+            </div>
+            <ScrollRestoration />
+        </div >
     );
 };
 

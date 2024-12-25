@@ -1,133 +1,124 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
-import useFetchAdmin from '../../../Hooks/useFetchAdmin';
+import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 
-const ManageAdminstration = () => {
-    const initialQueryParams = {
+const ManageAdministration = () => {
+    const axiosPublic = useAxiosPublic();
+    const [admins, setAdmins] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [queryParams, setQueryParams] = useState({
         searchTerm: '',
-        role: '',
         status: '',
-        sort: '-createdAt',
-        limit: 10,
+        role: '',
+        fromDate: '',
+        toDate: '',
         page: 1,
-        fromDate: '',
-        toDate: '',
-    };
-
-    const {
-        data,
-        isLoading,
-        isError,
-        error,
-        queryParams,
-        updateQueryParams,
-    } = useFetchAdmin(initialQueryParams);
-
-    const [filters, setFilters] = useState({
-        searchTerm: '',
-        status: '',
-        role: '',
-        fromDate: '',
-        toDate: '',
+        limit: 10, // pagination limit
     });
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-
-    useEffect(() => {
-        if (data && data.data) {
-            setTotalPages(Math.ceil(data.data.totalCount / initialQueryParams.limit));
+    // Fetch admin users from API
+    const fetchAdmins = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axiosPublic.get('/admins/alladmins', {
+                params: queryParams, // Send queryParams directly to the API
+            });
+            setAdmins(response.data.data.results);
+            setTotalPages(response.data.data.totalPages);
+        } catch (error) {
+            console.error('Error fetching administrative users:', error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [data]);
+    };
 
+    // Fetch admins whenever queryParams.page changes
+    useEffect(() => {
+        fetchAdmins();
+    }, [queryParams.page]); // Trigger refetch when page changes
+
+    // Handle filter change (for inputs like search or other filters)
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters((prev) => ({ ...prev, [name]: value }));
+        setQueryParams((prev) => ({
+            ...prev,
+            [name]: value,
+            page: 1, // Reset to the first page when filters change
+        }));
     };
 
-    const applyFilters = () => {
-        updateQueryParams({
-            searchTerm: filters.searchTerm.trim(),
-            status: filters.status,
-            role: filters.role,
-            fromDate: filters.fromDate,
-            toDate: filters.toDate,
-            page: currentPage,  // Ensure the page is updated
-        });
-    };
-
+    // Handle page change (pagination)
     const handlePagination = (page) => {
-        if (page < 1 || page > totalPages) return;  // Prevent invalid page numbers
-        setCurrentPage(page);
-        applyFilters();  // Reapply filters with updated page
+        if (page < 1 || page > totalPages) return;
+        setQueryParams((prev) => ({ ...prev, page }));
+        setCurrentPage(page); // Update currentPage state to reflect the change
     };
 
-    // Handle search
+    // Apply filters and reset to the first page
     const handleSearch = () => {
-        setCurrentPage(1);  // Reset to first page on new search
-        applyFilters();
+        setQueryParams((prev) => ({
+            ...prev,
+            page: 1, // Reset to the first page when searching
+        }));
     };
 
     return (
         <div className="p-4">
             <h1 className="text-xl font-bold mb-4">Manage Administration</h1>
 
-            {/* Filters */}
+            <div>Filters</div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <input
-                        type="text"
-                        name="searchTerm"
-                        placeholder="Search users"
-                        value={filters.searchTerm}
-                        onChange={handleFilterChange}
-                        className="border border-gray-300 rounded p-2 w-full"
-                    />
-                </div>
-                <div>
-                    <select
-                        name="status"
-                        value={filters.status}
-                        onChange={handleFilterChange}
-                        className="border border-gray-300 rounded p-2 w-full"
-                    >
-                        <option value="">Filter by Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                </div>
-                <div>
-                    <select
-                        name="role"
-                        value={filters.role}
-                        onChange={handleFilterChange}
-                        className="border border-gray-300 rounded p-2 w-full"
-                    >
-                        <option value="">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </div>
+                <input
+                    type="text"
+                    name="searchTerm"
+                    placeholder="Search users"
+                    value={queryParams.searchTerm}
+                    onChange={handleFilterChange}
+                    className="border border-gray-300 rounded p-2 w-full"
+                />
+                <select
+                    name="status"
+                    value={queryParams.status}
+                    onChange={handleFilterChange}
+                    className="border border-gray-300 rounded p-2 w-full"
+                >
+                    <option value="">Filter by Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                </select>
+                <select
+                    name="role"
+                    value={queryParams.role}
+                    onChange={handleFilterChange}
+                    className="border border-gray-300 rounded p-2 w-full"
+                >
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                </select>
                 <div className="flex space-x-2">
                     <input
                         type="date"
                         name="fromDate"
-                        value={filters.fromDate}
+                        value={queryParams.fromDate}
                         onChange={handleFilterChange}
                         className="border border-gray-300 rounded p-2 w-full"
                     />
                     <input
                         type="date"
                         name="toDate"
-                        value={filters.toDate}
+                        value={queryParams.toDate}
                         onChange={handleFilterChange}
                         className="border border-gray-300 rounded p-2 w-full"
                     />
                 </div>
             </div>
+
             <button
                 onClick={handleSearch}
                 className="bg-secondary text-white px-8 font-semibold py-2 rounded-full hover:bg-primary mb-4"
@@ -138,14 +129,12 @@ const ManageAdminstration = () => {
             {/* Table */}
             {isLoading ? (
                 <p>Loading...</p>
-            ) : isError ? (
-                <p className="text-red-500">Error: {error.message}</p>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="table-auto w-full border-collapse border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="border px-4 py-2">userID</th>
+                                <th className="border px-4 py-2">User ID</th>
                                 <th className="border px-4 py-2">Name</th>
                                 <th className="border px-4 py-2">Email</th>
                                 <th className="border px-4 py-2">Phone</th>
@@ -156,7 +145,7 @@ const ManageAdminstration = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.data?.results.map((user) => (
+                            {admins.map((user) => (
                                 <tr key={user._id} className="hover:bg-gray-50">
                                     <td className="border px-4 py-2">{user.userID}</td>
                                     <td className="border px-4 py-2">{user.name}</td>
@@ -177,34 +166,31 @@ const ManageAdminstration = () => {
                 </div>
             )}
 
-            {/* Pagination */}
             <div className="flex justify-between items-center mt-4">
-                <div className="space-x-2">
-                    <button
-                        onClick={() => handlePagination(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={() => handlePagination(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Next
-                    </button>
-                </div>
+                <button
+                    onClick={() => handlePagination(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => handlePagination(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
             </div>
         </div>
     );
 };
 
-ManageAdminstration.propTypes = {
+ManageAdministration.propTypes = {
     data: PropTypes.object,
     isLoading: PropTypes.bool,
     isError: PropTypes.bool,
     error: PropTypes.object,
 };
 
-export default ManageAdminstration;
+export default ManageAdministration;

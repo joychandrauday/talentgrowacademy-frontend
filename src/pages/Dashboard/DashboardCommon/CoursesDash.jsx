@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import useCourses from '../../../Hooks/roleFetch/useCourse';
+import { Link } from 'react-router-dom';
 
 const CoursesDash = () => {
-    const [courses, setCourses] = useState([]);
-
-    // Fetch courses from public folder
-    useEffect(() => {
-        fetch('/courses.json')
-            .then(response => response.json())
-            .then(data => setCourses(data))
-            .catch(error => console.error('Error fetching courses:', error));
-    }, []);
+    const { courses } = useCourses()
 
     return (
         <div className="p-6  text-white min-h-screen">
@@ -34,9 +28,9 @@ const CoursesDash = () => {
                         <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
                         <p className="text-sm text-gray-400">{course.description}</p>
 
-                        <button className="mt-4 w-full p-2 bg-secondary text-white rounded-md font-semibold hover:bg-opacity-80 transition">
-                            Enroll Now
-                        </button>
+                        <Link to={`/dashboard/courses/${course._id}`} className="mt-4 w-full p-2 bg-secondary text-white rounded-md font-semibold hover:bg-opacity-80 transition">
+                            Continue Course
+                        </Link>
                     </div>
                 ))}
             </div>

@@ -53,6 +53,14 @@ import AdminAllTeacherManagement from "../pages/Dashboard/DashboardRoleWise/Admi
 import RequestConsultant from "../pages/Dashboard/DashboardRoleWise/Consultant/RequestUserConsultant";
 import ControllerRequest from "../pages/Dashboard/DashboardRoleWise/Controller/ControllerRequest";
 import Count from "../components/Shared/Count";
+import UserDashboard from "../pages/Dashboard/DashboardHome/UserDashboard";
+import TeacherManagerTeacherManage from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerTeacherManage";
+import TeacherManagerCourseManageMent from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerCourseManageMent";
+import TeacherManagerUtility from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerUtility";
+import AdminUtilities from "../pages/Dashboard/DashboardRoleWise/Admin/AdminUtilities";
+import CountResult from "../components/Shared/CountResult";
+import CourseDetailed from "../pages/Dashboard/DashboardCommon/CourseDetailed";
+import TeacherManagerAssignments from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerAssignments";
 
 
 
@@ -149,6 +157,10 @@ export const router = createBrowserRouter([
         element: <CoursesDash />,
       },
       {
+        path: "courses/:id",
+        element: <CourseDetailed />,
+      },
+      {
         path: "change-password",
         element: <ChangePass />,
       },
@@ -156,6 +168,17 @@ export const router = createBrowserRouter([
       {
         path: "manage-clients",
         element: <ConsultantUserManagement />,
+      },
+      {
+        path: "user",
+        element: <DashboardHolder />,
+        children: [
+          {
+            path: "",
+            element: <DashboardHolder />
+          },
+
+        ]
       },
       //admin rooutes
       {
@@ -193,6 +216,10 @@ export const router = createBrowserRouter([
           {
             path: "courses",
             element: <AdminAllCourseManagementt />
+          },
+          {
+            path: "utilities",
+            element: <AdminUtilities />
           },
         ]
       },
@@ -251,6 +278,10 @@ export const router = createBrowserRouter([
             element: <Count />
           },
           {
+            path: "count-result",
+            element: <CountResult />
+          },
+          {
             path: "search",
             element: <ProfileSearch />
           }
@@ -262,7 +293,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <GroupLeaderTrainerManagement />
+            element: <GroupLeaderUserManagement />
           },
           {
             path: "trainers",
@@ -278,7 +309,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count-result",
-            element: <Count />
+            element: <CountResult />
           }
         ]
       },
@@ -289,7 +320,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <SGLglManagement />
+            element: <SGLUserManagement />
           },
           {
             path: "group-leaders",
@@ -302,6 +333,10 @@ export const router = createBrowserRouter([
           {
             path: "count",
             element: <Count />
+          },
+          {
+            path: "count-result",
+            element: <CountResult />
           },
           {
             path: "search",
@@ -338,6 +373,28 @@ export const router = createBrowserRouter([
           {
             path: "course",
             element: <TeacherCourses />
+          },
+        ]
+      },
+      {
+        path: "teacher-manager",
+        element: <TeacherDashboard />,
+        children: [
+          {
+            path: "",
+            element: <TeacherManagerTeacherManage />
+          },
+          {
+            path: "course",
+            element: <TeacherManagerCourseManageMent />
+          },
+          {
+            path: "assignments",
+            element: <TeacherManagerAssignments />
+          },
+          {
+            path: "links",
+            element: <TeacherManagerUtility />
           },
         ]
       },

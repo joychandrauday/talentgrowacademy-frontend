@@ -44,11 +44,11 @@ const Register = () => {
         try {
             // Fetch refer user
             const referUser = await axiosPublic.get(`/users/${referCode}`);
-            if (!referUser) {
-                toast.error("Invalid refer code or user not found!");
+            if (!referUser || referUser?.data.data.status === 'inactive') {
+                toast.error("Invalid refer code or user not found.!");
                 return;
             }
-            console.log(referUser);
+            console.log(referUser.data.data.status);
             const referData = referUser.data.data;
 
             const fullName = `${data.firstname} ${data.lastname}`;

@@ -29,6 +29,7 @@ import { RiUserSearchFill } from "react-icons/ri";
 import { ImBooks } from "react-icons/im";
 import { GiTeacher } from "react-icons/gi";
 import { IoBookSharp } from "react-icons/io5";
+import { BiLink, BiTask } from "react-icons/bi";
 
 const Sidebar = ({ user }) => {
   const { logOut } = useContext(AuthContext);
@@ -73,7 +74,7 @@ const Sidebar = ({ user }) => {
           />
           <div>
             <div className="text-xl font-semibold">
-              {user?.name || "John Doe"}
+              {user?.name}
             </div>
             <div className="text-sm">
               Balance:{" "}
@@ -87,7 +88,7 @@ const Sidebar = ({ user }) => {
         {/* Navigation Links */}
         <nav className="space-y-2 font-semibold">
           <NavLink
-            to={`/dashboard/${user.role === !'user' ? user.role : ""}`}
+            to={`/dashboard/${user.role}`}
             className={({ isActive }) =>
               `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
               }`
@@ -150,6 +151,15 @@ const Sidebar = ({ user }) => {
                 }
               >
                 <IoBookSharp /> All courses
+              </NavLink>
+              <NavLink
+                to="/dashboard/admin/utilities"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <IoBookSharp /> Utility Functions
               </NavLink>
               <NavLink
                 to="/dashboard/admin/books"
@@ -224,8 +234,18 @@ const Sidebar = ({ user }) => {
                 >
                   <IoMdArrowDropright /> Request
                 </NavLink>
+
                 <NavLink
-                  to="/dashboard/count"
+                  to="/dashboard/consultant/search"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Search
+                </NavLink>
+                <NavLink
+                  to="/dashboard/consultant/count"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
@@ -234,14 +254,15 @@ const Sidebar = ({ user }) => {
                   <IoMdArrowDropright /> Count
                 </NavLink>
                 <NavLink
-                  to="/dashboard/search"
+                  to="/dashboard/consultant/count-result"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
-                  <IoMdArrowDropright /> Search
+                  <IoMdArrowDropright /> Count Result
                 </NavLink>
+
               </div>
             </div>
           )}
@@ -350,6 +371,48 @@ const Sidebar = ({ user }) => {
                   }
                 >
                   <IoMdArrowDropright /> Count
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/count-result"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count Result
+                </NavLink>
+              </div>
+            </div>
+          )}
+          {user?.role === "teacher-manager" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/teacher-manager/course"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <ImBooks /> Manage Courses
+                </NavLink>
+                <NavLink
+                  to="/dashboard/teacher-manager/assignments"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <BiTask /> Manage Assignments
+                </NavLink>
+                <NavLink
+                  to="/dashboard/teacher-manager/links"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <BiLink /> Manage Links
                 </NavLink>
               </div>
             </div>
