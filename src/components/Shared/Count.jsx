@@ -5,9 +5,7 @@ import useUser from '../../pages/Others/Register/useUser';
 import { ScrollRestoration } from 'react-router-dom';
 
 const Count = ({ countId, countRole }) => {
-    console.log(countId, countRole, 'meeeeeeeeee');
     const { userdb } = useUser();
-    console.log(userdb?._id);
 
     const [queryParams, setQueryParams] = useState({
         searchTerm: '',
@@ -156,14 +154,7 @@ const Count = ({ countId, countRole }) => {
                 const assignDate = user.consultantAssign ? new Date(user.consultantAssign).toLocaleDateString() : null;
 
                 // Log for debugging
-                console.log({
-                    userId: user._id,
-                    createdDate,
-                    activateDate,
-                    assignDate,
-                    today,
-                    match: createdDate === today || activateDate === today || assignDate === today
-                });
+
 
                 // Return true if any of the dates match `today`
                 return createdDate === today || activateDate === today || assignDate === today;

@@ -56,17 +56,14 @@ const CountResult = () => {
             return; // Exit early if user role is "consultant"
         }
 
-        console.log(dynamicField, "dynamidddddddddd");
 
         const fetchData = async () => {
             try {
-                console.log(userdb._id);
                 const { data } = await axiosPublic.get(`/admins/alladmins`, {
                     params: { role: selectedRole, [dynamicField]: userdb._id },
                 });
 
                 setCountUsersFor(data.data.results);
-                console.log('Fetched G l Tr:', data.data.results);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -76,7 +73,6 @@ const CountResult = () => {
     }, [userdb, selectedRole, seniorGroupLeaders]);
 
 
-    console.log(countUsersFor);
     return (
         <div className="p-4">
             {/* Dropdown for Trainer ID */}

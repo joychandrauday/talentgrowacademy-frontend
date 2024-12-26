@@ -84,8 +84,6 @@ const AddUser = () => {
                 [additionalRoleName]: data.additionalRole || '',
             };
 
-            console.log(userData);
-
             if (userData.role !== 'user') {
                 const response2 = await axiosPublic.post(`/${userData.role}s/register`, userData, { headers });
                 if (response2.status === 201) {

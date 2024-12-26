@@ -140,7 +140,7 @@ const ControllerCount = () => {
         // Update the user counts
 
     }, [activeTab, users, searchQuery, queryParams, isTodaySelected, isLastMonthSelected]); // Added isLastMonthSelected dependency
-    console.log(totalInactive);
+
     return (
         <div className='p-6'>
             {/* Tab Navigation */}

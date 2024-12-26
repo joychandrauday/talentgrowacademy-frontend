@@ -11,17 +11,14 @@ const useUser = () => {
 
         try {
             const token = localStorage.getItem('authToken'); // Example: Storing token in localStorage
-            console.log(token);
             const response = await axiosPublic('/users/profile', {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
             const data = response.data.data
             setUser(data)
-            console.log("token user", data);
         } catch (error) {
             if (error.response?.status === 401) {
                 toast.error('Session expired. Please log in again.');

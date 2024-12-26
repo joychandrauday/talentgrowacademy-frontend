@@ -14,7 +14,6 @@ const ControllerConsultantManagement = () => {
     // Fetch consultants on component mount
     useEffect(() => {
         if (!userdb || !userdb._id) {
-            console.log('Waiting for user data...');
             return;
         }
 
@@ -23,7 +22,6 @@ const ControllerConsultantManagement = () => {
                 const response = await axiosPublic.get(`/admins/alladmins?role=consultant`);
                 if (response.status === 200) {
                     setConsultant(response.data.data.results); // Assuming your data structure
-                    console.log('Fetched data:', response.data.data.results);
                 } else {
                     throw new Error('Failed to fetch consultants');
                 }
@@ -37,7 +35,6 @@ const ControllerConsultantManagement = () => {
 
     // Handle permission update
     const handlePermission = async (userId, newPermission) => {
-        console.log(`Updating permission for User ID: ${userId} to ${newPermission}`);
         try {
             const response = await axiosPublic.patch(`/consultants/${userId}`, {
                 permission: newPermission, // No need to pass `userId` in the body

@@ -52,7 +52,6 @@ const Withdrawal = () => {
         setShowForm(false); // Hide the form after adding a method
         alert('New method added!');
     };
-    console.log(selectedMethod);
 
     return (
         <div className="p-6 text-white min-h-screen">

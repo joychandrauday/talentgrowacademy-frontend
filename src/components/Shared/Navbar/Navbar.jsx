@@ -16,7 +16,6 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const dropdownRef = useRef(null);
-  console.log(userdb);
 
   // Close dropdown when clicking outside
   useEffect(() => {
