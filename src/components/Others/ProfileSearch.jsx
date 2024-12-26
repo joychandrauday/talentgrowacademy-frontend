@@ -30,7 +30,6 @@ const ProfileSearch = () => {
         try {
             // API call to fetch user by search term (modify URL accordingly)
             const response = await axiosPublic.get(`/users/search/${searchTerm}`);
-            console.log(response.data.data);
             setUser(response.data?.data); // Assuming response contains user data
         } catch (err) {
             setError('User not found or error occurred');

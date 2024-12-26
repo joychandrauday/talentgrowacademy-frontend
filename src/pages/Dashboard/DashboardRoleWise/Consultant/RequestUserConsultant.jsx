@@ -31,7 +31,7 @@ const RequestUserConsultant = () => {
         fetchRequests();
     }, []);
     const myRequests = requests.filter(request => request.requestBy._id === userdb._id);
-    console.log(myRequests);
+
     if (isLoading) return <LoadingSpinner />;
     const handleSearchChange = (e) => {
         setUserId(e.target.value);
@@ -49,7 +49,6 @@ const RequestUserConsultant = () => {
 
         try {
             const response = await axiosPublic.get(`/users/search/${userId}`); // Replace with your API endpoint to fetch user data
-            console.log(response.data.data);
             setUserData(response.data.data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch user data.');
@@ -57,7 +56,6 @@ const RequestUserConsultant = () => {
             setIsLoading(false);
         }
     };
-    console.log(userData);
     const handleRequestLead = async () => {
         if (userdb._id === userData.consultant?._id) {
             alert('This lead is already assigned to you!');
@@ -72,7 +70,6 @@ const RequestUserConsultant = () => {
                 userId: userData._id, // The user for whom the lead is being requested
                 status: 'pending', // Request is in a pending state initially
             };
-            console.log(requestPayload);
             const response = await axiosPublic.post('/requests', requestPayload); // Send the request to the backend
             if (response.status === 201) {
                 toast.success('Lead request sent successfully!');

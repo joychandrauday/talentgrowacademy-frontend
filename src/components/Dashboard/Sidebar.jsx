@@ -96,6 +96,10 @@ const Sidebar = ({ user }) => {
           >
             <FaTachometerAlt /> Dashboard
           </NavLink>
+
+
+          {/* admin sidebar navs */}
+
           {user?.role === "admin" && (
             <div className="ml-4 mt-2 space-y-2">
               <NavLink
@@ -173,8 +177,9 @@ const Sidebar = ({ user }) => {
             </div>
           )}
 
+          {/* controller sidebar navs */}
           {user?.role === "controller" && (
-            <div className="ml-4 mt-2 space-y-2">
+            < div className="ml-4 mt-2 space-y-2">
               <NavLink
                 to="/dashboard/controller/consultants"
                 className={({ isActive }) =>
@@ -213,6 +218,7 @@ const Sidebar = ({ user }) => {
               </NavLink>
             </div>
           )}
+          {/* consultant sidebar navs */}
           {user?.role === "consultant" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
@@ -266,6 +272,8 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+
+          {/* trainer sidebar navs */}
           {user?.role === "trainer" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
@@ -290,6 +298,7 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+
           {/* GL routes */}
           {user?.role === "group-leader" && (
             <div>
@@ -333,6 +342,8 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+
+          {/* sgl sidebar navs */}
           {user?.role === "sgl" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
@@ -384,6 +395,9 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+
+
+          {/* teacher manager sidebar navs */}
           {user?.role === "teacher-manager" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
@@ -417,6 +431,8 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+
+          {/* teacher sidebar navs */}
           {user?.role === "teacher" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
@@ -443,26 +459,58 @@ const Sidebar = ({ user }) => {
             <FaUser /> Profile
           </NavLink>
           {/* Additional Navigation */}
-          {user.status === 'active' && <>
-            {[
-              "passbook",
-              "withdrawal",
-              "reference-history",
-              "courses",
-              "change-password",
-            ].map((path, idx) => (
+          {user.status === 'active' && (
+            <>
               <NavLink
-                key={idx}
-                to={`/dashboard/${path}`}
+                to="/dashboard/passbook"
                 className={({ isActive }) =>
                   `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
                   }`
                 }
               >
-                {getIconForPath(path)} {capitalize(path.replace("-", " "))}
+                {getIconForPath("passbook")} Passbook
               </NavLink>
-            ))}
-          </>}
+              <NavLink
+                to="/dashboard/withdrawal"
+                className={({ isActive }) =>
+                  `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
+                  }`
+                }
+              >
+                {getIconForPath("withdrawal")} Withdrawal
+              </NavLink>
+              {
+                user.role === 'user' ? <> <NavLink
+                  to="/dashboard/reference-history"
+                  className={({ isActive }) =>
+                    `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
+                    }`
+                  }
+                >
+                  {getIconForPath("reference-history")} Reference History
+                </NavLink>
+                  <NavLink
+                    to="/dashboard/courses"
+                    className={({ isActive }) =>
+                      `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
+                      }`
+                    }
+                  >
+                    {getIconForPath("courses")} Courses
+                  </NavLink></> : ''
+              }
+              <NavLink
+                to="/dashboard/change-password"
+                className={({ isActive }) =>
+                  `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
+                  }`
+                }
+              >
+                {getIconForPath("change-password")} Change Password
+              </NavLink>
+            </>
+          )}
+
 
           <NavLink
             onClick={logOut}
@@ -474,7 +522,7 @@ const Sidebar = ({ user }) => {
             <FaSignOutAlt /> Sign out
           </NavLink>
         </nav>
-      </div>
+      </div >
 
       {/* Overlay for mobile */}
       {

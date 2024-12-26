@@ -9,9 +9,9 @@ const AssignModal = ({
     assignTo,
     assignEndpoint,
     queryParams,
+    role
 }) => {
     const { users, isLoading, isError } = useFetchUsers(queryParams);
-    console.log(users);
     const axiosPublic = useAxiosPublic();
     const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -28,10 +28,9 @@ const AssignModal = ({
         }
 
         try {
-            const payload = { identifiers: selectedUsers, gl: assignTo };
-            console.log(payload);
+            const payload = { identifiers: selectedUsers, [role]: assignTo };
+
             const response = await axiosPublic.post(assignEndpoint, payload);
-            console.log();
             if (response.data.result.modifiedCount > 0) {
                 Swal.fire(
                     'Success',
@@ -44,7 +43,7 @@ const AssignModal = ({
             }
         } catch (error) {
             Swal.fire('Error', error.response?.data?.message || 'Assignment failed.', 'error');
-            console.log(error);
+
         }
     };
 

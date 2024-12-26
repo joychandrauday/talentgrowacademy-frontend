@@ -28,7 +28,6 @@ const GroupLeaderUserManagement = () => {
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
-    console.log(users);
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
         refetch();
@@ -74,7 +73,7 @@ const GroupLeaderUserManagement = () => {
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
-    console.log(users);
+
 
     return (
         <div className="p-4">

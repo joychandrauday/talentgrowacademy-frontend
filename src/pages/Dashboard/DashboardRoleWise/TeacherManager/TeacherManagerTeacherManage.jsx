@@ -26,7 +26,6 @@ const TeacherManagerTeacherManage = () => {
 
     const openModal = (teacher) => {
         setSelectedTeacher(teacher);
-        console.log(teacher);
         setShowModal(true);
     };
 
@@ -39,7 +38,6 @@ const TeacherManagerTeacherManage = () => {
     const handleAssignCourse = () => {
         if (selectedCourse) {
             // Add logic to assign the course to the teacher
-            console.log(`Assigned course ${selectedCourse} to teacher ${selectedTeacher}`);
             closeModal();
         } else {
             alert('Please select a course!');

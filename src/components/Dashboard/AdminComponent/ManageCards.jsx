@@ -136,6 +136,12 @@ const ManageCards = () => {
                                 className="textarea textarea-bordered w-full"
                             />
                             <input
+                                {...register('admissionFees')}
+                                placeholder="Admission fees"
+                                type="number" min="0.01" step="0.01"
+                                className="input input-bordered w-full"
+                            />
+                            <input
                                 {...register('link1')}
                                 placeholder="Link 1"
                                 className="input input-bordered w-full"
@@ -169,6 +175,7 @@ const ManageCards = () => {
                                 <option value="" disabled>
                                     Select Card Group
                                 </option>
+                                <option value="admin">Admin</option>
                                 <option value="link">Link</option>
                                 <option value="notice">Notice</option>
                                 <option value="others">Others</option>
@@ -193,8 +200,20 @@ const ManageCards = () => {
                                 <h3 className="card-title">{card.title}</h3>
                                 <p>{card.description}</p>
                                 {/* add Link1 */}
+                                {
+                                    card.link1 && <div>
+                                        <a href={card.link1} target="_blank" rel="noopener noreferrer">
+                                            {card.linkHeading1 || 'Link 1'}
+                                        </a>
+                                    </div>
+                                }
                                 <div className="text-primary hover:text-primary-dark">
-                                    Link 1: {card.link1}
+                                    {
+                                        card.admissionFees ? <div>
+                                            Admission Fees: {card.admissionFees}
+                                        </div> : ''
+
+                                    }
                                 </div>
 
                                 <div className="card-actions justify-end">

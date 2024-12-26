@@ -12,7 +12,6 @@ import ControllerAssignModal from '../../../../components/Dashboard/ControllerCO
 const ControllerSingleConsultant = () => {
     const { userID } = useParams();
     const { singleuser } = useSingleUser(userID);
-    console.log(singleuser);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [inactiveUsers, setInactiveUsers] = useState([]);
 
@@ -33,7 +32,6 @@ const ControllerSingleConsultant = () => {
             setQueryParams((prevParams) => ({ ...prevParams, consultant: singleuser._id }));
         }
     }, [singleuser]);
-    console.log(users);
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;

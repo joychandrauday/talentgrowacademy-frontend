@@ -14,7 +14,7 @@ const ControllerRequest = () => {
             try {
                 const response = await axiosPublic.get('/requests'); // API endpoint to fetch requests
                 setRequests(response.data.data); // Set the requests in state
-                console.log(response);
+
             } catch (error) {
                 console.error('Error fetching requests:', error);
             } finally {
