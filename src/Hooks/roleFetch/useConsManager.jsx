@@ -20,7 +20,6 @@ const useConsManager = () => {
         staleTime: 5 * 60 * 1000, // Cache trainers for 5 minutes
         cacheTime: 10 * 60 * 1000, // Keep data in memory for 10 minutes
     });
-    console.log(consultantManagers);
     return { consultantManagers, isLoading, isError, refetch };
 };
 

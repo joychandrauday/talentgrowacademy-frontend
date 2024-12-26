@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
 import useFetchUsers from '../../Hooks/useFetchUsers';
@@ -9,6 +9,8 @@ import { TbClockCheck } from 'react-icons/tb';
 import { GiCaptainHatProfile } from 'react-icons/gi';
 import useTrainers from '../../Hooks/roleFetch/useTrainers';
 import useGL from '../../Hooks/roleFetch/useGL';
+import useSGL from '../../Hooks/roleFetch/useSGL';
+import useCard from '../../Hooks/roleFetch/useCard';
 
 const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
@@ -25,11 +27,47 @@ const AllUserManagement = () => {
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
-    console.log(users);
+    const { cards } = useCard();
+    const [admissionFees, setAdmissionFees] = useState(0);
+    const [allocations, setAllocations] = useState({
+        reference: 0,
+        trainer: 0,
+        gl: 0,
+        sgl: 0,
+        consultant: 0
+    });
+
+    useEffect(() => {
+        // Find the card with the given ID
+        const admissionFeesCard = cards.find((card) => card.ID === 'admisssionFeesAdmin');
+
+        if (admissionFeesCard) {
+            const fees = admissionFeesCard.admissionFees;
+            setAdmissionFees(fees);
+
+            // Calculate the allocations based on the given percentages
+            const reference = fees * 0.24;
+            const trainer = fees * 0.07;
+            const gl = fees * 0.09;
+            const sgl = fees * 0.10;
+            const consultant = fees * 0.01;
+
+            // Set the calculated allocations
+            setAllocations({
+                reference,
+                trainer,
+                gl,
+                sgl,
+                consultant
+            });
+        }
+    }, [cards]);
+
 
     // fetch to assign
     const { trainers } = useTrainers()
     const { groupLeaders } = useGL()
+    const { seniorGroupLeaders } = useSGL()
 
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
@@ -50,21 +88,20 @@ const AllUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
 
-    const activateUser = async (userID, balance) => {
+    const activateUser = async (userID) => {
         try {
-            // Prepare options for the dropdowns
-            // const trainerOptions = trainers.map(trainer => `<option value="${trainer.id}">${trainer.name}</option>`).join('');
-            const groupLeaderOptions = groupLeaders.map(leader => `<option value="${leader._id}">${leader.name}</option>`).join('');
+            // Prepare options for the dropdown
+            const seniorGroupLeaderOptions = seniorGroupLeaders?.map(leader =>
+                `<option value="${leader._id}">${leader.name}</option>`).join('');
 
             // Create the SweetAlert2 dialog with dropdowns
             const { value: formValues } = await Swal.fire({
-                title: 'Assign Trainer & Group Leader',
+                title: 'Assign Senior Group Leader',
                 html: `
-                   
-                    <label for="groupLeader" style="display: block; text-align: left;">Select Group Leader:</label>
-                    <select id="groupLeader" class="swal2-select">
-                        <option value="">--Select Group Leader--</option>
-                        ${groupLeaderOptions}
+                    <label for="seniorGroupLeader" style="display: block; text-align: left;">Select Senior Group Leader:</label>
+                    <select id="seniorGroupLeader" class="swal2-select" style="width: 100%; padding: 0.5rem;">
+                        <option value="">--Select Senior Group Leader--</option>
+                        ${seniorGroupLeaderOptions}
                     </select>
                 `,
                 focusConfirm: false,
@@ -72,27 +109,35 @@ const AllUserManagement = () => {
                 confirmButtonText: 'Activate',
                 cancelButtonText: 'Cancel',
                 preConfirm: () => {
-                    const groupLeader = document.getElementById('groupLeader').value;
+                    const seniorGroupLeader = document.getElementById('seniorGroupLeader').value;
 
-                    if (!groupLeader) {
-                        Swal.showValidationMessage('Both Trainer and Group Leader must be selected.');
+                    if (!seniorGroupLeader) {
+                        Swal.showValidationMessage('Please select a Senior Group Leader.');
                         return null;
                     }
 
-                    return { groupLeader };
+                    return { seniorGroupLeader };
                 },
             });
 
             if (formValues) {
-                const { groupLeader } = formValues;
+                const { seniorGroupLeader } = formValues;
 
-                // Perform the activation with the selected trainer and group leader
-                const updatedBalance = (balance || 0) + 50;
+                // Perform the activation with the selected senior group leader
                 await axiosPublic.patch(`/users/${userID}`, {
                     status: 'active',
-                    balance: updatedBalance,
-                    groupLeader,
-                    activateDate: new Date()
+                    seniorGroupLeader,
+                    activateDate: new Date(),
+                });
+
+                // Add a welcome bonus transaction
+                await axiosPublic.post(`/transactions/create`, {
+                    status: 'completed',
+                    amount: 50,
+                    type: 'credit',
+                    description: 'Welcome Bonus.',
+                    userId: userID,
+                    date: new Date().toISOString(),
                 });
 
                 Swal.fire('Activated!', 'The user has been activated and assigned.', 'success');
@@ -108,7 +153,6 @@ const AllUserManagement = () => {
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
-    console.log(users);
 
     return (
         <div className="p-4">
@@ -200,7 +244,7 @@ const AllUserManagement = () => {
                                             {user.status === 'inactive' ? (
                                                 <div className="relative group">
                                                     <button
-                                                        onClick={() => activateUser(user._id, user.balance)}
+                                                        onClick={() => activateUser(user?._id)}
                                                         className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
                                                     >
                                                         <TbClockCheck />

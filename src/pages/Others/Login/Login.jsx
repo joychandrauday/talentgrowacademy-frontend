@@ -25,7 +25,6 @@ const Login = () => {
             const identifier = data.email
             const password = data.password
             const response = await signInUser(identifier, password)
-            console.log(response);
             if (response.data.success) {
                 toast.success('You are logged in successfully!');
                 navigate(`/dashboard/${response.data.data.user.role}`);

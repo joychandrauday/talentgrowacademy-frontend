@@ -1,264 +1,194 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
-import useCourses from '../../../../Hooks/roleFetch/useCourse';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-
 const TeacherManagerAssignments = () => {
     const axiosPublic = useAxiosPublic();
-    const [assignments, setAssignments] = useState({});
-    const { courses } = useCourses();
-    const [students, setStudents] = useState([]);
-    const [selectedClass, setSelectedClass] = useState('');
-    const [submittedAssignment, setNewAssignment] = useState({
-        title: '',
-        totalMark: '',
-        date: '',
-    });
-    console.log(selectedClass);
-    // Fetch assignments and students for a selected class
+    const [submittedAssignments, setSubmittedAssignments] = useState([]);
+
     useEffect(() => {
-        if (selectedClass) {
-            // Fetch assignments for the selected class
-            const fetchAssignments = async () => {
-                try {
-                    const response = await axiosPublic.get(`/courses/${selectedClass}`);
-                    console.log(response);
-                    setAssignments(response.data.data.allAssignment);
-                } catch (error) {
-                    console.error('Error fetching assignments:', error);
+        const fetchAllAssignments = async () => {
+            try {
+                // Fetch all courses
+                const response = await axiosPublic.get(`/courses`);
+                const courses = response.data.data || [];
+
+                // Extract all submitted assignments from the assignments array of each course
+                const allSubmittedAssignments = courses.flatMap(course => course.assignments || []);
+
+                // Sort assignments by date (most recent first)
+                allSubmittedAssignments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // Update state with the sorted assignments
+                setSubmittedAssignments(allSubmittedAssignments);
+            } catch (error) {
+                console.error('Error fetching assignments:', error);
+            }
+        };
+
+        fetchAllAssignments();
+    }, []);
+
+
+    const handleGradeAssignment = async (assignment) => {
+        const { value: mark } = await Swal.fire({
+            title: 'Grade Assignment',
+            input: 'number',
+            inputLabel: 'Enter the mark',
+            inputPlaceholder: 'Enter a number (e.g., 85)',
+            inputAttributes: {
+                min: 0,
+                max: 100,
+                step: 1,
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
+            inputValidator: (value) => {
+                if (!value || value < 0) {
+                    return 'Please enter a valid mark!';
                 }
-            };
+            },
+        });
 
+        if (mark) {
+            try {
+                // Make the PATCH request to update the assignment mark
+                const markResponse = await axiosPublic.patch(
+                    `/courses/${assignment.courseId}/assignments/${assignment._id}/mark`,
+                    { mark: Number(mark) }
+                );
 
-            fetchAssignments();
-        }
-    }, [selectedClass]);
+                if (markResponse.data.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'The assignment has been graded successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'Next',
+                    });
 
-    // Handle new assignment creation
-    const handleNewAssignmentSubmit = async (e) => {
-        e.preventDefault();
+                    // Prompt for bonus amount
+                    const { value: bonus } = await Swal.fire({
+                        title: 'Allocate Bonus',
+                        input: 'number',
+                        inputLabel: 'Enter bonus amount',
+                        inputPlaceholder: 'Enter a bonus amount (e.g., 500)',
+                        inputAttributes: {
+                            min: 0,
+                            step: 1,
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                        cancelButtonText: 'Cancel',
+                        inputValidator: (value) => {
+                            if (!value || value < 0) {
+                                return 'Please enter a valid bonus amount!';
+                            }
+                        },
+                    });
 
-        if (!submittedAssignment.title || !submittedAssignment.totalMark || !submittedAssignment.date) {
-            Swal.fire('Error', 'Please fill in all fields.', 'error');
-            return;
-        }
+                    if (bonus) {
+                        try {
+                            // Post a transaction
+                            await axiosPublic.post(`/transactions/create`, {
+                                status: 'completed',
+                                amount: Number(bonus),
+                                type: 'credit',
+                                description: 'Bonus for excellent performance in assignment grading.',
+                                userId: assignment.submittedBy._id,
+                                date: new Date().toISOString(),
+                            });
 
-        try {
-            const response = await axiosPublic.patch(`/courses/assignments/${selectedClass}/add`, {
-                submittedAssignment
-            });
-            if (response.data.success) {
-                Swal.fire('Success', 'Assignment created successfully!', 'success');
-            } else {
-                Swal.fire('Error', 'Failed to create assignment.', 'error');
+                            Swal.fire({
+                                title: 'Bonus Added!',
+                                text: 'The bonus has been successfully allocated to the student.',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                            });
+
+                            // Optionally refetch data or update UI to reflect the changes
+
+                        } catch (error) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while allocating the bonus.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                            });
+                            console.error('Error allocating bonus:', error);
+                        }
+                    }
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: markResponse.data.message || 'Failed to grade the assignment.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while grading the assignment.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+                console.error('Error grading assignment:', error);
             }
-        } catch (error) {
-            console.error('Error creating assignment:', error);
-            Swal.fire('Error', 'An error occurred.', 'error');
         }
     };
 
-    // Handle marking assignment with rewards
-    const handleMarkAssignment = async (assignmentId, studentId, mark, reward) => {
-        try {
-            const response = await axiosPublic.patch(`/courses/assignments/${assignmentId}/mark`, {
-                studentId,
-                mark,
-                reward,
-            });
-            if (response.data.success) {
-                Swal.fire('Success', 'Assignment marked and reward granted!', 'success');
-            } else {
-                Swal.fire('Error', 'Failed to mark assignment.', 'error');
-            }
-        } catch (error) {
-            console.error('Error marking assignment:', error);
-            Swal.fire('Error', 'An error occurred while marking.', 'error');
-        }
-    };
-    // handle block assignment
-    const handleUpdateAssignment = async () => {
-        const submittedAssignment = {
-        }
-        try {
-            const response = await axiosPublic.patch(`/courses/assignments/${selectedClass}/add`, {
-                submittedAssignment
-            });
-            if (response.data.success) {
-                Swal.fire('Success', 'Assignment blocked!', 'success');
-            } else {
-                Swal.fire('Error', 'Failed to block assignment.', 'error');
-            }
-        } catch (error) {
-            console.error('Error blocking assignment:', error);
-            Swal.fire('Error', 'An error occurred while blocking.', 'error');
-        }
-    };
-    console.log(assignments);
+
+
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
-            <Tabs>
-                <TabList className="flex space-x-4 mb-6">
-                    <Tab className="py-2 px-4 cursor-pointer hover:bg-blue-500 hover:text-white transition">Add Assignment</Tab>
-                    <Tab className="py-2 px-4 cursor-pointer hover:bg-blue-500 hover:text-white transition">Manage Assignments</Tab>
-                </TabList>
-
-                <TabPanel>
-                    <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-                        <h1 className="text-2xl font-bold mb-4">Add New Assignment</h1>
-                        <form onSubmit={handleNewAssignmentSubmit} className="space-y-4">
-                            <div className="mb-4">
-                                <label htmlFor="classSelect" className="block text-gray-700 mb-2">Select Class</label>
-                                <select
-                                    id="classSelect"
-                                    className="w-full p-2 border rounded-lg"
-                                    value={selectedClass}
-                                    onChange={(e) => setSelectedClass(e.target.value)}
-                                >
-                                    <option value="">Select a Couruse</option>
-                                    {courses.map((course) => (
-                                        <option key={course._id} value={course._id}>
-                                            {course.name}
-                                        </option>
-                                    ))}
-                                    {/* Add more class options dynamically if needed */}
-                                </select>
-                            </div>
-                            <div>
-                                <label htmlFor="title" className="block text-gray-700">Title</label>
-                                <input
-                                    type="text"
-                                    id="title"
-                                    value={submittedAssignment.title}
-                                    onChange={(e) => setNewAssignment({ ...submittedAssignment, title: e.target.value })}
-                                    className="w-full p-2 border rounded-lg"
-                                    placeholder="Enter assignment title"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="deadline" className="block text-gray-700">Deadline</label>
-                                <input
-                                    type="date"
-                                    id="date"
-                                    value={submittedAssignment.date}
-                                    onChange={(e) => setNewAssignment({ ...submittedAssignment, date: e.target.value })}
-                                    className="w-full p-2 border rounded-lg"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="total Mark" className="block text-gray-700">Total Mark</label>
-                                <input
-                                    type="number"
-                                    id="totalMark"
-                                    value={submittedAssignment.totalMark}
-                                    onChange={(e) => setNewAssignment({ ...submittedAssignment, totalMark: e.target.value })}
-                                    className="w-full p-2 border rounded-lg"
-                                    required
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
-                            >
-                                Create Assignment
-                            </button>
-                        </form>
-                    </div>
-                </TabPanel>
-
-                <TabPanel>
-                    <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-                        <h2 className="text-xl font-bold mb-4">Manage Assignments</h2>
-                        <div className="mb-4">
-                            <label htmlFor="classSelect" className="block text-gray-700 mb-2">Select Class</label>
-                            <select
-                                id="classSelect"
-                                className="w-full p-2 border rounded-lg"
-                                value={selectedClass}
-                                onChange={(e) => setSelectedClass(e.target.value)}
-                            >
-                                <option value="">Select a Couruse</option>
-                                {courses.map((course) => (
-                                    <option key={course._id} value={course._id}>
-                                        {course.name}
-                                    </option>
-                                ))}
-                                {/* Add more class options dynamically if needed */}
-                            </select>
-                        </div>
-                        <table className="table-auto w-full border-collapse border border-gray-300">
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+                <h1 className="text-2xl font-bold mb-4">Submitted Assignments</h1>
+                {submittedAssignments.length > 0 && (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full bg-white border rounded-lg">
                             <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="border px-4 py-2">Title</th>
-                                    <th className="border px-4 py-2">Description</th>
-                                    <th className="border px-4 py-2">Deadline</th>
-                                    <th className="border px-4 py-2">Actions</th>
+                                <tr className="bg-gray-100 border-b">
+                                    <th className="py-2 px-4 text-left">#</th>
+                                    <th className="py-2 px-4 text-left">Link</th>
+                                    <th className="py-2 px-4 text-left">Submitted By</th>
+                                    <th className="py-2 px-4 text-left">Date</th>
+                                    <th className="py-2 px-4 text-left">Status</th>
+                                    <th className="py-2 px-4 text-left">Mark</th>
+                                    <th className="py-2 px-4 text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                    assignments && <>
-                                        <tr>
-                                            <td className="border px-4 py-2">{assignments.title}</td>
-                                            <td className="border px-4 py-2">{assignments.status}</td>
-                                            <td className="border px-4 py-2">{new Date(assignments.date).toLocaleDateString()}</td>
-                                            <td className="border px-4 py-2">
-                                                <button
-                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                                                    onClick={() => handleUpdateAssignment()}
-                                                >
-                                                    Update Assignment
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                    </>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    {/* Marking Assignments */}
-                    <div className="bg-white shadow-lg rounded-lg p-6">
-                        <h2 className="text-xl font-bold mb-4">Mark Student Assignments</h2>
-                        <table className="table-auto w-full border-collapse border border-gray-300">
-                            <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="border px-4 py-2">Student Name</th>
-                                    <th className="border px-4 py-2">Mark</th>
-                                    <th className="border px-4 py-2">Reward</th>
-                                    <th className="border px-4 py-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {students.map((student) => (
-                                    <tr key={student._id}>
-                                        <td className="border px-4 py-2">{student.name}</td>
-                                        <td className="border px-4 py-2">
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                className="w-full p-2 border rounded-lg"
-                                            />
-                                        </td>
-                                        <td className="border px-4 py-2">
-                                            <input
-                                                type="text"
-                                                placeholder="Enter reward"
-                                                className="w-full p-2 border rounded-lg"
-                                            />
-                                        </td>
-                                        <td className="border px-4 py-2">
-                                            <button
-                                                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-                                                onClick={() => handleMarkAssignment(assignment._id, student._id, mark, reward)}
+                                {submittedAssignments.map((assignment, index) => (
+                                    <tr key={assignment._id} className="border-b hover:bg-gray-50">
+                                        <td className="py-2 px-4">{index + 1}</td>
+                                        <td className="py-2 px-4">
+                                            <a
+                                                href={assignment.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 underline"
                                             >
-                                                Submit Mark
+                                                View Link
+                                            </a>
+                                        </td>
+                                        <td className="py-2 px-4">{assignment.submittedBy?.name}</td>
+                                        <td className="py-2 px-4">
+                                            {new Date(assignment.date).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                            })}
+                                        </td>
+                                        <td className="py-2 px-4">{assignment.status}</td>
+                                        <td className="py-2 px-4">
+                                            {assignment.mark !== null ? assignment.mark : 'Not Graded'}
+                                        </td>
+                                        <td className="py-2 px-4">
+                                            <button
+                                                onClick={() => handleGradeAssignment(assignment)}
+                                                className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
+                                            >
+                                                Feed Back
                                             </button>
                                         </td>
                                     </tr>
@@ -266,14 +196,10 @@ const TeacherManagerAssignments = () => {
                             </tbody>
                         </table>
                     </div>
-                </TabPanel>
-            </Tabs>
-        </div >
+                )}
+            </div>
+        </div>
     );
-};
-
-TeacherManagerAssignments.propTypes = {
-    // Add prop types if needed
 };
 
 export default TeacherManagerAssignments;

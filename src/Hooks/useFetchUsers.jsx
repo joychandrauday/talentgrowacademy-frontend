@@ -7,9 +7,7 @@ const useFetchUsers = (queryParams) => {
     // Function to fetch users from the backend
     const fetchUsers = async () => {
         try {
-            console.log("Fetching users with params:", queryParams); // Debug params
             const response = await axiosPublic.get('/users', { params: queryParams });
-            console.log("API Response:", response.data); // Debug API response
             return response.data; // This should return { users, totalCount, totalPages, currentPage }
         } catch (error) {
             console.error("Error fetching users:", error);

@@ -9,7 +9,6 @@ const EmailSection = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
 
   return (
     <div className="md:my-10 px-4">

@@ -5,7 +5,6 @@ import useUser from '../pages/Others/Register/useUser';
 
 const Dashboard = () => {
     const { userdb } = useUser()
-    console.log(userdb);
     // Render the dashboard page with sidebar and main content components
     // The Outlet component will render the component corresponding to the current route path
     return (

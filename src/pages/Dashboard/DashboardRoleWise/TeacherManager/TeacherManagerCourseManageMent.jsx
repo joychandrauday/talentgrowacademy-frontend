@@ -41,8 +41,9 @@ const TeacherManagerCourseManagement = () => {
             try {
                 // Send updated course data to the API
                 const response = await axiosPublic.post(`/teacher-managers/edit-class/${data._id}`, data);
-                console.log(response);
-
+                const response2 = await axiosPublic.patch(`/teachers/${data.teacherId}`, {
+                    "data": data._id
+                });
                 if (response.status === 200) {
                     Swal.fire({
                         title: 'Success!',
@@ -66,7 +67,6 @@ const TeacherManagerCourseManagement = () => {
 
     const handleDelete = (id) => {
         // Add logic to delete the course
-        console.log('Deleted Course ID:', id);
     };
 
     return (

@@ -33,13 +33,11 @@ const Register = () => {
         setReferCode(code || '00000000');
     }, [location]);
 
-    console.log(referCode);
     const { userSignUp, logOut } = useContext(AuthContext);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const axiosPublic = useAxiosPublic();
 
     const onSubmit = async (data) => {
-        console.log(data);
 
         try {
             // Fetch refer user
@@ -48,7 +46,6 @@ const Register = () => {
                 toast.error("Invalid refer code or user not found.!");
                 return;
             }
-            console.log(referUser.data.data.status);
             const referData = referUser.data.data;
 
             const fullName = `${data.firstname} ${data.lastname}`;
@@ -66,11 +63,8 @@ const Register = () => {
                 trainer: referData.trainer,
             };
 
-            console.log(userData);
-
             // Send user data to the database
             const response = await axiosPublic.post("/users/register", userData);
-            console.log(response);
             if (response.status === 201) {
                 toast.success("User registered successfully and added to the database!");
 

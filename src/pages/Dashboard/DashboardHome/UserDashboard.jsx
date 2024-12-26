@@ -14,7 +14,6 @@ const UserDashboard = ({ user }) => {
     const helpCard = cards.filter((card) => card.ID === 'userDashboardHelp');
     const supportMeetCard = cards.filter((card) => card.ID === 'userDashboardSupportMeet');
     const orientationCard = cards.filter((card) => card.ID === 'userDashboardOrientation');
-    console.log(helpCard, supportMeetCard, orientationCard);
 
     const fetchCourses = async () => {
         const response = await axiosPublic.get('/courses', {

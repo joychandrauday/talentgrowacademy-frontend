@@ -24,7 +24,6 @@ const Courses = () => {
         queryKey: ['courses'],
         queryFn: fetchCourses,
     });
-    console.log(courses);
 
     // Extract unique categories from courses
     const categories = ['all', ...new Set(courses.map(course => course.category))];

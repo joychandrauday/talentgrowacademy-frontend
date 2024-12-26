@@ -15,7 +15,6 @@ const SGLglManagement = () => {
     useEffect(() => {
         if (!userdb || !userdb._id) {
             // If userdb or userdb._id is undefined, we return early and do not make the fetch request
-            console.log('Waiting for user data...');
             return;
         }
 
@@ -28,7 +27,6 @@ const SGLglManagement = () => {
                     },
                 });
                 setGl(response.data.data.results)
-                console.log('Fetched dataaaaa:', response.data.data.results);
                 // You can store data in state or do something with it
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -47,12 +45,10 @@ const SGLglManagement = () => {
         setModalOpen(true);
     };
     const handleConfirmAssign = async (user) => {
-        console.log('Assigning user:', user);
         // Call the backend to assign the user
 
     };
     const handleModalClose = () => {
-        console.log("Closing modal...");
         setModalOpen(false);
     };
     // is loading 
@@ -170,6 +166,7 @@ const SGLglManagement = () => {
                     queryParams={{
                         seniorGroupLeader: userdb._id, status: 'active', groupLeader: 'null'
                     }}
+                    role={'gl'}
                 />
             )}
         </div>

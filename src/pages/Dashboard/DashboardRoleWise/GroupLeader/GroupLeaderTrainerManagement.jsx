@@ -8,7 +8,6 @@ import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 
 const GroupLeaderTrainerManagement = () => {
     const { userdb } = useUser()
-    console.log(userdb._id);
     const [trainers, setTrainers] = useState([])
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState('');
@@ -18,7 +17,6 @@ const GroupLeaderTrainerManagement = () => {
     useEffect(() => {
         if (!userdb || !userdb._id) {
             // If userdb or userdb._id is undefined, we return early and do not make the fetch request
-            console.log('Waiting for user data...');
             return;
         }
 
@@ -31,7 +29,6 @@ const GroupLeaderTrainerManagement = () => {
                     },
                 });
                 setTrainers(response.data.data.results)
-                console.log('Fetched dataaaaa:', response.data.data.results);
                 // You can store data in state or do something with it
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -51,12 +48,10 @@ const GroupLeaderTrainerManagement = () => {
         setModalOpen(true);
     };
     const handleConfirmAssign = async (user) => {
-        console.log('Assigning user:', user);
         // Call the backend to assign the user
 
     };
     const handleModalClose = () => {
-        console.log("Closing modal...");
         setModalOpen(false);
     };
     // is loading 
@@ -171,6 +166,7 @@ const GroupLeaderTrainerManagement = () => {
                     assignTo={selectedUser}
                     assignEndpoint={assignedEndpoint}
                     onConfirm={handleConfirmAssign}
+                    role={'trainer'}
                     queryParams={{ groupLeader: userdb._id, status: 'active', trainer: 'null' }}
                 />
             )}

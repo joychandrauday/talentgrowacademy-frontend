@@ -6,8 +6,6 @@ import { MdEmail } from 'react-icons/md';
 const Profile = () => {
 
   const { userdb } = useUser()
-  console.log(userdb);
-  console.log(userdb.seniorGroupLeader?.name);
   const [copied, setCopied] = useState(false);
 
 
@@ -16,7 +14,8 @@ const Profile = () => {
 
 
   const handleCopy = (userID) => {
-    navigator.clipboard.writeText(`${import.meta.env.VITE_API_URL}/register?refer=${userID}`);
+    const currentUrl = `${window.location.origin}/register?refer=${userID}`;
+    navigator.clipboard.writeText(currentUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
   };
