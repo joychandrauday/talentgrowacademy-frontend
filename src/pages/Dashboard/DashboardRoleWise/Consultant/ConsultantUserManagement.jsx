@@ -103,7 +103,40 @@ const ConsultantUserManagement = () => {
         }
     };
 
+    const sendWhatsAppMessage = (user) => {
+        const message = `
+        Dear Applicant ${user.name},
+        User ID: ${user.userID}
+        from https://talentgrowacdemy.com
 
+            I GOT YOUR APPLICATION FORM REGARDING CONSULTING MEETING
+
+            আমি কন্সালটেন্ট মিটিং সংক্রান্ত আপনার আবেদনপত্র পেয়েছি
+
+            Tell me when you free for counselling
+
+
+            আমাকে আপনি আপনার ফ্রি টাইম বলুন কাউন্সিলিং এর জন্য
+
+            INDIAN CONSULTING  TIME
+            10 AM to 8 PM
+
+            ইন্ডিয়ান কন্সালটেন্ট মিটিং টাইম সকাল ১০  থেকে রাত ৮ পর্যন্ত
+
+            BANGLADESH CONSULTING TIME10:30 AM to 8:30 PM
+
+            *বাংলাদেশ কন্সালটেন্ট মিটিং টাইম সকাল ১০:৩০ থেকে রাত ৮:৩০ পর্যন্ত
+        
+        I am your Consultant ${userdb.name}.
+        From
+        TalentGrowAcademy.
+        `;
+
+        const url = `https://wa.me/${user.whatsapp}?text=${encodeURIComponent(message)}`;
+
+        // Open WhatsApp in a new tab
+        window.open(url, '_blank');
+    };
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
@@ -199,10 +232,9 @@ const ConsultantUserManagement = () => {
                                 <td className="border px-4 py-2">
                                     {userdb.permission && user.whatsapp ? (
                                         <a
-                                            href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-500 underline"
+                                            href="#"
+                                            onClick={() => sendWhatsAppMessage(user)}
+                                            className="text-blue-500 underline cursor-pointer"
                                         >
                                             {user.whatsapp}
                                         </a>
