@@ -16,7 +16,7 @@ const ManageAdministration = () => {
         fromDate: '',
         toDate: '',
         page: 1,
-        limit: 10, // pagination limit
+        limit: 5, // pagination limit
     });
 
     // Fetch admin users from API

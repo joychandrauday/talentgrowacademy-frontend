@@ -33,6 +33,7 @@ const DashboardHolder = () => {
             {role === 'controller' && <ControllerDashboard />}
             {role === 'consultant' && <ConsultantDashboard />}
             {role === 'sgl' && <SeniorGroupLeaderDashboard />}
+            {role === 'sgl-manager' && <SeniorGroupLeaderDashboard />}
             {role === 'group-leader' && <GroupLeaderDashboard />}
             {role === 'trainer' && <TrainerDashboard />}
             {role === 'teacher' && <TeacherDashboard />}

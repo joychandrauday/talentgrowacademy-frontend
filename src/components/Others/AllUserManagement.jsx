@@ -277,7 +277,7 @@ const AllUserManagement = () => {
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
-                confirmButtonText: 'Activate',
+                confirmButtonText: 'Re-Assign User',
                 cancelButtonText: 'Cancel',
                 preConfirm: () => {
                     const seniorGroupLeader = document.getElementById('seniorGroupLeader').value;
@@ -291,6 +291,10 @@ const AllUserManagement = () => {
 
                     return { seniorGroupLeader, groupLeader, trainer };
                 },
+                willOpen: () => {
+                    // Show a loading spinner before submission
+                    Swal.showLoading();
+                }
             });
 
             if (formValues) {
@@ -326,13 +330,41 @@ const AllUserManagement = () => {
         }
     }
 
-    // handle edit user
-    const editUser = async (userID) => {
 
-    }
+    const [editingUserId, setEditingUserId] = useState(null);
+    const [editedUserData, setEditedUserData] = useState({});
 
+    const handleInputChange = (e, field) => {
+        setEditedUserData({
+            ...editedUserData,
+            [field]: e.target.value,
+        });
+    };
 
+    const handleSave = async (userId) => {
+        try {
+            const { value: confirm } = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Update it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            });
 
+            if (confirm) {
+                await axiosPublic.patch(`/users/${userId}`, editedUserData);
+
+                Swal.fire('Updated!', 'The user has been updated.', 'info');
+                refetch();
+            }
+        } catch (err) {
+            Swal.fire('Error!', 'Failed to block the user.', 'error');
+        }
+        setEditingUserId(null);  // Stop editing
+    };
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
 
@@ -388,15 +420,16 @@ const AllUserManagement = () => {
             </button>
 
             <div className="overflow-x-auto">
-                <table className="table-auto  border-collapse border border-gray-300">
+                <table className="table-auto min-w-full border-collapse border border-gray-300">
                     <thead>
                         <tr className="bg-gray-100">
                             <th className="border px-4 py-2">User ID</th>
                             <th className="border px-4 py-2">Name</th>
                             <th className="border px-4 py-2">Email</th>
                             <th className="border px-4 py-2">Phone</th>
+                            <th className="border px-4 py-2">Whatsapp</th>
                             <th className="border px-4 py-2">Country</th>
-                            <th className="border px-4 py-2">refer</th>
+                            <th className="border px-4 py-2">Refer</th>
                             <th className="border px-4 py-2">Balance</th>
                             <th className="border px-4 py-2">Trainer</th>
                             <th className="border px-4 py-2">G.L</th>
@@ -411,64 +444,144 @@ const AllUserManagement = () => {
                     <tbody>
                         {users.map((user) => (
                             <tr key={user._id} className="hover:bg-gray-50">
-                                <td className="border px-4 py-2">{user.userID}</td>
-                                <td className="border px-4 py-2">{user.name}</td>
-                                <td className="border px-4 py-2">{user.email}</td>
-                                <td className="border px-4 py-2">{user.phone}</td>
-                                <td className="border px-4 py-2">{user.country}</td>
-                                <td className="border px-4 py-2">{user.reference ? user.reference.name : 'N/A'}</td>
-                                <td className="border px-4 py-2">{user.balance}</td>
+                                <td className="border px-4 py-2">
+                                    {user.userID}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {editingUserId === user._id ? (
+                                        <input
+                                            type="text"
+                                            value={editedUserData.name || user.name}
+                                            onChange={(e) => handleInputChange(e, "name")}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    ) : (
+                                        user.name
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {editingUserId === user._id ? (
+                                        <input
+                                            type="email"
+                                            value={editedUserData.email || user.email}
+                                            onChange={(e) => handleInputChange(e, "email")}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    ) : (
+                                        user.email
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {editingUserId === user._id ? (
+                                        <input
+                                            type="text"
+                                            value={editedUserData.phone || user.phone}
+                                            onChange={(e) => handleInputChange(e, "phone")}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    ) : (
+                                        user.phone
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {editingUserId === user._id ? (
+                                        <input
+                                            type="text"
+                                            value={editedUserData.whatsapp || user.whatsapp}
+                                            onChange={(e) => handleInputChange(e, "whatsapp")}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    ) : (
+                                        user.whatsapp
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {editingUserId === user._id ? (
+                                        <input
+                                            type="text"
+                                            value={editedUserData.country || user.country}
+                                            onChange={(e) => handleInputChange(e, "country")}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    ) : (
+                                        user.country
+                                    )}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {user.reference ? user.reference.name : 'N/A'}
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {user.balance}
+                                </td>
+                                {/* Add other fields similarly */}
                                 <td className="border px-4 py-2">{user.trainer?.name}</td>
                                 <td className="border px-4 py-2">{user.groupLeader?.name}</td>
                                 <td className="border px-4 py-2">{user.seniorGroupLeader?.name}</td>
                                 <td className="border px-4 py-2">{user.consultant?.name}</td>
                                 <td className="border px-4 py-2">{user.role}</td>
-                                <td className="border px-4 py-2">{user.status}</td>
-                                <td className="border px-4 py-2">{user.password}</td>
-                                <td className="border px-4 py-2 flex items-center">
-                                    {user.status === 'inactive' ? (
-                                        <div className="relative group">
-                                            <button
-                                                onClick={() => activateUser(user?._id, user)}
-                                                className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                            >
-                                                <TbClockCheck />
-                                            </button>
-                                        </div>
+                                <td className="border px-4 py-2">
+                                    <span className={user.status === 'blocked' ? "badge bg-red-800 text-white" : "badge "}>
+                                        {user.status}
+                                    </span>
+                                </td>
+                                <td className="border px-4 py-2">
+                                    {editingUserId === user._id ? (
+                                        <input
+                                            type="text"
+                                            value={editedUserData.password || user.password || "N/A"}
+                                            onChange={(e) => handleInputChange(e, "password")}
+                                            className="w-full p-2 border rounded"
+                                        />
                                     ) : (
-                                        <div className="relative group">
+                                        user.password
+                                    )}
+
+                                </td>
+                                <td className="border px-4 py-2 flex items-center">
+                                    {editingUserId === user._id ? (
+                                        <button
+                                            className="bg-blue-500 text-white px-3 py-1 rounded"
+                                            onClick={() => handleSave(user._id)}
+                                        >
+                                            Save
+                                        </button>
+                                    ) : (
+                                        <>
+                                            {user.status === 'inactive' || user.status === 'blocked' ? (
+                                                <button
+                                                    onClick={() => activateUser(user._id, user)}
+                                                    className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                >
+                                                    <TbClockCheck />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                >
+                                                    <IoCheckmarkCircleSharp />
+                                                </button>
+                                            )}
                                             <button
                                                 className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                onClick={() => blockUser(user._id)}
+                                                disabled={user.status === 'blocked'}
                                             >
-                                                <IoCheckmarkCircleSharp />
+                                                <MdBlock />
                                             </button>
-                                        </div>
+                                            <button
+                                                className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                onClick={() => handleReassignUser(user._id)}
+                                            >
+                                                <MdReplayCircleFilled />
+                                            </button>
+                                            <button
+                                                className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                onClick={() => setEditingUserId(user._id)} // Start editing
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                        </>
                                     )}
-                                    <div className="relative group">
-                                        <button
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                            onClick={() => blockUser(user._id)}
-                                        >
-                                            <MdBlock />
-                                        </button>
-                                    </div>
-                                    <div className="relative group">
-                                        <button
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                            onClick={() => handleReassignUser(user._id)}
-                                        >
-                                            <MdReplayCircleFilled />
-                                        </button>
-                                    </div>
-                                    <div className="relative group">
-                                        <button
-                                            className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                            onClick={() => handleEditUser(user)}
-                                        >
-                                            <FaEdit />
-                                        </button>
-                                    </div>
-
                                 </td>
                             </tr>
                         ))}
