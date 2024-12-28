@@ -151,7 +151,8 @@ const ManageTransactions = () => {
             )}
 
             {activeTab === "manage-withdrawal" && (
-                <ManageWithdrawal />
+                <ManageWithdrawal 
+                />
             )}
 
             {activeTab === "money-allocate" && (

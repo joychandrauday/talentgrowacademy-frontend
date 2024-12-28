@@ -120,7 +120,6 @@ const AllUserManagement = () => {
             if (!user.seniorGroupLeader) updatedAllocations.sgl = 0;
             if (!user.consultant) updatedAllocations.consultant = 0;
 
-
             // Prepare options for dropdowns
             const seniorGroupLeaderOptions = seniorGroupLeaders?.map(leader =>
                 `<option value="${leader._id}">${leader.name}</option>`).join('');
@@ -129,8 +128,8 @@ const AllUserManagement = () => {
             const trainerOptions = trainers?.map(leader =>
                 `<option value="${leader._id}">${leader.name}</option>`).join('');
 
-            // Create the SweetAlert2 dialog with dropdowns
-            const { value: formValues } = await Swal.fire({
+            // Create SweetAlert2 dialog with dropdowns
+            const swalInstance = await Swal.fire({
                 title: 'Assign Administrative roles',
                 html: `
                     <label for="seniorGroupLeader" style="display: block; text-align: left;">Select Senior Group Leader:</label>
@@ -163,14 +162,25 @@ const AllUserManagement = () => {
                         return null;
                     }
 
+                    // Show loading spinner manually before starting async work
+                    Swal.fire({
+                        title: 'Processing...',
+                        html: 'Please wait while the user is being activated.',
+                        didOpen: () => {
+                            Swal.showLoading();  // This manually triggers the loading state
+                        },
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                    });
+
+                    // Return the selected values
                     return { seniorGroupLeader, groupLeader, trainer };
                 },
             });
 
-            if (formValues) {
-                const { seniorGroupLeader, groupLeader, trainer } = formValues;
-
-                console.log('Updated Allocations:', updatedAllocations);
+            if (swalInstance.isConfirmed && swalInstance.value) {
+                const { seniorGroupLeader, groupLeader, trainer } = swalInstance.value;
 
                 // Perform the update with the selected roles and modified allocations
                 await axiosPublic.patch(`/users/${userID}`, {
@@ -184,18 +194,16 @@ const AllUserManagement = () => {
                 // Loop through updatedAllocations and create transactions for amount > 0
                 for (let role in updatedAllocations) {
                     const amount = updatedAllocations[role];
-                    console.log(role);
                     if (amount > 0) {
-                        // Fetch userId of non-null roles and create a transaction
                         let id = user[role];
 
                         if (role === 'admin') {
                             // Admin transaction creation
                             id = admin;  // Use the admin ID directly from the `admin` object
                         }
+
                         if (id) {
-                            console.log(id);
-                            const userId = id._id
+                            const userId = id._id;
                             await axiosPublic.post(`/transactions/create`, {
                                 status: 'completed',
                                 amount,
@@ -207,16 +215,16 @@ const AllUserManagement = () => {
                         }
                     }
                 }
-                // Handle the updated allocations here (you can proceed with creating transactions, etc.)
-                console.log("Updated Allocations: ", updatedAllocations);
 
-                // Final confirmation
+                // Final confirmation with success message
                 Swal.fire('Activated!', 'The user has been activated and assigned.', 'success');
                 refetch();
             }
         } catch (err) {
+            // Handle error and stop loading if anything goes wrong
             Swal.fire('Error!', 'Failed to activate the user.', 'error');
         }
+
     };
     // handle block user
     const blockUser = async (userID) => {
