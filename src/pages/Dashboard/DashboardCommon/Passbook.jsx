@@ -82,7 +82,7 @@ const Passbook = () => {
         <div>
           <select
             name="status"
-            className="w-full border border-secondary  text-primary w-full p-2 rounded-md"
+            className="w-full border border-secondary  text-primary p-2 rounded-md"
             value={statusFilter}
             onChange={handleFilterChange}
           >
