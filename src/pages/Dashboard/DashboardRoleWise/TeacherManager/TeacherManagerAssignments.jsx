@@ -100,6 +100,15 @@ const TeacherManagerAssignments = () => {
                                 await axiosPublic.post(`/transactions/create`, {
                                     status: 'completed',
                                     amount: Number(bonus),
+                                    type: 'debit',
+                                    description: `Bonus for excellent performance in assignment ${assignment._id}`,
+                                    userId: userdb._id,
+                                    date: new Date().toISOString(),
+                                });
+                                // Post a transaction
+                                await axiosPublic.post(`/transactions/create`, {
+                                    status: 'completed',
+                                    amount: Number(bonus),
                                     type: 'credit',
                                     description: `Bonus for excellent performance in assignment ${assignment._id}`,
                                     userId: assignment.submittedBy._id,
@@ -205,7 +214,7 @@ const TeacherManagerAssignments = () => {
                                             <button
                                                 onClick={() => handleGradeAssignment(assignment)}
                                                 className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
-                                                disabled={assignment.status === 'Reviewed' || assignment.status === 'Rejected'}
+                                                disabled={assignment.status !== 'Pending'}
                                             >
                                                 Feed Back
                                             </button>

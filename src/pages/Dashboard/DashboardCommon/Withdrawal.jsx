@@ -93,13 +93,28 @@ const Withdrawal = () => {
             accountNumber: newMethod.number,
             methodName: newMethod.method,
         })
-        if (response.status === 201) {
+        console.log(response);
+        if (response.status === 200) {
             toast.success('successfully created new Payment Method.')
         } else {
             toast.error('Failed to create new Payment Method.')
         }
     };
-    console.log(firstWithdraw);
+    // handle delete method
+    const handleDeleteMethod = async (id) => {
+        if (window.confirm('Are you sure you want to delete this method?')) {
+            const response = await axiosPublic.delete(`/users/${userid}/withdraw/${id}`)
+            console.log(response);
+            if (response.status === 200) {
+                toast.success('Successfully deleted Payment Method.')
+                window.location.reload() // Refresh the page to reflect the updated methods list
+            } else {
+                toast.error('Failed to delete Payment Method.')
+            }
+        }
+    };
+
+
     return (
         <div className="p-6 text-white min-h-screen">
             <div className="mb-8">
@@ -125,7 +140,7 @@ const Withdrawal = () => {
                                 }`}
                             onClick={() => setSelectedMethod(method)}
                         >
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center relative ">
                                 <div className="mehtodText">
                                     <h3 className="text-lg font-bold capitalize">{method?.methodName}</h3>
                                     <p className="text-sm text-gray-400">Number: {method?.accountNumber}</p>
@@ -138,6 +153,7 @@ const Withdrawal = () => {
                                         method?.methodName === 'nagad' && <img src={nagad} alt="" className='w-32' />
                                     }
                                 </div>
+                                <div className="absolute btn-sm -bottom-4 -right-4 btn-warning btn" onClick={() => handleDeleteMethod(method._id)}>delete</div>
                             </div>
                         </div>
                     ))}
@@ -253,7 +269,7 @@ const Withdrawal = () => {
                     </form>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 
