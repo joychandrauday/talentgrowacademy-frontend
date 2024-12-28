@@ -4,109 +4,110 @@ import useUser from '../../../Others/Register/useUser';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import useCourses from '../../../../Hooks/roleFetch/useCourse';
+import { DiVim } from 'react-icons/di';
 
 const TeacherCourses = () => {
     const { userdb } = useUser();
-    const [courses, setCourses] = useState(userdb?.course || []);
-    const [updatedLink, setUpdatedLink] = useState('');
-    const [selectedCourseId, setSelectedCourseId] = useState('');
-    const axiosPublic = useAxiosPublic()
+    const [updatedLink, setUpdatedLink] = useState(''); // State for updated class link
+    const [selectedCourseId, setSelectedCourseId] = useState(null); // State for selected course
+    const axiosPublic = useAxiosPublic();
 
-    // Function to handle the class link update
+    console.log(userdb.course);
+    // Handle updating the class link for a selected course
     const handleClassLinkUpdate = async () => {
         if (!updatedLink) {
             Swal.fire('Error', 'Please enter a valid link', 'error');
             return;
         }
-
         try {
-            const response = await axiosPublic.patch(`/courses/${selectedCourseId}`, {
-                link: updatedLink,
+            const response = await axiosPublic.patch(`/courses/${userdb.course?._id}/update-class-link`, {
+                classLink: updatedLink, // Ensure the key matches the backend expectation
             });
 
-            if (response.data.success) {
+            if (response.status === 200) {
                 Swal.fire('Success', 'Class link updated successfully', 'success');
-                // Update courses after successful update
-                setCourses(courses.map(course => {
-                    if (course._id === selectedCourseId) {
-                        return { ...course, classLinks: [{ _id: selectedCourseId, link: updatedLink }] };
-                    }
-                    return course;
-                }));
-                setUpdatedLink('');
-                setSelectedCourseId('');
             }
         } catch (error) {
             console.error("Error updating class link:", error);
             Swal.fire('Error', 'Failed to update class link', 'error');
         }
     };
+    const handleLiveStatusToggle = async (id) => {
+        try {
+            const newStatus = !userdb.course?.isLive; // Toggle the status
+            const response = await axiosPublic.patch(`/courses/${id}/update-status`, {
+                isLive: newStatus, // Send the updated status to the backend
+            });
 
-    useEffect(() => {
-        if (userdb?.courses) {
-            setCourses(userdb.courses);
+            if (response.status === 200) {
+                Swal.fire('Success', `Course is now ${newStatus ? 'Live' : 'Not Live'}`, 'success');
+                window.location.reload()
+                // Optionally, refetch data to reflect the updated status
+            }
+        } catch (error) {
+            console.error("Error updating live status:", error);
+            Swal.fire('Error', 'Failed to update live status', 'error');
         }
-    }, [userdb]);
-
+    };
     return (
         <div className="p-6">
             <h1 className="text-2xl font-semibold mb-4">Teacher Courses</h1>
 
+            {/* List of teacher's courses */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {courses?.map(course => (
-                    <div key={course._id} className="border p-4 rounded-lg shadow-sm relative">
-                        <img src={course.image} alt={course.name} className="w-full h-48 object-cover mb-4" />
-                        <h2 className="text-xl font-medium mb-2">{course.name}</h2>
-                        <p className=" mb-2 absolute badge-warning rounded-full px-3 top-2 right-2 text-white capitalize">{course.category}</p>
-                        <div>
-                            <strong>Class Links:</strong>
-                            {course.classLinks?.length > 0 ? (
-                                <ul>
-                                    {course.classLinks.map(link => (
-                                        <li key={link._id} className="text-blue-500">
-                                            <a href={link.link} target="_blank" rel="noopener noreferrer">{link.link}</a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>No class link available</p>
-                            )}
-                        </div>
+                {userdb.course && (
+                    <div
+                        className="p-4 border rounded shadow-md cursor-pointer"
+                        onClick={() => setSelectedCourseId(selectedCourseId)}
+                    >
+                        {/* image */}
+                        <img
+                            src={userdb.course?.image}
+                            alt={userdb.course?.name}
+                            className="w-full h-48 object-cover rounded-md"
+                        />
+                        <div className="card-body">
+                            <h3 className="text-xl font-semibold">{userdb.course?.name}</h3>
+                            <p>{userdb.course?.description}</p>
 
-                        {/* Form to update class link */}
-                        <div className="mt-4">
-                            <input
-                                type="url"
-                                value={selectedCourseId === course._id ? updatedLink : ''}
-                                onChange={(e) => setUpdatedLink(e.target.value)}
-                                className="border border-gray-300 rounded p-2 w-full"
-                                placeholder="Enter new class link"
-                            />
+                        </div>
+                        {/* Live Status Toggle */}
+                        <div className="mt-2 flex items-center">
+                            <label className="mr-2">Live Status:</label>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={userdb.course?.isLive}
+                                    onChange={() => handleLiveStatusToggle(userdb.course?._id)}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                )}
+                {/* Form to update the class link */}
+                {userdb.course && (
+                    <div className="mt-6">
+                        <input
+                            type="url"
+                            value={updatedLink}
+                            onChange={(e) => setUpdatedLink(e.target.value)}
+                            placeholder="Enter new class link"
+                            className="p-2 border rounded w-full"
+                        />
+                        <div className="mt-4 flex justify-center">
                             <button
-                                onClick={() => {
-                                    setSelectedCourseId(course._id);
-                                    setUpdatedLink(course.classLinks[0]?.link || ''); // Populate the link if exists
-                                }}
-                                className="bg-primary text-white px-4 py-2 mt-2 rounded"
+                                onClick={handleClassLinkUpdate}
+                                className="bg-green-500 text-white px-6 py-3 rounded"
                             >
-                                Update Link
+                                Update Class Link
                             </button>
                         </div>
                     </div>
-                ))}
+                )}
             </div>
 
-            {/* Submit Button to update the class link */}
-            {selectedCourseId && (
-                <div className="mt-6 flex justify-center">
-                    <button
-                        onClick={handleClassLinkUpdate}
-                        className="bg-green-500 text-white px-6 py-3 rounded"
-                    >
-                        Update Class Link
-                    </button>
-                </div>
-            )}
         </div>
     );
 };

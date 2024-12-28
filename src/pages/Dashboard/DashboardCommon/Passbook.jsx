@@ -1,50 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUser from "../../Others/Register/useUser";
+import useSingleTransaction from "../../../Hooks/Transactions/useSingleTransaction";
 
 const Passbook = () => {
-  const transactions = [
-    {
-      date: "2024-11-30",
-      method: "Bank Transfer",
-      number: "TRX123456",
-      amount: 5000,
-      status: "credit",
-    },
-    {
-      date: "2024-11-29",
-      method: "Cash",
-      number: "TRX123457",
-      amount: 2000,
-      status: "debit",
-    },
-    {
-      date: "2024-11-28",
-      method: "UPI",
-      number: "TRX123458",
-      amount: 3500,
-      status: "credit",
-    },
-    {
-      date: "2024-11-27",
-      method: "Card Payment",
-      number: "TRX123459",
-      amount: 1000,
-      status: "debit",
-    },
-  ];
-
+  const { userdb } = useUser();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortBy, setSortBy] = useState("timestamp");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [referenceId, setReferenceId] = useState("");
 
-  const filteredTransactions = transactions.filter((tx) => {
-    const isStatusMatch = statusFilter === "all" || tx.status === statusFilter;
-    const isDateInRange =
-      (!dateRange.from || new Date(tx.date) >= new Date(dateRange.from)) &&
-      (!dateRange.to || new Date(tx.date) <= new Date(dateRange.to));
-    return isStatusMatch && isDateInRange;
-  });
+  const [queryParams, setQueryParams] = useState({});
+
+  useEffect(() => {
+    const params = {
+      userId: userdb?._id,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+      status: statusFilter,
+      type: typeFilter,
+      fromDate: dateRange.from,
+      toDate: dateRange.to,
+      referenceId,
+    };
+    setQueryParams(params);
+  }, [userdb, page, limit, sortBy, sortOrder, statusFilter, typeFilter, dateRange, referenceId]);
+
+  const {
+    transactions,
+    isLoading,
+    isError,
+    error,
+    totalPages,
+    currentPage,
+    refetch,
+  } = useSingleTransaction(queryParams);
+
+  const handlePagination = (direction) => {
+    if (direction === "next" && currentPage < totalPages) {
+      setPage((prev) => prev + 1);
+    } else if (direction === "prev" && page > 1) {
+      setPage((prev) => prev - 1);
+    }
+  };
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "status") setStatusFilter(value);
+    else if (name === "type") setTypeFilter(value);
+    else if (name === "fromDate") setDateRange((prev) => ({ ...prev, from: value }));
+    else if (name === "toDate") setDateRange((prev) => ({ ...prev, to: value }));
+    else if (name === "referenceId") setReferenceId(value);
+  };
 
   return (
-    <div className="p-6  text-white min-h-screen">
+    <div className="p-6 text-white min-h-screen">
       <div className="mb-8">
         <h1 className="text-primary italic text-2xl capitalize font-bold">
           Debit and Credit History
@@ -54,100 +78,144 @@ const Passbook = () => {
         </h4>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 justify-between justify-items-between">
+        <div>
           <select
-            className="border border-secondary text-primary p-2 rounded-md"
+            name="status"
+            className="w-full border border-secondary  text-primary w-full p-2 rounded-md"
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={handleFilterChange}
           >
-            <option value="all">Method</option>
+            <option value="all">All Status</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+
+        <div className="flex space-x-2">
+          <input
+            type="date"
+            name="fromDate"
+            value={dateRange.from}
+            onChange={handleFilterChange}
+            className="border border-gray-700  text-primary w-full rounded p-2 w-full"
+          />
+          <input
+            type="date"
+            name="toDate"
+            value={dateRange.to}
+            onChange={handleFilterChange}
+            className="border border-gray-700  text-primary w-full rounded p-2 w-full"
+          />
+        </div>
+
+        <div>
+          <select
+            name="type"
+            className="border border-secondary  text-primary w-full p-2 rounded-md"
+            value={typeFilter}
+            onChange={handleFilterChange}
+          >
+            <option value="all">All Types</option>
             <option value="credit">Credit</option>
             <option value="debit">Debit</option>
           </select>
         </div>
 
-        <div className="flex flex-col">
+        <div>
           <input
-            type="date"
-            className=" text-primary border border-secondary p-2 rounded-md"
-            value={dateRange.from}
-            onChange={(e) =>
-              setDateRange({ ...dateRange, from: e.target.value })
-            }
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <input
-            type="date"
-            className="border-secondary border text-primary p-2 rounded-md"
-            value={dateRange.to}
-            onChange={(e) => setDateRange({ ...dateRange, to: e.target.value })}
+            type="text"
+            name="referenceId"
+            className=" border border-secondary text-primary w-full p-2 rounded-md"
+            placeholder="Search by Reference ID"
+            value={referenceId}
+            onChange={handleFilterChange}
           />
         </div>
       </div>
 
-      {/* Transactions Table */}
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Error: {error?.message}</div>}
+
       <div className="overflow-x-auto">
-        <table className="table-auto w-full bg-[#F8F9FA] shadow-md rounded-lg overflow-hidden">
+        <table className="table-auto w-full bg-gray-800 text-white shadow-md rounded-lg">
           <thead>
-            <tr className="bg-[#2B6777] text-white">
-              <th className="p-4 text-sm font-medium tracking-wide uppercase">
+            <tr className="bg-gray-700">
+              <th
+                className="py-3 px-6 text-left cursor-pointer"
+                onClick={() => handleSort("timestamp")}
+              >
                 Date
               </th>
-              <th className="p-4 text-sm font-medium tracking-wide uppercase">
+              <th
+                className="py-3 px-6 text-left cursor-pointer"
+                onClick={() => handleSort("method")}
+              >
                 Method
               </th>
-              <th className="p-4 text-sm font-medium tracking-wide uppercase">
-                Transaction Number
-              </th>
-              <th className="p-4 text-sm font-medium tracking-wide uppercase">
+              <th className="py-3 px-6 text-left">Transaction Number</th>
+              <th
+                className="py-3 px-6 text-left cursor-pointer"
+                onClick={() => handleSort("amount")}
+              >
                 Amount (৳)
               </th>
-              <th className="p-4 text-sm font-medium tracking-wide uppercase">
-                Status
-              </th>
+              <th className="py-3 px-6 text-left">Status</th>
+              <th className="py-3 px-6 text-left">Description</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#C8D8E4]">
-            {filteredTransactions.map((tx, index) => (
-              <tr
-                key={index}
-                className="hover:bg-[#C8D8E4] transition-colors duration-200"
-              >
-                <td className="p-4 text-[#2B6777] text-sm">
-                  {new Date(tx.date).toLocaleDateString()}
-                </td>
-                <td className="p-4 text-[#2B6777] text-sm">{tx.method}</td>
-                <td className="p-4 text-[#2B6777] text-sm">{tx.number}</td>
-                <td className="p-4 text-[#2B6777] text-sm font-semibold">
-                  ৳{tx.amount.toLocaleString()}
-                </td>
-                <td
-                  className={`p-4 text-sm font-semibold rounded-lg px-2 py-1 text-center ${
-                    tx.status === "credit"
-                      ? "bg-[#F2A154] text-white"
-                      : "bg-red-100 text-red-600"
-                  }`}
-                >
-                  {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                </td>
-              </tr>
-            ))}
-            {filteredTransactions.length === 0 && (
+          <tbody>
+            {transactions?.length > 0 ? (
+              transactions.map((tx, index) => (
+                <tr key={index} className="border-b border-gray-700">
+                  <td className="py-3 px-6">
+                    {new Date(tx.timestamp).toLocaleDateString()}
+                  </td>
+                  <td className="py-3 px-6">{tx.method}</td>
+                  <td className="py-3 px-6">{tx.referenceId}</td>
+                  <td className="py-3 px-6">{tx.amount}</td>
+                  <td className="py-3 px-6">
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${tx.status === "completed"
+                        ? "bg-green-500 text-white"
+                        : tx.status === "pending"
+                          ? "bg-yellow-500 text-white"
+                          : "bg-red-500 text-white"
+                        }`}
+                    >
+                      {tx.status}
+                    </span>
+                  </td>
+                  <td className="py-3 px-6">{tx.description}</td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td
-                  colSpan="5"
-                  className="p-4 text-center text-[#2B6777] text-sm italic"
-                >
-                  No transactions found.
+                <td colSpan="6" className="py-3 px-6 text-center">
+                  No transactions found
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={() => handlePagination("prev")}
+          disabled={page === 1}
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+        >
+          Previous
+        </button>
+        <button
+          onClick={() => handlePagination("next")}
+          disabled={transactions?.length < limit}
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

@@ -48,7 +48,14 @@ const UserDashboard = ({ user }) => {
             <div className="flex justify-center items-center mb-6">
                 <img src={logo} alt="Company Logo" className="object-cover rounded-full w-44 sm:w-24 lg:w-72" />
             </div>
-
+            {user.status === 'blocked' && <>
+                <div className="blockScreen flex justify-center items-center">
+                    <div className="blockScreenInner text-primary text-center">
+                        <h1 className="font-bold text-2xl">Your account has been blocked</h1>
+                        <p>Contact your admin to unlock your account.</p>
+                    </div>
+                </div>
+            </>}
             {user.status === 'active' && (
                 <>
                     {/* Card Section */}
@@ -166,9 +173,9 @@ const UserDashboard = ({ user }) => {
                                     <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
                                         {course.name}
                                     </h2>
-                                    {course.classLinks[0].link ? (
+                                    {course.classLink && course.isLive ? (
                                         <Link
-                                            to={course.classLinks[0].link}
+                                            to={course.classLink}
                                             className="btn text-white hover:bg-primary bg-secondary"
                                         >
                                             Join Now
@@ -187,6 +194,7 @@ const UserDashboard = ({ user }) => {
                     </div>
                 </>
             )}
+
         </div>
     );
 };

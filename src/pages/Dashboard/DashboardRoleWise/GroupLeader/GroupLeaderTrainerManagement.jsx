@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
-import useFetchAdmin from '../../../../Hooks/useFetchAdmin';
+import useFetchAdmin from '../../../../Hooks/useAdmins';
 import useUser from '../../../Others/Register/useUser';
 import AssignModal from '../../../../Hooks/AssignModal';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
