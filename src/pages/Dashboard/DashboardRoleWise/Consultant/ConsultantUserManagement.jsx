@@ -103,6 +103,15 @@ const ConsultantUserManagement = () => {
         }
     };
 
+    const sendWhatsAppMessage = (user) => {
+        const message = `Dear ${user.name},\nUser ID: ${user.userID}\nfrom https://talentgrowacdemy.com\n\n*I GOT YOUR APPLICATION FORM REGARDING CONSULTING MEETING*\n\nআমি কন্সালটেন্ট মিটিং সংক্রান্ত আপনার আবেদনপত্র পেয়েছি\n\n*Tell me when you are free for counselling*\n\nআমাকে আপনার ফ্রি টাইম বলুন কাউন্সিলিং এর জন্য\n\n*INDIAN CONSULTING TIME*\n\n*10 AM to 8 PM*\n\nইন্ডিয়ান কন্সালটেন্ট মিটিং টাইম সকাল ১০  থেকে রাত ৮ পর্যন্ত\n\n*BANGLADESH CONSULTING TIME*\n\n*10:30 AM to 8:30 PM*\n\nবাংলাদেশ কন্সালটেন্ট মিটিং টাইম সকাল ১০:৩০ থেকে রাত ৮:৩০ পর্যন্ত\n\nI am your Consultant ${userdb.name}.\nFrom\nTalentGrowAcademy.
+        `;
+
+        const url = `https://wa.me/${user.whatsapp}?text=${encodeURIComponent(message)}`;
+
+        // Open WhatsApp in a new tab
+        window.open(url, '_blank');
+    };
 
 
     if (isLoading) return <LoadingSpinner />;
@@ -199,10 +208,9 @@ const ConsultantUserManagement = () => {
                                 <td className="border px-4 py-2">
                                     {userdb.permission && user.whatsapp ? (
                                         <a
-                                            href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-500 underline"
+                                            href="#"
+                                            onClick={() => sendWhatsAppMessage(user)}
+                                            className="text-blue-500 underline cursor-pointer"
                                         >
                                             {user.whatsapp}
                                         </a>
