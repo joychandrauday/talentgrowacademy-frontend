@@ -119,10 +119,10 @@ const UserDashboard = ({ user }) => {
               <div className="codeWrap flex flex-col gap-6 sm:w-1/2">
                 <div className="card-body bg-white border shadow-md text-center p-6">
                   <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                    {helpCard[0].title}
+                    {helpCard[0]?.title}
                   </h2>
                   <Link
-                    to={`${helpCard[0].link1}`}
+                    to={`${helpCard[0]?.link1}`}
                     className="btn text-white hover:bg-primary bg-secondary"
                   >
                     <div className="flex gap-2 items-center text-white">
@@ -133,10 +133,10 @@ const UserDashboard = ({ user }) => {
 
                 <div className="card-body bg-white border shadow-md text-center p-6">
                   <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                    {supportMeetCard[0].title}
+                    {supportMeetCard[0]?.title}
                   </h2>
                   <Link
-                    to={`${supportMeetCard[0].link1}`}
+                    to={`${supportMeetCard[0]?.link1}`}
                     className="btn text-white hover:bg-primary bg-secondary"
                   >
                     <div className="flex gap-2 items-center text-white">
@@ -223,14 +223,14 @@ const UserDashboard = ({ user }) => {
           <div className="orientationSection mt-12 w-full lg:w-4/5 mx-auto">
             <div className="card-body bg-white border shadow-md text-center p-6">
               <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                {orientationCard[0].title}
+                {orientationCard[0]?.title}
               </h2>
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-12">
                 <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl">
-                  {orientationCard[0].linkHeading1}
+                  {orientationCard[0]?.linkHeading1}
                 </h2>
                 <Link
-                  to={`${orientationCard[0].link1}`}
+                  to={`${orientationCard[0]?.link1}`}
                   className="btn text-white hover:bg-primary bg-secondary"
                 >
                   <div className="flex gap-2 items-center text-white">
@@ -252,7 +252,7 @@ const UserDashboard = ({ user }) => {
                   <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
                     {course.name}
                   </h2>
-                  {course.classLink && course.isLive ? (
+                  {course?.classLink && course?.isLive ? (
                     <Link
                       to={course.classLink}
                       className="btn text-white hover:bg-primary bg-secondary"
