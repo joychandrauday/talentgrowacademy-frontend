@@ -30,6 +30,7 @@ import { ImBooks } from "react-icons/im";
 import { GiTeacher } from "react-icons/gi";
 import { IoBookSharp } from "react-icons/io5";
 import { BiLink, BiTask } from "react-icons/bi";
+import { HiCurrencyBangladeshi } from "react-icons/hi2";
 
 const Sidebar = ({ user }) => {
   const { logOut } = useContext(AuthContext);
@@ -128,6 +129,15 @@ const Sidebar = ({ user }) => {
                 }
               >
                 <FaCogs /> Manage Role
+              </NavLink>
+              <NavLink
+                to="/dashboard/admin/transactions"
+                className={({ isActive }) =>
+                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                  }`
+                }
+              >
+                <HiCurrencyBangladeshi /> Manage Transactions
               </NavLink>
               <NavLink
                 to="/dashboard/admin/users"
@@ -345,6 +355,58 @@ const Sidebar = ({ user }) => {
 
           {/* sgl sidebar navs */}
           {user?.role === "sgl" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/sgl/group-leaders"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsersGear /> Group Leaders
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/users"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsers /> All users
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/search"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <RiUserSearchFill /> Search
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/count"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl/count-result"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count Result
+                </NavLink>
+              </div>
+            </div>
+          )}
+          {/* sgl sidebar navs */}
+          {user?.role === "sgl-manager" && (
             <div>
               <div className="ml-4 mt-2 space-y-2">
                 <NavLink

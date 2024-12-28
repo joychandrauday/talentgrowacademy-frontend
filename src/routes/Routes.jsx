@@ -61,6 +61,10 @@ import AdminUtilities from "../pages/Dashboard/DashboardRoleWise/Admin/AdminUtil
 import CountResult from "../components/Shared/CountResult";
 import CourseDetailed from "../pages/Dashboard/DashboardCommon/CourseDetailed";
 import TeacherManagerAssignments from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerAssignments";
+import SGLManagerDashboard from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLManagerDashboard";
+import ManageTransactions from "../pages/Dashboard/DashboardRoleWise/Admin/ManageTransactions";
+import ManageWithdrawal from "../pages/Dashboard/DashboardRoleWise/Admin/ManageWithdrawal";
+import MoneyAllocation from "../pages/Dashboard/DashboardRoleWise/Admin/MoneyAllocation";
 
 
 
@@ -202,6 +206,10 @@ export const router = createBrowserRouter([
             element: <ManageAdminstration />
           },
           {
+            path: "transactions",
+            element: <ManageTransactions />
+          },
+          {
             path: "users",
             element: <AllUserManagement />
           },
@@ -313,10 +321,41 @@ export const router = createBrowserRouter([
           }
         ]
       },
-      //trainer routes
+      //Sgl routes
       {
         path: "sgl",
         element: <SeniorGroupLeaderDashboard />,
+        children: [
+          {
+            path: "",
+            element: <SGLUserManagement />
+          },
+          {
+            path: "group-leaders",
+            element: <SGLglManagement />
+          },
+          {
+            path: "users",
+            element: <SGLUserManagement />
+          },
+          {
+            path: "count",
+            element: <Count />
+          },
+          {
+            path: "count-result",
+            element: <CountResult />
+          },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
+        ]
+      },
+      //Sgl routes
+      {
+        path: "sgl-manager",
+        element: <SGLManagerDashboard />,
         children: [
           {
             path: "",

@@ -133,6 +133,7 @@ const GroupLeaderUserManagement = () => {
                         <th className="border px-4 py-2">Active Date</th>
                         <th className="border px-4 py-2">userID</th>
                         <th className="border px-4 py-2">Name</th>
+                        <th className='border px-4 py-2'>Rf-Id</th>
                         <th className="border px-4 py-2">Trainer</th>
                         <th className="border px-4 py-2">Consultant</th>
                         <th className="border px-4 py-2">Phone</th>
@@ -156,6 +157,7 @@ const GroupLeaderUserManagement = () => {
                             </td>
                             <td className="border px-4 py-2">{user.userID}</td>
                             <td className="border px-4 py-2">{user.name}</td>
+                            <td className="border px-4 py-2">{user.reference?.userID}</td>
                             <td className="border px-4 py-2">{user.trainer?.userID}</td>
                             <td className="border px-4 py-2">{user.consultant ? user.consultant?.userID : "N/A"}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
