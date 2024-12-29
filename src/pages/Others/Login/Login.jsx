@@ -96,7 +96,7 @@ const Login = () => {
                         >
                             {loading ? (
                                 <div className="flex justify-center items-center">
-                                    <span className="loading-sm loading-dots"></span> {/* Add a loader spinner */}
+                                    <span className="loading-sm loading loading-dots"></span> {/* Add a loader spinner */}
                                 </div>
                             ) : (
                                 'Login'

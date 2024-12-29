@@ -57,7 +57,7 @@ const RequestUserConsultant = () => {
         }
     };
     const handleRequestLead = async () => {
-        if (userdb._id === userData.consultant?._id) {
+        if (userdb?._id === userData.consultant?._id) {
             alert('This lead is already assigned to you!');
             return;
         }
@@ -132,7 +132,8 @@ const RequestUserConsultant = () => {
                             />
                         </div>
                         <h2 className="text-2xl font-semibold">{userData.name || 'N/A'}</h2>
-                        <p className="text-sm text-gray-300">{`UserID: ${userData.userID || 'N/A'}`}</p>
+                        <p className="text-sm text-gray-300">{`UserID: ${userData?.userID || 'N/A'}`}</p>
+                        <p className="text-sm text-gray-300">{`Status: ${userData?.status || 'N/A'}`}</p>
                     </div>
 
                     {/* Information Section */}
@@ -182,7 +183,7 @@ const RequestUserConsultant = () => {
                                     : "bg-secondary text-white hover:bg-secondary-focus"
                                 : "bg-red-500 cursor-not-allowed"
                             }`}
-                        disabled={userdb._id === userData.consultant?._id || isRequesting}
+                        disabled={userdb._id === userData.consultant?._id || isRequesting || userData.status === 'active'}
                     >
                         {userdb._id === userData.consultant?._id
                             ? "Already Yours"
@@ -218,9 +219,9 @@ const RequestUserConsultant = () => {
                                 <td className="border px-4 py-2">
                                     {new Date(request.createdAt).toLocaleDateString()}
                                 </td>
-                                <td className="border px-4 py-2">{request.userId.userID}</td>
-                                <td className="border px-4 py-2">{request.userId.name}</td>
-                                <td className="border px-4 py-2">{request.userId.whatsapp}</td>
+                                <td className="border px-4 py-2">{request.userId?.userID}</td>
+                                <td className="border px-4 py-2">{request.userId?.name}</td>
+                                <td className="border px-4 py-2">{request.userId?.whatsapp}</td>
                                 <td className="border px-4 py-2">{request.requestBy?.name}</td>
                                 <td className="border px-4 py-2">
                                     <span

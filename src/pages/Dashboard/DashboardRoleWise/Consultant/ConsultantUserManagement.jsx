@@ -19,6 +19,7 @@ const ConsultantUserManagement = () => {
         page: 1,  // Start with the first page
         fromDate: '',
         toDate: '',
+        isMessageDone: 'select'
     });
     useEffect(() => {
         if (userdb) {
@@ -47,7 +48,7 @@ const ConsultantUserManagement = () => {
     const handleFilterChange = (e) => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
-    const handleStatusChange = async (userId, isDone, currentWhatsApp) => {
+    const handleStatusChange = async (userId, isDone) => {
         try {
             // Open the Swal modal for confirmation
             const result = await Swal.fire({
@@ -112,7 +113,7 @@ const ConsultantUserManagement = () => {
         // Open WhatsApp in a new tab
         window.open(url, '_blank');
     };
-
+    console.log(users);
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
@@ -167,9 +168,9 @@ const ConsultantUserManagement = () => {
                         onChange={handleFilterChange}
                         className="border border-gray-300 rounded p-2 w-full"
                     >
-                        <option value={null}>Filter by Message Done</option>
-                        <option value={true}>Done</option>
-                        <option value={false}>Not Done</option>
+                        <option selected value={'select'}>Filter by Message Done</option>
+                        <option value={'done'}>Done</option>
+                        <option value={'not-done'}>Not Done</option>
                     </select>
                 </div>
             </div>
@@ -223,12 +224,14 @@ const ConsultantUserManagement = () => {
                                 <td className="border px-4 py-2">{user.reference?.groupLeader?.name}</td>
                                 <td className="border px-4 py-2">
                                     <select
+                                        disabled={user.isMessageDone !== 'select'}
                                         className="border rounded px-2 py-1"
-                                        value={user.isMessageDone ? "true" : "false"} // Ensure value matches boolean
-                                        onChange={(e) => handleStatusChange(user._id, e.target.value === "true")}
+                                        value={user.isMessageDone} // Ensure value matches boolean
+                                        onChange={(e) => handleStatusChange(user._id, e.target.value)}
                                     >
-                                        <option value="true">Done</option>
-                                        <option value="false">Not Done</option>
+                                        <option selected >select</option>
+                                        <option value="done">Done</option>
+                                        <option value="not-done">Not Done</option>
                                     </select>
                                 </td>
 

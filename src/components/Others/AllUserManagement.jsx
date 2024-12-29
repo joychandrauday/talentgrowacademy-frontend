@@ -14,6 +14,7 @@ import useCard from '../../Hooks/roleFetch/useCard';
 import { FaEdit } from 'react-icons/fa';
 import { MdBlock, MdReplayCircleFilled } from 'react-icons/md';
 import useAdmins from '../../Hooks/roleFetch/useAdmin';
+import { BiRepeat } from 'react-icons/bi';
 
 const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
@@ -50,8 +51,8 @@ const AllUserManagement = () => {
                 reference: 0.24,
                 trainer: 0.07,
                 gl: 0.09,
-                sgl: 0.10,
-                consultant: 0.01,
+                sgl: 0.01,
+                consultant: 0.10,
             };
 
             const roleAllocations = {
@@ -98,134 +99,111 @@ const AllUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
 
-    // Function to activate user and assign roles
     const activateUser = async (userID, user) => {
         try {
-            // Check if any of the user's roles are missing and reallocate their share to the admin
-            const updatedAllocations = { ...allocations };
+            const updatedAllocations = { ...allocations }; // Clone initial allocations
 
-            // Add admin allocation from hook if any roles are missing
-            if (admin) {
-                if (!user.reference) updatedAllocations.admin += allocations.reference;
-                if (!user.trainer) updatedAllocations.admin += allocations.trainer;
-                if (!user.groupLeader) updatedAllocations.admin += allocations.gl;
-                if (!user.seniorGroupLeader) updatedAllocations.admin += allocations.sgl;
-                if (!user.consultant) updatedAllocations.admin += allocations.consultant;
+            // Check for null or unassigned roles and reallocate their share to admin
+            let isAnyRoleAssigned = false; // Track if at least one role is assigned
+
+            // Iterate over each role to check assignments and adjust allocations
+            for (const [role, allocation] of Object.entries(updatedAllocations)) {
+                if (role !== 'admin') { // Skip admin allocation check here
+                    if (!user[role]) {
+                        // If role is unassigned, add its allocation to admin
+                        updatedAllocations.admin += allocation;
+                        updatedAllocations[role] = 0; // Set unassigned role allocation to 0
+                    } else {
+                        isAnyRoleAssigned = true; // Mark that at least one role is assigned
+                    }
+                }
             }
 
-            // Reset the missing roles' allocations to 0
-            if (!user.reference) updatedAllocations.user = 0;
-            if (!user.trainer) updatedAllocations.trainer = 0;
-            if (!user.groupLeader) updatedAllocations.gl = 0;
-            if (!user.seniorGroupLeader) updatedAllocations.sgl = 0;
-            if (!user.consultant) updatedAllocations.consultant = 0;
+            // If all roles are unassigned, allocate the entire admission fee to admin
+            if (!isAnyRoleAssigned) {
+                updatedAllocations.admin = admissionFees;
+                Object.keys(updatedAllocations).forEach((key) => {
+                    if (key !== 'admin') updatedAllocations[key] = 0; // Reset all other roles
+                });
+            }
 
-            // Prepare options for dropdowns
-            const seniorGroupLeaderOptions = seniorGroupLeaders?.map(leader =>
-                `<option value="${leader._id}">${leader.name}</option>`).join('');
-            const groupLeaderOptions = groupLeaders?.map(leader =>
-                `<option value="${leader._id}">${leader.name}</option>`).join('');
-            const trainerOptions = trainers?.map(leader =>
-                `<option value="${leader._id}">${leader.name}</option>`).join('');
-
-            // Create SweetAlert2 dialog with dropdowns
+            // Confirmation dialog for role assignments
             const swalInstance = await Swal.fire({
-                title: 'Assign Administrative roles',
-                html: `
-                    <label for="seniorGroupLeader" style="display: block; text-align: left;">Select Senior Group Leader:</label>
-                    <select id="seniorGroupLeader" class="swal2-select" style="width: 100%; padding: 0.5rem;">
-                        <option value="">--Select Senior Group Leader--</option>
-                        ${seniorGroupLeaderOptions}
-                    </select>
-                    <label for="groupLeader" style="display: block; text-align: left;">Select Group Leader:</label>
-                    <select id="groupLeader" class="swal2-select" style="width: 100%; padding: 0.5rem;">
-                        <option value="">--Select Group Leader--</option>
-                        ${groupLeaderOptions}
-                    </select>
-                    <label for="trainer" style="display: block; text-align: left;">Select Trainer:</label>
-                    <select id="trainer" class="swal2-select" style="width: 100%; padding: 0.5rem;">
-                        <option value="">--Select Trainer--</option>
-                        ${trainerOptions}
-                    </select>
-                `,
-                focusConfirm: false,
+                title: 'Confirm Activating.',
+                html: `Do you want to activate this user ?`,
                 showCancelButton: true,
                 confirmButtonText: 'Activate',
                 cancelButtonText: 'Cancel',
-                preConfirm: () => {
-                    const seniorGroupLeader = document.getElementById('seniorGroupLeader').value;
-                    const groupLeader = document.getElementById('groupLeader').value;
-                    const trainer = document.getElementById('trainer').value;
-
-                    if (!seniorGroupLeader || !trainer || !groupLeader) {
-                        Swal.showValidationMessage('Please select all required roles.');
-                        return null;
-                    }
-
-                    // Show loading spinner manually before starting async work
-                    Swal.fire({
-                        title: 'Processing...',
-                        html: 'Please wait while the user is being activated.',
-                        didOpen: () => {
-                            Swal.showLoading();  // This manually triggers the loading state
-                        },
-                        allowOutsideClick: false,
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                    });
-
-                    // Return the selected values
-                    return { seniorGroupLeader, groupLeader, trainer };
-                },
             });
 
-            if (swalInstance.isConfirmed && swalInstance.value) {
-                const { seniorGroupLeader, groupLeader, trainer } = swalInstance.value;
-
-                // Perform the update with the selected roles and modified allocations
+            if (swalInstance.isConfirmed) {
+                const loaderInstance = Swal.fire({
+                    title: 'Processing...',
+                    html: 'Creating transactions, please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading(); // Trigger SweetAlert2 loading spinner
+                    },
+                });
+                // Activate user and assign roles
                 await axiosPublic.patch(`/users/${userID}`, {
                     status: 'active',
-                    seniorGroupLeader,
-                    groupLeader,
-                    trainer,
                     activateDate: new Date(),
                 });
 
-                // Loop through updatedAllocations and create transactions for amount > 0
-                for (let role in updatedAllocations) {
-                    const amount = updatedAllocations[role];
+                // Process transactions for each role with allocation > 0
+                for (const [role, amount] of Object.entries(updatedAllocations)) {
                     if (amount > 0) {
-                        let id = user[role];
-
-                        if (role === 'admin') {
-                            // Admin transaction creation
-                            id = admin;  // Use the admin ID directly from the `admin` object
-                        }
+                        const id = role === 'admin' ? admin?._id : user[role]?._id;
 
                         if (id) {
-                            const userId = id._id;
                             await axiosPublic.post(`/transactions/create`, {
                                 status: 'completed',
                                 amount,
                                 type: 'credit',
-                                description: `${role} Allocation.`,
-                                userId,
+                                description: `${role} Allocation`,
+                                userId: id,
+                                foreignUser: user.userID,
                                 date: new Date().toISOString(),
                             });
+                            console.log(role, amount);
                         }
                     }
                 }
+                // Activate bonus for the user
+                await axiosPublic.post(`/transactions/create`, {
+                    status: 'completed',
+                    amount: 50,
+                    type: 'credit',
+                    description: `activation bonus.`,
+                    userId: userID,
+                    foreignUser: admin.userID,
+                    date: new Date().toISOString(),
+                });
 
-                // Final confirmation with success message
-                Swal.fire('Activated!', 'The user has been activated and assigned.', 'success');
-                refetch();
+                // Debit the admin for the bonus
+                await axiosPublic.post(`/transactions/create`, {
+                    status: 'completed',
+                    amount: 50,
+                    withdra: true,
+                    type: 'debit',
+                    description: `activation bonus.`,
+                    userId: admin._id,
+                    foreignUser: user.userID,
+                    date: new Date().toISOString(),
+                });
+
+                Swal.fire('Success', 'User has been activated and roles assigned.', 'success');
+                refetch(); // Refresh data after activation
             }
-        } catch (err) {
-            // Handle error and stop loading if anything goes wrong
-            Swal.fire('Error!', 'Failed to activate the user.', 'error');
+        } catch (error) {
+            console.error('Activation Error:', error);
+            Swal.fire('Error', 'Failed to activate the user.', 'error');
         }
-
     };
+
+
     // handle block user
     const blockUser = async (userID) => {
         try {
@@ -372,6 +350,32 @@ const AllUserManagement = () => {
             Swal.fire('Error!', 'Failed to block the user.', 'error');
         }
         setEditingUserId(null);  // Stop editing
+    };
+
+    const reactiveUser = async (userID) => {
+        try {
+            const { value: confirm } = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, unblock it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            });
+
+            if (confirm) {
+                await axiosPublic.patch(`/users/${userID}`, {
+                    status: 'active',
+                });
+
+                Swal.fire('UnBlocked!', 'The user has been Unblocked.', 'info');
+                refetch();
+            }
+        } catch (err) {
+            Swal.fire('Error!', 'Failed to Unblock the user.', 'error');
+        }
     };
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
@@ -555,27 +559,34 @@ const AllUserManagement = () => {
                                         </button>
                                     ) : (
                                         <>
-                                            {user.status === 'inactive' || user.status === 'blocked' ? (
+                                            {user.status === 'inactive' && (
                                                 <button
                                                     onClick={() => activateUser(user._id, user)}
                                                     className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
                                                 >
                                                     <TbClockCheck />
                                                 </button>
-                                            ) : (
+                                            )
+                                            }
+                                            {user.status === 'active' && (
                                                 <button
                                                     className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                    onClick={() => blockUser(user._id)}
                                                 >
-                                                    <IoCheckmarkCircleSharp />
+                                                    <MdBlock />
                                                 </button>
-                                            )}
-                                            <button
-                                                className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                                onClick={() => blockUser(user._id)}
-                                                disabled={user.status === 'blocked'}
-                                            >
-                                                <MdBlock />
-                                            </button>
+
+                                            )
+                                            }
+                                            {
+                                                user.status === 'blocked' &&
+                                                <button
+                                                    className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                    onClick={() => reactiveUser(user._id)}
+                                                >
+                                                    <BiRepeat />
+                                                </button>
+                                            }
                                             <button
                                                 className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
                                                 onClick={() => handleReassignUser(user._id)}
