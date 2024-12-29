@@ -3,10 +3,10 @@ import axios from 'axios';
 import useAxiosPublic from '../useAxiosPublic';
 
 
-const useTrainers = () => {
+const useTrainers = (queryParams) => {
     const axiosPublic = useAxiosPublic()
-    const fetchTrainers = async () => {
-        const { data } = await axiosPublic.get('/trainers');
+    const fetchUsers = async () => {
+        const { data } = await axiosPublic.get('/trainers', { params: queryParams });
         return data.data.trainers;
     };
 
@@ -16,8 +16,8 @@ const useTrainers = () => {
         isError,
         refetch,
     } = useQuery({
-        queryKey: ['trainers'],
-        queryFn: fetchTrainers,
+        queryKey: ['trainers', queryParams],
+        queryFn: fetchUsers,
         staleTime: 5 * 60 * 1000, // Cache trainers for 5 minutes
         cacheTime: 10 * 60 * 1000, // Keep data in memory for 10 minutes
     });
