@@ -152,7 +152,12 @@ const Passbook = () => {
                 className="py-3 px-6 text-left cursor-pointer"
                 onClick={() => handleSort("method")}
               >
-                Method
+                Reference ID
+              </th>
+              <th
+                className="py-3 px-6 text-left cursor-pointer"
+              >
+                Type
               </th>
               <th className="py-3 px-6 text-left">Transaction Number</th>
               <th
@@ -172,7 +177,8 @@ const Passbook = () => {
                   <td className="py-3 px-6">
                     {new Date(tx.timestamp).toLocaleDateString()}
                   </td>
-                  <td className="py-3 px-6">{tx.method}</td>
+                  <td className="py-3 px-6">{tx.foreignUser}</td>
+                  <td className="py-3 px-6">{tx.type}</td>
                   <td className="py-3 px-6">{tx.referenceId}</td>
                   <td className="py-3 px-6">{tx.amount}</td>
                   <td className="py-3 px-6">

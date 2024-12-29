@@ -5,6 +5,7 @@ import nagad from '../../../assets/nagad.png'
 import useUser from '../../Others/Register/useUser';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 const Withdrawal = () => {
     const { userdb } = useUser()
     const userid = userdb?._id
@@ -53,14 +54,56 @@ const Withdrawal = () => {
 
     const handleWithdraw = async () => {
         if (!selectedMethod) {
-            alert('Please select a withdrawal method.');
+            Swal.fire({
+                title: 'No Method Selected',
+                text: 'Please select a withdrawal method.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
             return;
         }
+
         if (!amount || amount <= 0) {
-            alert('Please enter a valid withdrawal amount.');
+            Swal.fire({
+                title: 'Invalid Amount',
+                text: 'Please enter a valid withdrawal amount.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
             return;
         }
+
         try {
+            const result = await Swal.fire({
+                title: 'Confirm Withdrawal',
+                text: firstWithdraw ? `350 tk will be deducted from your first withdrawal. 
+                This deduction will occur when you proceed with the withdrawal process. 
+                Are you sure you want to withdraw ৳${amount} using ${selectedMethod.methodName}?`
+                    : `Are you sure you want to withdraw ৳${amount} using ${selectedMethod.methodName}`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Proceed',
+                cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    return true; // Only proceed if confirmed
+                },
+            });
+
+            if (!result.isConfirmed) {
+                return; // Exit if the user cancels
+            }
+
+            // Show SweetAlert loader before submission
+            const loadingSwal = Swal.fire({
+                title: 'Processing Withdrawal...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // Show loading spinner
+                },
+            });
+
+            // Proceed with the withdrawal
             const response = await axiosPublic.post(`/transactions/create`, {
                 status: 'pending',
                 amount,
@@ -68,20 +111,46 @@ const Withdrawal = () => {
                 description: `withdraw.`,
                 userId: userid,
                 withdraw: true,
+                firstWithdraw: firstWithdraw,
                 method: selectedMethod.methodName,
+                foreignUser: userdb?.userID,
                 withdrawAccount: selectedMethod.accountNumber,
                 date: new Date().toISOString(),
+                showingId: userdb.userID
             });
+
+            // Close the loading Swal after submission
+            loadingSwal.close();
+
             if (response.status === 201) {
-                toast.success('Withdrawal initiated successfully.')
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Withdrawal initiated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                });
             } else {
-                toast.error('Failed to initiate withdrawal.')
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to initiate withdrawal.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
             }
         } catch (error) {
-            toast.error('Something went wrong!')
+            // Close the loading Swal in case of an error
+            Swal.close();
+
+            Swal.fire({
+                title: 'Error!',
+                text: 'Something went wrong. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
         }
-        // alert(`Withdrawal of ৳${amount} initiated to ${selectedMethod.method} (${selectedMethod.number}).`);
     };
+
+
     const handleAddMethod = async (e) => {
         e.preventDefault();
         if (!newMethod.number || !newMethod.method) {
@@ -239,33 +308,41 @@ const Withdrawal = () => {
 
                 {showForm && (
                     <form onSubmit={handleAddMethod} className="space-y-4 mt-4 p-4 bg-gray-800 rounded-md">
-                        <h2 className="text-lg font-bold">Add New Withdrawal Method</h2>
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">Method Name</label>
-                            <input
-                                type="text"
-                                value={newMethod.method}
-                                onChange={(e) => setNewMethod({ ...newMethod, method: e.target.value })}
-                                className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Enter method name (e.g., bkash)"
-                            />
+                            <h2 className="text-lg font-bold">Add New Withdrawal Method</h2>
+                            <div>
+                                <label className="block text-sm text-gray-400 mb-2">Method Name</label>
+                                <select
+                                    value={newMethod.method}
+                                    onChange={(e) => setNewMethod({ ...newMethod, method: e.target.value })}
+                                    className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                >
+                                    <option value="" disabled>Select a method</option>
+                                    <option value="bkash">Bkash</option>
+                                    <option value="nagad">Nagad</option>
+                                    <option value="rocket">Rocket</option>
+                                    <option value="phonepay">Phone Pay</option>
+                                    <option value="googlepay">Google Pay</option>
+                                    <option value="paytm">Paytm</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-400 mb-2">Number</label>
+                                <input
+                                    type="text"
+                                    value={newMethod.number}
+                                    onChange={(e) => setNewMethod({ ...newMethod, number: e.target.value })}
+                                    className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                    placeholder="Enter number"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full p-3 bg-secondary text-gray-900 rounded-md font-bold hover:bg-opacity-80 transition"
+                            >
+                                Add Method
+                            </button>
                         </div>
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-2">Number</label>
-                            <input
-                                type="text"
-                                value={newMethod.number}
-                                onChange={(e) => setNewMethod({ ...newMethod, number: e.target.value })}
-                                className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Enter number"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full p-3 bg-primary text-gray-900 rounded-md font-bold hover:bg-opacity-80 transition"
-                        >
-                            Add Method
-                        </button>
                     </form>
                 )}
             </div>

@@ -40,10 +40,20 @@ const Register = () => {
     const onSubmit = async (data) => {
 
         try {
+            // Show loading Swal
+            Swal.fire({
+                title: 'Processing Registration...',
+                html: 'Please wait while we process the registration.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+
             // Fetch refer user
             const referUser = await axiosPublic.get(`/users/${referCode}`);
             if (!referUser || referUser?.data.data.status === 'inactive') {
-                toast.error("Invalid refer code or user not found.!");
+                toast.error("User is not active or user not found.!");
                 return;
             }
             const referData = referUser.data.data;
@@ -55,16 +65,26 @@ const Register = () => {
                 password: data.password,
                 country: data.country,
                 phone: `${countryCode}${data.phone}`,
-                language: `${countryCode}${data.whatsapp}`,
-                whatsapp: data.whatsapp,
+                language: data.language,
+                whatsapp: `${countryCode}${data.whatsapp}`,
                 reference: referData._id,
                 seniorGroupLeader: referData.seniorGroupLeader,
                 groupLeader: referData.groupLeader,
-                trainer: referData.trainer,
+                seniorGroupLeaderManager: referData?.seniorGroupLeader?.seniorGroupLeaderManager || null
             };
 
             // Send user data to the database
             const response = await axiosPublic.post("/users/register", userData);
+            console.log(response.data.data.userID);
+            await axiosPublic.post(`/transactions/create`, {
+                status: 'completed',
+                amount: 1,
+                type: 'credit',
+                description: `${response.data.data.userID} creation Allocation.`,
+                userId: referData._id,
+                foreignUser: response.data.data.userID,
+                date: new Date().toISOString(),
+            });
             if (response.status === 201) {
                 toast.success("User registered successfully and added to the database!");
 
@@ -91,6 +111,7 @@ const Register = () => {
                 toast.error("User creation successful, but failed to save to the database.");
             }
         } catch (error) {
+            console.log(error);
             console.error("Error during registration:", error.message);
             toast.error(`Registration failed: ${error.message}`);
         }

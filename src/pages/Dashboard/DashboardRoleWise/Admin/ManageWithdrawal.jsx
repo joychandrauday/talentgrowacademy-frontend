@@ -5,8 +5,10 @@ import Swal from 'sweetalert2';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import useUser from '../../../Others/Register/useUser';
 
 const ManageWithdrawal = () => {
+    const { userdb } = useUser()
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [sortBy, setSortBy] = useState("timestamp");
@@ -34,13 +36,36 @@ const ManageWithdrawal = () => {
         }
     };
 
-    const updateStatus = async (transactionId, newStatus, userId) => {
+    const updateStatus = async (transactionId, newStatus, userId, transaction) => {
         try {
+            // Show SweetAlert loader
+            const loadingSwal = Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process the transaction.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // Show the loader
+                },
+            });
+            if (transaction.firstWithdraw) {
+                // admin allocation on first transaction
+                await axiosPublic.post('/transactions/create', {
+                    userId: userdb._id,
+                    foreignUser: userId, // Use the selected user
+                    amount: 350,
+                    type: 'credit',
+                    status: 'completed',
+                    description: 'Money allocated to the admin.',
+                    showingId: userdb.userID,
+                });
+            }
             const response = await axiosPublic.put('/transactions/update-status', {
                 transactionId,
                 status: newStatus,
                 userId
             });
+            console.log(response);
+            loadingSwal.close();
             if (response.status === 200) {
                 Swal.fire({
                     title: `Transaction ${newStatus}!`,
@@ -59,8 +84,7 @@ const ManageWithdrawal = () => {
         }
     };
 
-    const handleAction = (transactionId, action, userId) => {
-        console.log(userId);
+    const handleAction = (transactionId, action, userId, transaction) => {
         const status = action === 'completed' ? 'completed' : 'rejected';
         Swal.fire({
             title: `Are you sure you want to ${action} this request?`,
@@ -71,7 +95,7 @@ const ManageWithdrawal = () => {
             confirmButtonText: action === 'completed' ? 'Yes, Approve' : 'Yes, Reject',
         }).then((result) => {
             if (result.isConfirmed) {
-                updateStatus(transactionId, status, userId);
+                updateStatus(transactionId, status, userId, transaction);
             }
         });
     };
@@ -99,18 +123,15 @@ const ManageWithdrawal = () => {
                                 <th className="p-3 cursor-pointer" onClick={() => handleSort("status")}>
                                     Status
                                 </th>
-                                <th className="p-3">_id</th>
                                 <th className="p-3">Withdraw Account</th>
                                 <th className="p-3">Method</th>
-                                <th className="p-3">Type</th>
-                                <th className="p-3">Description</th>
                                 <th className="p-3">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {transactions.map((transaction) => (
                                 <tr key={transaction.referenceId} className="text-center border-b">
-                                    <td className="p-3">{transaction.userId}</td>
+                                    <td className="p-3">{transaction.foreignUser ? transaction.showingId : 'N/A'}</td>
                                     <td className="p-3">
                                         {transaction.type === "credit" ? "+" : "-"}
                                         {transaction.amount}
@@ -119,27 +140,24 @@ const ManageWithdrawal = () => {
                                         {new Date(transaction.timestamp).toLocaleDateString()}
                                     </td>
                                     <td className="p-3">{transaction.status}</td>
-                                    <td className="p-3">{transaction.userId}</td>
                                     <td className="p-3">{transaction.withdrawAccount || "N/A"}</td>
                                     <td className="p-3 capitalize">{transaction.method || "N/A"}</td>
-                                    <td className="p-3 capitalize">{transaction.type}</td>
-                                    <td className="p-3 capitalize">{transaction.description}</td>
-                                    <td className="p-3 flex justify-center items-center gap-2">
+                                    {transaction.status !== 'pending' ? <div className="opacity-60">completed</div> : <td className="p-3 flex justify-center items-center gap-2">
                                         <button
                                             className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
-                                            onClick={() => handleAction(transaction._id, "completed", transaction.userId)}
+                                            onClick={() => handleAction(transaction._id, "completed", transaction.userId, transaction)}
                                             disabled={transaction.status === 'completed'}
                                         >
                                             <FaCheck />
                                         </button>
                                         <button
                                             className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
-                                            onClick={() => handleAction(transaction._id, "rejected", transaction.userId)}
+                                            onClick={() => handleAction(transaction._id, "rejected", transaction.userId, transaction)}
                                             disabled={transaction.status === 'completed'}
                                         >
                                             <FaTimes />
                                         </button>
-                                    </td>
+                                    </td>}
                                 </tr>
                             ))}
                         </tbody>
