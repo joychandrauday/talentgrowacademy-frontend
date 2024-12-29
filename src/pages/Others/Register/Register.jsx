@@ -70,6 +70,7 @@ const Register = () => {
                 reference: referData._id,
                 seniorGroupLeader: referData.seniorGroupLeader,
                 groupLeader: referData.groupLeader,
+                trainer: referData.trainer,
                 seniorGroupLeaderManager: referData?.seniorGroupLeader?.seniorGroupLeaderManager || null
             };
 
