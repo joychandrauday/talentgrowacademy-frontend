@@ -269,15 +269,6 @@ const Sidebar = ({ user }) => {
                 >
                   <IoMdArrowDropright /> Count
                 </NavLink>
-                <NavLink
-                  to="/dashboard/consultant/count-result"
-                  className={({ isActive }) =>
-                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
-                    }`
-                  }
-                >
-                  <IoMdArrowDropright /> Count Result
-                </NavLink>
 
               </div>
             </div>
@@ -410,7 +401,16 @@ const Sidebar = ({ user }) => {
             <div>
               <div className="ml-4 mt-2 space-y-2">
                 <NavLink
-                  to="/dashboard/sgl/group-leaders"
+                  to="/dashboard/sgl-manager/sgl"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsersGear />Senior Group Leaders
+                </NavLink>
+                <NavLink
+                  to="/dashboard/sgl-manager/group-leaders"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
@@ -419,25 +419,16 @@ const Sidebar = ({ user }) => {
                   <FaUsersGear /> Group Leaders
                 </NavLink>
                 <NavLink
-                  to="/dashboard/sgl/users"
+                  to="/dashboard/sgl-manager/trainer"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
                   }
                 >
-                  <FaUsers /> All users
+                  <FaUsersGear /> Trainer
                 </NavLink>
                 <NavLink
-                  to="/dashboard/sgl/search"
-                  className={({ isActive }) =>
-                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
-                    }`
-                  }
-                >
-                  <RiUserSearchFill /> Search
-                </NavLink>
-                <NavLink
-                  to="/dashboard/sgl/count"
+                  to="/dashboard/sgl-manager/count"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`
@@ -446,7 +437,7 @@ const Sidebar = ({ user }) => {
                   <IoMdArrowDropright /> Count
                 </NavLink>
                 <NavLink
-                  to="/dashboard/sgl/count-result"
+                  to="/dashboard/sgl-manager/count-result"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
                     }`

@@ -7,12 +7,6 @@ const Profile = () => {
 
   const { userdb } = useUser()
   const [copied, setCopied] = useState(false);
-
-
-  // add a image upload fuctionaluty using cloudinary by clicking on avatar 
-
-
-
   const handleCopy = (userID) => {
     const currentUrl = `${window.location.origin}/register?refer=${userID}`;
     navigator.clipboard.writeText(currentUrl);
@@ -92,26 +86,28 @@ const Profile = () => {
               <FaCalendarCheck className="text-blue-400 mr-2" />
               <strong>Joined:</strong> {new Date(userdb.createdAt).toLocaleDateString()}
             </p>
-            <div className="flex items-center space-x-2 mt-2">
-              {userdb.status === 'active' ? (
-                <div className="flex items-center space-x-1">
-                  <span className="text-sm text-gray-600">Refer Link:</span>
-                  <span className="text-blue-500 hover:underline cursor-pointer">
+            {
+              userdb.role === 'user' && <div className="flex items-center space-x-2 mt-2">
+                {userdb.status === 'active' ? (
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm text-gray-600">Refer Link:</span>
+                    <span className="text-blue-500 hover:underline cursor-pointer">
 
-                  </span>
-                  <button
-                    className={`text-secondary btn btn-sm bg-primary hover:text-green-500 transition ${copied ? 'text-green-500' : ''
-                      }`}
-                    onClick={() => handleCopy(userdb.userID)}
-                    title={copied ? 'Copied!' : 'Copy Refer link'}
-                  >Refer Link
-                    {copied ? '✔' : '📋'}
-                  </button>
-                </div>
-              ) : (
-                ''
-              )}
-            </div>
+                    </span>
+                    <button
+                      className={`text-secondary btn btn-sm bg-primary hover:text-green-500 transition ${copied ? 'text-green-500' : ''
+                        }`}
+                      onClick={() => handleCopy(userdb.userID)}
+                      title={copied ? 'Copied!' : 'Copy Refer link'}
+                    >Refer Link
+                      {copied ? '✔' : '📋'}
+                    </button>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+            }
           </div>
         </div>
       </div>

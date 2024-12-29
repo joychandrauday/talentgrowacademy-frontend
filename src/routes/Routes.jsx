@@ -65,6 +65,14 @@ import SGLManagerDashboard from "../pages/Dashboard/DashboardRoleWise/SGLManager
 import ManageTransactions from "../pages/Dashboard/DashboardRoleWise/Admin/ManageTransactions";
 import ManageWithdrawal from "../pages/Dashboard/DashboardRoleWise/Admin/ManageWithdrawal";
 import MoneyAllocation from "../pages/Dashboard/DashboardRoleWise/Admin/MoneyAllocation";
+import SglManagerUserManagement from "../pages/Dashboard/DashboardRoleWise/SGLManager/SglManagerUserManagement";
+import SglManagerGlManager from "../pages/Dashboard/DashboardRoleWise/SGLManager/SglManagerGlManager";
+import SglManagerSglManagement from "../pages/Dashboard/DashboardRoleWise/SGLManager/SglManagerSglManagement";
+import SglManagerTrainerManageMent from "../pages/Dashboard/DashboardRoleWise/SGLManager/SglManagerTrainerManageMent";
+import ConsultantManagerUserManagement from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerUserManagement";
+import ConsultantManagerConsultantManagement from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerConsultantManagement";
+import ConsultantManagerCount from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCount";
+import ConsultantManagerCountResult from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCountResult";
 
 
 
@@ -286,12 +294,30 @@ export const router = createBrowserRouter([
             element: <Count />
           },
           {
-            path: "count-result",
-            element: <CountResult />
-          },
-          {
             path: "search",
             element: <ProfileSearch />
+          }
+        ]
+      },
+      {
+        path: "consultant-manager",
+        element: <ControllerDashboard />,
+        children: [
+          {
+            path: "",
+            element: <ConsultantManagerUserManagement />
+          },
+          {
+            path: "consultant",
+            element: <ConsultantManagerConsultantManagement />
+          },
+          {
+            path: "count",
+            element: <ConsultantManagerCount />
+          },
+          {
+            path: "count-result",
+            element: <ConsultantManagerCountResult />
           }
         ]
       },
@@ -359,15 +385,19 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <SGLUserManagement />
+            element: <SglManagerUserManagement />
           },
           {
             path: "group-leaders",
-            element: <SGLglManagement />
+            element: <SglManagerGlManager />
           },
           {
-            path: "users",
-            element: <SGLUserManagement />
+            path: "sgl",
+            element: <SglManagerSglManagement />
+          },
+          {
+            path: "trainer",
+            element: <SglManagerTrainerManageMent />
           },
           {
             path: "count",
