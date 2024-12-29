@@ -364,7 +364,6 @@ const AllUserManagement = () => {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
             });
-
             if (confirm) {
                 await axiosPublic.patch(`/users/${userID}`, {
                     status: 'active',

@@ -206,10 +206,6 @@ export const router = createBrowserRouter([
             element: <AddUser />
           },
           {
-            path: "customize",
-            element: <EditUser />
-          },
-          {
             path: "manage",
             element: <ManageAdminstration />
           },
