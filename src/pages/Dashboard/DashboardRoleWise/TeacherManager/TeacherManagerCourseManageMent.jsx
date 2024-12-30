@@ -99,7 +99,7 @@ const TeacherManagerCourseManagement = () => {
         if (result.isConfirmed) {
             try {
                 const res = await axiosPublic.delete(`/courses/${id}`);
-                console.log(res);
+
                 if (res.data.success) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -114,7 +114,6 @@ const TeacherManagerCourseManagement = () => {
                     text: 'An error occurred while deleting the course. Please try again.',
                     icon: 'error',
                 });
-                console.log(error);
             }
         }
     };

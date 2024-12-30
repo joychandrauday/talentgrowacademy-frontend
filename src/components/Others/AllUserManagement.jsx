@@ -15,6 +15,7 @@ import { FaEdit } from 'react-icons/fa';
 import { MdBlock, MdReplayCircleFilled } from 'react-icons/md';
 import useAdmins from '../../Hooks/roleFetch/useAdmin';
 import { BiRepeat } from 'react-icons/bi';
+import useConsultant from '../../Hooks/roleFetch/useConsultant';
 
 const AllUserManagement = () => {
     const [queryParams, setQueryParams] = useState({
@@ -73,12 +74,12 @@ const AllUserManagement = () => {
         }
     }, [admissionFees, cards]);
 
-    console.log(allocations, admissionFees);
 
     // fetch to assign
     const { trainers } = useTrainers()
     const { groupLeaders } = useGL()
     const { seniorGroupLeaders } = useSGL()
+    const { consultants } = useConsultant()
 
     const handleSearch = () => {
         setQueryParams((prev) => ({ ...prev, searchTerm: searchInput }));
@@ -167,7 +168,6 @@ const AllUserManagement = () => {
                                 foreignUser: user.userID,
                                 date: new Date().toISOString(),
                             });
-                            console.log(role, amount);
                         }
                     }
                 }
@@ -234,6 +234,8 @@ const AllUserManagement = () => {
     const handleReassignUser = async (userID) => {
         try {
             // Prepare options for the dropdown
+            const consultantOptions = consultants?.map(leader =>
+                `<option value="${leader._id}">${leader.name}</option>`).join('');
             const seniorGroupLeaderOptions = seniorGroupLeaders?.map(leader =>
                 `<option value="${leader._id}">${leader.name}</option>`).join('');
             const groupLeaderOptions = groupLeaders?.map(leader =>
@@ -245,6 +247,11 @@ const AllUserManagement = () => {
             const { value: formValues } = await Swal.fire({
                 title: 'Re-Assign to Adminstrative users.',
                 html: `
+                    <label for="consultant" style="display: block; text-align: left;">Select Senior Group Leader:</label>
+                    <select id="consultant" class="swal2-select" style="width: 100%; padding: 0.5rem;">
+                        <option value="">--Select Senior Group Leader--</option>
+                        ${consultantOptions}
+                    </select>
                     <label for="seniorGroupLeader" style="display: block; text-align: left;">Select Senior Group Leader:</label>
                     <select id="seniorGroupLeader" class="swal2-select" style="width: 100%; padding: 0.5rem;">
                         <option value="">--Select Senior Group Leader--</option>
@@ -266,16 +273,17 @@ const AllUserManagement = () => {
                 confirmButtonText: 'Re-Assign User',
                 cancelButtonText: 'Cancel',
                 preConfirm: () => {
+                    const consultant = document.getElementById('consultant').value;
                     const seniorGroupLeader = document.getElementById('seniorGroupLeader').value;
                     const groupLeader = document.getElementById('groupLeader').value;
                     const trainer = document.getElementById('trainer').value;
 
-                    if (!seniorGroupLeader && !trainer && !groupLeader) {
+                    if (!seniorGroupLeader && !trainer && !groupLeader && !consultant) {
                         Swal.showValidationMessage('Please select at least one of: Senior Group Leader, Trainer, or Group Leader.');
                         return null;
                     }
 
-                    return { seniorGroupLeader, groupLeader, trainer };
+                    return { seniorGroupLeader, groupLeader, trainer, consultant };
                 },
                 willOpen: () => {
                     // Show a loading spinner before submission
@@ -284,10 +292,13 @@ const AllUserManagement = () => {
             });
 
             if (formValues) {
-                const { seniorGroupLeader, groupLeader, trainer } = formValues;
+                const { seniorGroupLeader, groupLeader, trainer, consultant } = formValues;
 
                 const dataToSend = {};
 
+                if (consultant) {
+                    dataToSend.consultant = consultant;
+                }
                 if (seniorGroupLeader) {
                     dataToSend.seniorGroupLeader = seniorGroupLeader;
                 }
@@ -312,7 +323,6 @@ const AllUserManagement = () => {
             }
         } catch (err) {
             Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.log(error);
         }
     }
 
@@ -588,7 +598,7 @@ const AllUserManagement = () => {
                                             }
                                             <button
                                                 className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
-                                                onClick={() => handleReassignUser(user._id)}
+                                                onClick={() => handleReassignUser(user._id)} disabled={user.status === 'inactive' || user.status === 'blocked'}
                                             >
                                                 <MdReplayCircleFilled />
                                             </button>

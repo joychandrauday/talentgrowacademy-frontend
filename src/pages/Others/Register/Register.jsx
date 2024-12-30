@@ -76,7 +76,6 @@ const Register = () => {
 
             // Send user data to the database
             const response = await axiosPublic.post("/users/register", userData);
-            console.log(response.data.data.userID);
             await axiosPublic.post(`/transactions/create`, {
                 status: 'completed',
                 amount: 1,
@@ -112,7 +111,6 @@ const Register = () => {
                 toast.error("User creation successful, but failed to save to the database.");
             }
         } catch (error) {
-            console.log(error);
             console.error("Error during registration:", error.message);
             toast.error(`Registration failed: ${error.message}`);
         }

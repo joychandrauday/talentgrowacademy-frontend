@@ -6,6 +6,8 @@ import useUser from '../../../Others/Register/useUser';
 import useFetchUsers from '../../../../Hooks/useFetchUsers';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
+import { MdReplayCircleFilled } from 'react-icons/md';
+import useTrainers from '../../../../Hooks/roleFetch/useTrainers';
 
 const GroupLeaderUserManagement = () => {
     const { userdb } = useUser()
@@ -46,31 +48,68 @@ const GroupLeaderUserManagement = () => {
     const handleFilterChange = (e) => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
+    const { trainers } = useTrainers()
 
-    const activateUser = async (userID) => {
+    const handleReassignUser = async (userID) => {
         try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
+            // Prepare options for the dropdown
+            const trainerOptions = trainers?.map(leader =>
+                `<option value="${leader._id}">${leader.name}</option>`).join('');
+
+            // Create the SweetAlert2 dialog with dropdowns
+            const { value: formValues } = await Swal.fire({
+                title: 'Re-Assign to Adminstrative users.',
+                html: `
+                    <label for="trainer" style="display: block; text-align: left;">Select trainer:</label>
+                    <select id="trainer" class="swal2-select" style="width: 100%; padding: 0.5rem;">
+                        <option value="">--Select Trainer--</option>
+                        ${trainerOptions}
+                    </select>
+                `,
+                focusConfirm: false,
                 showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
+                confirmButtonText: 'Re-Assign User',
                 cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const trainer = document.getElementById('trainer').value;
+
+                    if (!trainer) {
+                        Swal.showValidationMessage('Please select at least one of: Senior Group Leader, Trainer, or Group Leader.');
+                        return null;
+                    }
+
+                    return { trainer };
+                },
+                willOpen: () => {
+                    // Show a loading spinner before submission
+                    Swal.showLoading();
+                }
             });
 
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
+            if (formValues) {
+                const { trainer } = formValues;
+
+                const dataToSend = {};
+
+                if (trainer) {
+                    dataToSend.trainer = trainer;
+                }
+
+                if (Object.keys(dataToSend).length > 0) {
+                    const res = await axiosPublic.patch(`/users/${userID}`, dataToSend);
+
+                    Swal.fire('Updated!', 'The user has been Updated and assigned.', 'success');
+                    refetch();
+                } else {
+                    Swal.showValidationMessage('Please select at least one of: Senior Group Leader, Trainer, or Group Leader.');
+                }
+                Swal.fire('Updated!', 'The user has been Updated and assigned.', 'success');
                 refetch();
             }
         } catch (err) {
             Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
         }
-    };
-
-
-
+    }
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;
 
@@ -139,6 +178,7 @@ const GroupLeaderUserManagement = () => {
                         <th className="border px-4 py-2">Phone</th>
                         <th className="border px-4 py-2">Whatsapp</th>
                         <th className="border px-4 py-2">Status</th>
+                        <th className="border px-4 py-2">action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -174,6 +214,14 @@ const GroupLeaderUserManagement = () => {
                                     )
                                 }
                             </td>
+                            <td className="border px-4 py-2" >
+                                <button
+                                    className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                    onClick={() => handleReassignUser(user._id)} >
+                                    <MdReplayCircleFilled />
+                                </button>
+                            </td>
+
 
                         </tr>
                     ))}

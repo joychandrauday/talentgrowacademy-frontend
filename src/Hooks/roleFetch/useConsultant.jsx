@@ -2,25 +2,25 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../useAxiosPublic';
 
 
-const useSGL = (queryParams) => {
+const useConsultant = (queryParams) => {
     const axiosPublic = useAxiosPublic()
     const fetchRole = async () => {
-        const { data } = await axiosPublic.get('/sgls', { params: queryParams });
-        return data.data.seniorGroupLeaders;
+        const { data } = await axiosPublic.get('/consultants', { params: queryParams });
+        return data.data.consultant;
     };
 
     const {
-        data: seniorGroupLeaders = [],
+        data: consultants = [],
         isLoading,
         isError,
         refetch,
     } = useQuery({
-        queryKey: ['seniorGroupLeaders', queryParams],
+        queryKey: ['consultant', queryParams],
         queryFn: fetchRole,
         staleTime: 5 * 60 * 1000, // Cache trainers for 5 minutes
         cacheTime: 10 * 60 * 1000, // Keep data in memory for 10 minutes
     });
-    return { seniorGroupLeaders, isLoading, isError, refetch };
+    return { consultants, isLoading, isError, refetch };
 };
 
-export default useSGL;
+export default useConsultant;

@@ -113,7 +113,6 @@ const ConsultantUserManagement = () => {
         // Open WhatsApp in a new tab
         window.open(url, '_blank');
     };
-    console.log(users);
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <div>Error: {error.message}</div>;

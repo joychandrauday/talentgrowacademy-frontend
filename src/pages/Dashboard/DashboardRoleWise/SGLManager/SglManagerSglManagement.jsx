@@ -6,9 +6,6 @@ import AssignModal from '../../../../Hooks/AssignModal';
 
 const SglManagerSglManagement = () => {
     const { userdb } = useUser()
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState('');
-    const [assignedEndpoint, setAssignEndpoint] = useState('')
     const [sgl, setSGl] = useState([])
     const axiosPublic = useAxiosPublic()
 
@@ -36,21 +33,7 @@ const SglManagerSglManagement = () => {
         fetchData(); // Call the async function
     }, [userdb]); // Add userdb as a dependency to re-run when userdb changes
     // set up assignEndpoint route
-    useEffect(() => {
-        setAssignEndpoint(`/sgls/assigngl`);
-    }, [selectedUser]);
 
-    const handleAssignClick = (user) => {
-        setSelectedUser(user);
-        setModalOpen(true);
-    };
-    const handleConfirmAssign = async (user) => {
-        // Call the backend to assign the user
-
-    };
-    const handleModalClose = () => {
-        setModalOpen(false);
-    };
     // is loading 
     return (
         <div className="p-4">
@@ -145,7 +128,7 @@ const SglManagerSglManagement = () => {
                                 <td className="border px-4 py-2">
                                     <button
                                         className="px-4 py-2 border rounded text-white bg-blue-600 hover:bg-blue-700"
-                                        onClick={() => handleAssignClick(user._id)}
+
                                     >
                                         Assign
                                     </button>
@@ -156,19 +139,7 @@ const SglManagerSglManagement = () => {
                 </table>
             </div>
 
-            {/* Assign Modal */}
-            {isModalOpen && (
-                <AssignModal
-                    handleModalClose={handleModalClose}
-                    assignTo={selectedUser}
-                    assignEndpoint={assignedEndpoint}
-                    onConfirm={handleConfirmAssign}
-                    queryParams={{
-                        seniorGroupLeader: userdb._id, status: 'active', groupLeader: 'null'
-                    }}
-                    role={'gl'}
-                />
-            )}
+
         </div>
     );
 };

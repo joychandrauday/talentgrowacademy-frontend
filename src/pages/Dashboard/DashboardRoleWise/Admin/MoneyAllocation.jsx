@@ -28,7 +28,6 @@ const MoneyAllocation = () => {
         } catch (err) {
             swal.fire('Error', 'User not found', 'error');
             setUser(null);
-            console.log(err);
         }
     };
     const handleSubmit = async (e) => {
@@ -60,7 +59,6 @@ const MoneyAllocation = () => {
                 status: 'completed',
                 description: 'Money allocated to the user by admin.',
             });
-            console.log(adminDeduct);
             const response = await axiosPublic.post('/transactions/create', {
                 userId: user._id,
                 showingId: user.userID,
@@ -69,7 +67,6 @@ const MoneyAllocation = () => {
                 status: 'completed',
                 description: 'Money allocated by admin',
             });
-            console.log(response);
             if (response.status === 201) {
                 swal.fire('Success', 'Money allocated successfully', 'success');
                 setUserIdToAllocate('');
@@ -78,7 +75,7 @@ const MoneyAllocation = () => {
             }
         } catch (err) {
             swal.fire('Error', err.response?.data?.message || 'Failed to allocate money', 'error');
-            console.log(err);
+
         }
     };
 

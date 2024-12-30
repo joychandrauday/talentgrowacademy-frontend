@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
@@ -10,11 +10,15 @@ import Swal from 'sweetalert2';
 const ManageCards = () => {
     const queryClient = useQueryClient();
     const { cards, refetch } = useCard();
+    const [filteredCard, setFileredCard] = useState([])
     const axiosPublic = useAxiosPublic()
     const { register, handleSubmit, reset, setValue } = useForm();
     const [selectedCard, setSelectedCard] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    useEffect(() => {
+        const filterr = cards.filter(card => card.cardGroup === "admin")
+        setFileredCard(filterr)
+    }, [])
     // Handle create or update card
     const onSubmit = async (data) => {
         try {
@@ -194,7 +198,7 @@ const ManageCards = () => {
                 <p className="text-center text-lg text-gray-500">No cards found.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                    {cards.map((card) => (
+                    {filteredCard.map((card) => (
                         <div key={card._id} className="card shadow-lg">
                             <div className="card-body relative">
                                 <h3 className="card-title">{card.title}</h3>
