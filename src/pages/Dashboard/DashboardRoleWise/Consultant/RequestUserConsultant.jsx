@@ -30,7 +30,7 @@ const RequestUserConsultant = () => {
 
         fetchRequests();
     }, []);
-    const myRequests = requests.filter(request => request.requestBy._id === userdb._id);
+    const myRequests = requests.filter(request => request?.requestBy?._id === userdb._id);
 
     if (isLoading) return <LoadingSpinner />;
     const handleSearchChange = (e) => {
@@ -57,7 +57,7 @@ const RequestUserConsultant = () => {
         }
     };
     const handleRequestLead = async () => {
-        if (userdb?._id === userData.consultant?._id) {
+        if (userdb?._id === userData?.consultant?._id) {
             alert('This lead is already assigned to you!');
             return;
         }
@@ -214,7 +214,7 @@ const RequestUserConsultant = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {myRequests.map((request) => (
+                        {myRequests.length && myRequests.map((request) => (
                             <tr key={request._id} className="hover:bg-gray-50">
                                 <td className="border px-4 py-2">
                                     {new Date(request.createdAt).toLocaleDateString()}
