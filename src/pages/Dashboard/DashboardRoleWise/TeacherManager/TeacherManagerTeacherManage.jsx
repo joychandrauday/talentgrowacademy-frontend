@@ -2,48 +2,75 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import useTeacher from '../../../../Hooks/roleFetch/useTeacher';
 import useCourses from '../../../../Hooks/roleFetch/useCourse';
+import { BiRepeat } from 'react-icons/bi';
+import { MdBlock, MdReplayCircleFilled } from 'react-icons/md';
+import Swal from 'sweetalert2';
+import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 
 
 const TeacherManagerTeacherManage = () => {
-    const { teachers } = useTeacher(); // Fetching teachers
+    const { teachers, refetch } = useTeacher(); // Fetching teachers
     const { courses } = useCourses(); // Fetching courses
-
+    const axiosPublic = useAxiosPublic()
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterRole, setFilterRole] = useState('All');
     const [showModal, setShowModal] = useState(false);
     const [selectedTeacher, setSelectedTeacher] = useState('');
     const [selectedCourse, setSelectedCourse] = useState('');
+    console.log(teachers);
 
-    // Filtered teachers based on search and role filter
-    const filteredTeachers = teachers.filter((teacher) => {
-        const matchesSearch = teacher.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesRole = filterRole === 'All' || teacher.role === filterRole;
-        return matchesSearch && matchesRole;
-    });
 
     const handleSearchChange = (e) => setSearchTerm(e.target.value);
-    const handleRoleFilterChange = (e) => setFilterRole(e.target.value);
 
-    const openModal = (teacher) => {
-        setSelectedTeacher(teacher);
-        setShowModal(true);
-    };
+    const activateUser = async (userID) => {
+        try {
+            const { value: confirm } = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, unblock it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            });
 
-    const closeModal = () => {
-        setSelectedTeacher('');
-        setSelectedCourse('');
-        setShowModal(false);
-    };
+            if (confirm) {
+                await axiosPublic.patch(`/teachers/${userID}/all`, {
+                    status: 'active',
+                });
 
-    const handleAssignCourse = () => {
-        if (selectedCourse) {
-            // Add logic to assign the course to the teacher
-            closeModal();
-        } else {
-            alert('Please select a course!');
+                Swal.fire('Activated!', 'The user has been Activated.', 'info');
+                refetch();
+            }
+        } catch (err) {
+            Swal.fire('Error!', 'Failed to block the user.', 'error');
         }
     };
+    const blockUser = async (userID) => {
+        try {
+            const { value: confirm } = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, block it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            });
 
+            if (confirm) {
+                await axiosPublic.patch(`/teachers/${userID}/all`, {
+                    status: 'blocked',
+                });
+
+                Swal.fire('Blocked!', 'The user has been blocked.', 'info');
+                refetch();
+            }
+        } catch (err) {
+            Swal.fire('Error!', 'Failed to block the user.', 'error');
+        }
+    };
     return (
         <div className="p-6 space-y-4 bg-gray-100 rounded-lg">
             <h1 className="text-2xl font-semibold text-gray-700">Teacher Manager - Teacher Manage</h1>
@@ -58,15 +85,6 @@ const TeacherManagerTeacherManage = () => {
                     onChange={handleSearchChange}
                 />
 
-                <select
-                    className="select select-bordered w-full md:w-1/4 bg-white"
-                    value={filterRole}
-                    onChange={handleRoleFilterChange}
-                >
-                    <option value="All">All Roles</option>
-                    <option value="Subject Teacher">Subject Teacher</option>
-                    <option value="Class Teacher">Class Teacher</option>
-                </select>
             </div>
 
             {/* Teacher Table */}
@@ -77,29 +95,49 @@ const TeacherManagerTeacherManage = () => {
                             <th className="text-left">#</th>
                             <th className="text-left">Name</th>
                             <th className="text-left">Email</th>
+                            <th className="text-left">Status</th>
                             <th className="text-left">Role</th>
-                            <th className="text-left">Assign Class</th>
+                            <th className="text-left">Course</th>
                             <th className="text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredTeachers.map((teacher, index) => (
+                        {teachers?.map((teacher, index) => (
                             <tr key={teacher.id} className="hover">
                                 <td>{index + 1}</td>
                                 <td>{teacher.name}</td>
                                 <td>{teacher.email}</td>
-                                <td>{teacher.role}</td>
                                 <td>
-                                    <button
-                                        className="btn btn-outline btn-sm"
-                                        onClick={() => openModal(teacher._id)}
-                                    >
-                                        Assign
-                                    </button>
+                                    {
+                                        teacher.status === 'active' ? <span className="badge-accnt badge" >{teacher.status}</span> : <span className="bg-red-700 text-white badge ">{teacher.status}</span>
+                                    }
                                 </td>
-                                <td>
-                                    <button className="btn btn-info btn-sm mr-2">Edit</button>
-                                    <button className="btn btn-error btn-sm">Delete</button>
+                                <td>{teacher.role}</td>
+                                <td>{teacher.course?.name || 'N/A'}</td>
+                                <td className="border px-4 py-2 flex items-center">
+                                    {
+                                        <>
+                                            {teacher.status === 'active' && (
+                                                <button
+                                                    className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                    onClick={() => blockUser(teacher._id)}
+                                                >
+                                                    <MdBlock />
+                                                </button>
+
+                                            )
+                                            }
+                                            {
+                                                teacher.status === 'blocked' &&
+                                                <button
+                                                    className="text-secondary px-3 py-1 rounded flex items-center text-2xl"
+                                                    onClick={() => activateUser(teacher._id)}
+                                                >
+                                                    <BiRepeat />
+                                                </button>
+                                            }
+                                        </>
+                                    }
                                 </td>
                             </tr>
                         ))}
@@ -108,39 +146,8 @@ const TeacherManagerTeacherManage = () => {
             </div>
 
             {/* Empty State */}
-            {filteredTeachers.length === 0 && (
+            {teachers.length === 0 && (
                 <p className="text-center text-gray-500 mt-4">No teachers found!</p>
-            )}
-
-            {/* Modal */}
-            {showModal && (
-                <div className="fixed space-y-0 inset-0 bg-black bg-opacity-50 mt-0 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-96 space-y-4">
-                        <h2 className="text-lg font-semibold text-gray-700">
-                            Assign Course to {selectedTeacher?.name}
-                        </h2>
-                        <select
-                            className="select select-bordered w-full"
-                            value={selectedCourse}
-                            onChange={(e) => setSelectedCourse(e.target.value)}
-                        >
-                            <option value="">Select a Course</option>
-                            {courses.map((course) => (
-                                <option key={course.id} value={course._id}>
-                                    {course.name}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="flex justify-end space-x-2">
-                            <button className="btn btn-error bg-secondary" onClick={closeModal}>
-                                Cancel
-                            </button>
-                            <button className="btn btn-success bg-primary" onClick={handleAssignCourse}>
-                                Assign
-                            </button>
-                        </div>
-                    </div>
-                </div>
             )}
         </div>
     );

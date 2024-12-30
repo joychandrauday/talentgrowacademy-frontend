@@ -209,13 +209,16 @@ const TeacherManagerAssignments = () => {
                                         </td>
                                         <td className="py-2 px-4">{assignment.status}</td>
                                         <td className="py-2 px-4">
-                                            <button
-                                                onClick={() => handleGradeAssignment(assignment)}
-                                                className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
-                                                disabled={assignment.status !== 'Pending'}
-                                            >
-                                                Feed Back
-                                            </button>
+                                            {assignment.status === 'Pending' || assignment.status === 'Resubmitted' ?
+                                                <button
+                                                    onClick={() => handleGradeAssignment(assignment)}
+                                                    className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
+                                                >
+                                                    Feed Back
+                                                </button> : <>
+                                                    <span className="badge badge-warning">reviewed</span>
+                                                </>
+                                            }
                                         </td>
                                     </tr>
                                 ))}
