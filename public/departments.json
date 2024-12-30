@@ -1,66 +1,146 @@
 [
-    {
-      "title": "Controller",
-      "description": "Responsible for managing the overall operations of the department.",
-      "responsibilities": [
-        "Oversee departmental budgets and expenses.",
-        "Ensure compliance with financial regulations.",
-        "Prepare reports for senior management."
-      ]
-    },
-    {
-      "title": "Accountant",
-      "description": "Manages financial transactions and ensures accurate reporting.",
-      "responsibilities": [
-        "Prepare monthly and yearly financial statements.",
-        "Monitor and reconcile accounts.",
-        "Advise on financial planning and tax matters."
-      ]
-    },
-    {
-      "title": "Consultant",
-      "description": "Provides expert advice to optimize departmental performance.",
-      "responsibilities": [
-        "Conduct audits and assessments.",
-        "Provide strategic business advice.",
-        "Help implement new technologies to improve efficiency."
-      ]
-    },
-    {
-      "title": "Group Leader",
-      "description": "Leads and coordinates the team within the department.",
-      "responsibilities": [
-        "Motivate and guide team members.",
-        "Set goals and ensure team meets objectives.",
-        "Monitor team performance and provide feedback."
-      ]
-    },
-    {
-      "title": "Trainer",
-      "description": "Responsible for training team members and new employees.",
-      "responsibilities": [
-        "Create and implement training programs.",
-        "Assess the skills and needs of team members.",
-        "Provide ongoing support and feedback to trainees."
-      ]
-    },
-    {
-      "title": "Manager",
-      "description": "Manages the daily operations and resources of the department.",
-      "responsibilities": [
-        "Coordinate projects and assign tasks.",
-        "Ensure timely completion of department objectives.",
-        "Maintain a productive work environment."
-      ]
-    },
-    {
-      "title": "Senior Group Leader",
-      "description": "Leads multiple teams and ensures high-level coordination across the department.",
-      "responsibilities": [
-        "Manage multiple group leaders and ensure project alignment.",
-        "Develop strategies to improve team collaboration.",
-        "Monitor the overall department performance."
-      ]
-    }
-  ]
-  
+  {
+    "title": "Trainer",
+    "description": "Responsible for training team members and new employees.",
+    "responsibilities": [
+      "Create and implement training programs.",
+      "Assess the skills and needs of team members.",
+      "Provide ongoing support and feedback to trainees."
+    ]
+  },
+  {
+    "title": "Group Leader",
+    "description": "Leads and coordinates the team within the department.",
+    "responsibilities": [
+      "Motivate and guide team members.",
+      "Set goals and ensure the team meets objectives.",
+      "Monitor team performance and provide feedback."
+    ]
+  },
+  {
+    "title": "Senior Group Leader",
+    "description": "Leads multiple teams and ensures high-level coordination across the department.",
+    "responsibilities": [
+      "Manage multiple group leaders and ensure project alignment.",
+      "Develop strategies to improve team collaboration.",
+      "Monitor the overall department performance."
+    ]
+  },
+  {
+    "title": "Teacher",
+    "description": "Responsible for delivering knowledge and fostering learning.",
+    "responsibilities": [
+      "Develop lesson plans and instructional materials.",
+      "Assess and evaluate student progress.",
+      "Provide guidance and mentorship to learners."
+    ]
+  },
+  {
+    "title": "Checker",
+    "description": "Ensures the accuracy and quality of the work produced.",
+    "responsibilities": [
+      "Review completed tasks for errors or discrepancies.",
+      "Verify compliance with standards and guidelines.",
+      "Report and resolve quality issues."
+    ]
+  },
+  {
+    "title": "Manager",
+    "description": "Manages the daily operations and resources of the department.",
+    "responsibilities": [
+      "Coordinate projects and assign tasks.",
+      "Ensure timely completion of department objectives.",
+      "Maintain a productive work environment."
+    ]
+  },
+  {
+    "title": "Account",
+    "description": "Handles financial records and transactions within the department.",
+    "responsibilities": [
+      "Maintain accurate financial records.",
+      "Assist with budgeting and financial planning.",
+      "Ensure compliance with accounting standards."
+    ]
+  },
+  {
+    "title": "Senior Account",
+    "description": "Oversees financial operations and provides advanced accounting expertise.",
+    "responsibilities": [
+      "Supervise junior accountants and review their work.",
+      "Prepare detailed financial reports for stakeholders.",
+      "Ensure adherence to advanced financial practices."
+    ]
+  },
+  {
+    "title": "Controller",
+    "description": "Responsible for managing the overall operations of the department.",
+    "responsibilities": [
+      "Oversee departmental budgets and expenses.",
+      "Ensure compliance with financial regulations.",
+      "Prepare reports for senior management."
+    ]
+  },
+  {
+    "title": "Senior Controller",
+    "description": "Leads the department's operational control, focusing on high-level strategy.",
+    "responsibilities": [
+      "Develop and implement advanced operational strategies.",
+      "Monitor and evaluate long-term departmental goals.",
+      "Advise senior leadership on performance improvements."
+    ]
+  },
+  {
+    "title": "Telecaller",
+    "description": "Engages with clients or customers via telephone for various purposes.",
+    "responsibilities": [
+      "Handle inbound and outbound calls professionally.",
+      "Provide information or support to clients.",
+      "Maintain records of all interactions."
+    ]
+  },
+  {
+    "title": "Consultant",
+    "description": "Provides expert advice to optimize departmental performance.",
+    "responsibilities": [
+      "Conduct audits and assessments.",
+      "Provide strategic business advice.",
+      "Help implement new technologies to improve efficiency."
+    ]
+  },
+  {
+    "title": "Senior Consultant",
+    "description": "Offers advanced guidance and leadership for strategic projects.",
+    "responsibilities": [
+      "Lead complex assessments and provide insights.",
+      "Mentor junior consultants and manage consultancy teams.",
+      "Drive implementation of innovative solutions."
+    ]
+  },
+  {
+    "title": "Lead Checker",
+    "description": "Heads the quality assurance team and ensures exceptional standards.",
+    "responsibilities": [
+      "Supervise the checking team and review their work.",
+      "Develop quality control guidelines.",
+      "Ensure consistency across all quality assurance processes."
+    ]
+  },
+  {
+    "title": "Audit",
+    "description": "Examines financial and operational records for compliance and accuracy.",
+    "responsibilities": [
+      "Conduct detailed reviews of financial documents.",
+      "Identify discrepancies and areas of risk.",
+      "Prepare audit reports with actionable recommendations."
+    ]
+  },
+  {
+    "title": "Support",
+    "description": "Provides assistance to ensure the smooth functioning of operations.",
+    "responsibilities": [
+      "Assist team members with tasks and troubleshooting.",
+      "Maintain operational tools and resources.",
+      "Ensure timely resolution of issues."
+    ]
+  }
+]
