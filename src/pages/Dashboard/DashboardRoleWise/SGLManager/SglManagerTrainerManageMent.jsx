@@ -21,7 +21,6 @@ const SglManagerTrainerManageMent = () => {
         const fetchData = async () => {
             try {
                 const response = await axiosPublic.get(`/trainers`);
-                console.log(response.data.data.trainers);
                 const filteredData = response.data.data.trainers.filter(data => data.groupLeader.seniorGroupLeader.seniorGroupLeaderManager === userdb._id)
                 setTrainers(filteredData)
                 // You can store data in state or do something with it

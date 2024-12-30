@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../useAxiosPublic';
 
 
-const useSGLManager = () => {
+const useSGLManager = (queryParams) => {
     const axiosPublic = useAxiosPublic()
     const fetchRole = async () => {
-        const { data } = await axiosPublic.get('/sgl-managers');
+        const { data } = await axiosPublic.get('/sgl-managers', { params: queryParams });
         return data.data.seniorGroupLeaderManagers;
     };
 
@@ -15,7 +15,7 @@ const useSGLManager = () => {
         isError,
         refetch,
     } = useQuery({
-        queryKey: ['seniorGroupLeaderManagers'],
+        queryKey: ['seniorGroupLeaderManagers', queryParams],
         queryFn: fetchRole,
         staleTime: 5 * 60 * 1000, // Cache trainers for 5 minutes
         cacheTime: 10 * 60 * 1000, // Keep data in memory for 10 minutes

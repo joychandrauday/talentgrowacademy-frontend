@@ -130,7 +130,6 @@ const SGLglManagement = () => {
                             <th className="border px-4 py-2">Phone</th>
                             <th className="border px-4 py-2">Role</th>
                             <th className="border px-4 py-2">Status</th>
-                            <th className="border px-4 py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -142,14 +141,7 @@ const SGLglManagement = () => {
                                 <td className="border px-4 py-2">{user.phone}</td>
                                 <td className="border px-4 py-2">{user.role}</td>
                                 <td className="border px-4 py-2">{user.status}</td>
-                                <td className="border px-4 py-2">
-                                    <button
-                                        className="px-4 py-2 border rounded text-white bg-blue-600 hover:bg-blue-700"
-                                        onClick={() => handleAssignClick(user._id)}
-                                    >
-                                        Assign
-                                    </button>
-                                </td>
+
                             </tr>
                         ))}
                     </tbody>

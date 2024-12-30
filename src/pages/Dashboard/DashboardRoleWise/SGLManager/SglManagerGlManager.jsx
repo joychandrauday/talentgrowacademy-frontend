@@ -23,7 +23,6 @@ const SglManagerGlManager = () => {
                 const response = await axiosPublic.get(`/group-leaders`);
                 const filteredData = response.data.data.groupLeaders.filter(data => data.seniorGroupLeader.seniorGroupLeaderManager === userdb._id)
                 setGl(filteredData)
-                console.log(filteredData);
                 // You can store data in state or do something with it
             } catch (error) {
                 console.error('Error fetching data:', error);

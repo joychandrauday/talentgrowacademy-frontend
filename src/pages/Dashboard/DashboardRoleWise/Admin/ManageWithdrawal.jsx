@@ -36,7 +36,7 @@ const ManageWithdrawal = () => {
         }
     };
 
-    const updateStatus = async (transactionId, newStatus, userId, transaction) => {
+    const updateStatus = async (transactionId, newStatus, userId) => {
         try {
             // Show SweetAlert loader
             const loadingSwal = Swal.fire({
@@ -47,24 +47,12 @@ const ManageWithdrawal = () => {
                     Swal.showLoading(); // Show the loader
                 },
             });
-            if (transaction.firstWithdraw) {
-                // admin allocation on first transaction
-                await axiosPublic.post('/transactions/create', {
-                    userId: userdb._id,
-                    foreignUser: userId, // Use the selected user
-                    amount: 350,
-                    type: 'credit',
-                    status: 'completed',
-                    description: 'Money allocated to the admin.',
-                    showingId: userdb.userID,
-                });
-            }
+
             const response = await axiosPublic.put('/transactions/update-status', {
                 transactionId,
                 status: newStatus,
                 userId
             });
-            console.log(response);
             loadingSwal.close();
             if (response.status === 200) {
                 Swal.fire({
@@ -145,7 +133,7 @@ const ManageWithdrawal = () => {
                                     {transaction.status !== 'pending' ? <div className="opacity-60">completed</div> : <td className="p-3 flex justify-center items-center gap-2">
                                         <button
                                             className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
-                                            onClick={() => handleAction(transaction._id, "completed", transaction.userId, transaction)}
+                                            onClick={() => handleAction(transaction._id, "completed", transaction.userId)}
                                             disabled={transaction.status === 'completed'}
                                         >
                                             <FaCheck />

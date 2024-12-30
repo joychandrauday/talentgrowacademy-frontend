@@ -6,6 +6,8 @@ import { TbClockCheck } from "react-icons/tb";
 import { MdBlock, MdReplayCircleFilled } from "react-icons/md";
 import { BiRepeat } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
+import useGL from "../../../Hooks/roleFetch/useGL";
+import useSGL from "../../../Hooks/roleFetch/useSGL";
 
 const ManageTrainer = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,7 +27,8 @@ const ManageTrainer = () => {
     };
 
     const { trainers, totalCount, isLoading, isError, refetch } = useTrainers(queryParams);
-
+    const { groupLeaders } = useGL()
+    const { seniorGroupLeaders } = useSGL()
     const handleSearch = (e) => {
         e.preventDefault();
         setCurrentPage(1); // Reset to first page
@@ -58,13 +61,13 @@ const ManageTrainer = () => {
             });
 
             if (confirm) {
-                await axiosPublic.patch(`/users/${userId}`, editedUserData);
+                await axiosPublic.patch(`/trainers/${userId}`, editedUserData);
 
                 Swal.fire('Updated!', 'The user has been updated.', 'info');
                 refetch();
             }
         } catch (err) {
-            Swal.fire('Error!', 'Failed to block the user.', 'error');
+            Swal.fire('Error!', 'Failed to update the user.', 'error');
         }
         setEditingUserId(null);  // Stop editing
     };
@@ -129,9 +132,6 @@ const ManageTrainer = () => {
             const groupLeaderOptions = groupLeaders?.map(leader =>
                 `<option value="${leader._id}">${leader.name}</option>`
             ).join('');
-            const trainerOptions = trainers?.map(leader =>
-                `<option value="${leader._id}">${leader.name}</option>`
-            ).join('');
 
             // Create the SweetAlert2 dialog with dropdowns
             const { value: formValues } = await Swal.fire({
@@ -147,11 +147,6 @@ const ManageTrainer = () => {
                         <option value="">--Select Group Leader--</option>
                         ${groupLeaderOptions}
                     </select>
-                    <label for="trainer" style="display: block; text-align: left;">Select Trainer:</label>
-                    <select id="trainer" class="swal2-select" style="width: 100%; padding: 0.5rem;">
-                        <option value="">--Select Trainer--</option>
-                        ${trainerOptions}
-                    </select>
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
@@ -160,15 +155,14 @@ const ManageTrainer = () => {
                 preConfirm: () => {
                     const seniorGroupLeader = document.getElementById('seniorGroupLeader').value;
                     const groupLeader = document.getElementById('groupLeader').value;
-                    const trainer = document.getElementById('trainer').value;
 
                     // Check if at least one selection is made (SGL, GL, or Trainer)
-                    if (!seniorGroupLeader && !groupLeader && !trainer) {
+                    if (!seniorGroupLeader && !groupLeader) {
                         Swal.showValidationMessage('Please select at least one of: Senior Group Leader, Group Leader, or Trainer.');
                         return null;
                     }
 
-                    return { seniorGroupLeader, groupLeader, trainer };
+                    return { seniorGroupLeader, groupLeader };
                 },
                 willOpen: () => {
                     // Show a loading spinner before submission
@@ -177,7 +171,7 @@ const ManageTrainer = () => {
             });
 
             if (formValues) {
-                const { seniorGroupLeader, groupLeader, trainer } = formValues;
+                const { seniorGroupLeader, groupLeader } = formValues;
 
                 const dataToSend = {};
 
@@ -189,12 +183,8 @@ const ManageTrainer = () => {
                     dataToSend.groupLeader = groupLeader;
                 }
 
-                if (trainer) {
-                    dataToSend.trainer = trainer;
-                }
-
                 if (Object.keys(dataToSend).length > 0) {
-                    await axiosPublic.patch(`/users/${userID}`, dataToSend);
+                    await axiosPublic.patch(`/trainers/${userID}`, dataToSend);
                     Swal.fire('Updated!', 'The user has been updated and assigned.', 'success');
                     refetch();
                 }
@@ -333,7 +323,7 @@ const ManageTrainer = () => {
                                         {user.balance}
                                     </td>
                                     <td className="border px-4 py-2">{user.groupLeader?.name || 'N/A'}</td>
-                                    <td className="border px-4 py-2">{user.groupLeader.seniorGroupLeader?.name || 'N/A'}</td>
+                                    <td className="border px-4 py-2">{user.groupLeader?.seniorGroupLeader?.name || 'N/A'}</td>
                                     <td className="border px-4 py-2">
                                         {editingUserId === user._id ? (
                                             <input
