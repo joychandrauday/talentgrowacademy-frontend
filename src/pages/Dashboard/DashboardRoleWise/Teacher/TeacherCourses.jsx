@@ -12,7 +12,7 @@ const TeacherCourses = () => {
     const [updatedLink, setUpdatedLink] = useState(''); // State for updated class link
     const [selectedCourseId, setSelectedCourseId] = useState(null); // State for selected course
     const axiosPublic = useAxiosPublic();
-
+    console.log(userdb.course);
     // Handle updating the class link for a selected course
     const handleClassLinkUpdate = async () => {
         if (!updatedLink) {
@@ -92,7 +92,7 @@ const TeacherCourses = () => {
                             type="url"
                             value={updatedLink}
                             onChange={(e) => setUpdatedLink(e.target.value)}
-                            placeholder="Enter new class link"
+                            placeholder={userdb.course ? userdb.course.classLink : 'no link found'}
                             className="p-2 border rounded w-full"
                         />
                         <div className="mt-4 flex justify-center">

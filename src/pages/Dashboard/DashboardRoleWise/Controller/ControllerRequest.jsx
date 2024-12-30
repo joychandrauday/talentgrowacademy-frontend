@@ -92,12 +92,12 @@ const ControllerRequest = () => {
                         {requests.map((request) => (
                             <tr key={request._id}>
                                 <td className="border px-4 py-2">{new Date(request.createdAt).toLocaleDateString()}</td>
-                                <td className="border px-4 py-2">{request.userId.userID}</td>
-                                <td className="border px-4 py-2">{request.userId.name}</td>
-                                <td className="border px-4 py-2">{request.userId.phone}</td>
-                                <td className="border px-4 py-2">{request.requestBy.userID}</td>
-                                <td className="border px-4 py-2">{request.requestBy.name}</td>
-                                <td className="border px-4 py-2">{request.requestBy.whatsapp}</td>
+                                <td className="border px-4 py-2">{request.userId ? request.userId.userID : "N/A"}</td >
+                                <td className="border px-4 py-2">{request.userId ? request.userId.name : 'N/A'}</td>
+                                <td className="border px-4 py-2">{request.userId ? request.userId.phone : 'N/A'}</td>
+                                <td className="border px-4 py-2">{request.requestBy ? request.requestBy.userID : "N/A"}</td>
+                                <td className="border px-4 py-2">{request.requestBy ? request.requestBy.name : "N/A"}</td>
+                                <td className="border px-4 py-2">{request.requestBy ? request.requestBy.whatsapp : "N/A"}</td>
                                 <td className="border px-4 py-2">
                                     {request.status === "accept" && (
                                         <span className="badge badge-success white">{request.status}ed<FaCheckCircle className="text-white cursor-pointer" title="Accepted Request" /></span>
