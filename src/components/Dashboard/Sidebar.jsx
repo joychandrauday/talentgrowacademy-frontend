@@ -439,6 +439,31 @@ const Sidebar = ({ user }) => {
               </div>
             </div>
           )}
+          {/* c m sidebar navs */}
+          {user?.role === "consultant-manager" && (
+            <div>
+              <div className="ml-4 mt-2 space-y-2">
+                <NavLink
+                  to="/dashboard/consultant-manager/consultant"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaUsersGear />Consultants
+                </NavLink>
+                <NavLink
+                  to="/dashboard/consultant-manager/count"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count
+                </NavLink>
+              </div>
+            </div>
+          )}
 
 
           {/* teacher manager sidebar navs */}

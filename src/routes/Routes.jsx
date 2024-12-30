@@ -74,6 +74,7 @@ import ConsultantManagerConsultantManagement from "../pages/Dashboard/DashboardR
 import ConsultantManagerCount from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCount";
 import ConsultantManagerCountResult from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCountResult";
 import SGLManagerCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLManagerCount";
+import ConsultantManagerDashboard from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerDashboard";
 
 
 
@@ -298,7 +299,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "consultant-manager",
-        element: <ControllerDashboard />,
+        element: <ConsultantManagerDashboard />,
         children: [
           {
             path: "",
@@ -312,10 +313,6 @@ export const router = createBrowserRouter([
             path: "count",
             element: <ConsultantManagerCount />
           },
-          {
-            path: "count-result",
-            element: <ConsultantManagerCountResult />
-          }
         ]
       },
       {
