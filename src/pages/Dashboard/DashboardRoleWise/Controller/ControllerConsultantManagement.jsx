@@ -134,7 +134,7 @@ const ControllerConsultantManagement = () => {
                                             type="checkbox"
                                             className="form-checkbox"
                                             checked={user.permission}
-                                            onChange={(e) => handlePermission(user.userID, e.target.checked)}
+                                            onChange={(e) => handlePermission(user._id, e.target.checked)}
                                         />
                                         <span className="ml-2">{user.permission ? 'Yes' : 'No'}</span>
                                     </label>
