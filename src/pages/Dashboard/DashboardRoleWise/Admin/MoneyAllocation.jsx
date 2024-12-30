@@ -13,17 +13,25 @@ const MoneyAllocation = () => {
     const [userIdToAllocate, setUserIdToAllocate] = useState('');  // To store the userID input by admin
     const [amount, setAmount] = useState('');
     const [user, setUser] = useState(null);  // To store the searched user data
-
+    const [isAdminSelected, setIsAdminSelected] = useState(true)
+    console.log(isAdminSelected);
     const handleSearchUser = async () => {
         if (!userIdToAllocate) {
             swal.fire('Error', 'Please enter a valid user ID', 'error');
             return;
         }
         try {
-            const response = await axiosPublic.get(`/admins/alladmins?searchTerm=${userIdToAllocate}`);
-            if (response.status === 200) {
-                setUser(response.data.data.results[0]);
-                toast.success('User found !!')
+            const response = await axiosPublic.get(`/${isAdminSelected ? 'admins/alladmins' : 'users'}?searchTerm=${userIdToAllocate}`);
+            if (!isAdminSelected) {
+                if (response.status === 200) {
+                    setUser(response.data.data.users[0]);
+                    response.data.data.users[0] && toast.success('User found !!')
+                }
+            } else {
+                if (response.status === 200) {
+                    setUser(response.data.data.results[0]);
+                    response.data.data.results[0] && toast.success('User found!!')
+                }
             }
         } catch (err) {
             swal.fire('Error', 'User not found', 'error');
@@ -89,28 +97,40 @@ const MoneyAllocation = () => {
                     <label htmlFor="userIdToAllocate" className="block text-gray-700 font-medium mb-2">
                         Enter User ID to Allocate Money
                     </label>
-                    <div className="flex">
+                    <div className="flex gap-2">
                         <input
                             type="text"
                             id="userIdToAllocate"
                             value={userIdToAllocate}
                             onChange={(e) => setUserIdToAllocate(e.target.value)}
-                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            className="w-full input border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             placeholder="Enter User ID"
-                        />
+                        /> <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={!isAdminSelected}
+                                onChange={() => setIsAdminSelected(!isAdminSelected)}
+                                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-gray-700">User</span>
+                        </label>
                         <button
                             type="button"
                             onClick={handleSearchUser}
-                            className="ml-2 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
+                            className=" bg-indigo-500 text-white btn rounded-md hover:bg-indigo-600 transition"
                         >
                             Search User
                         </button>
                     </div>
+                    {/* add a checkbox to select admin or user to search */}
+
+
+
                 </div>
 
                 {user && (
                     <div className="mb-4">
-                        <p className="font-medium">User Found: {user.name}</p>
+                        <p className="font-medium flex items-center gap-2 ">User Found: <span className="card-title">{user.name}</span><span className="badge badge-neutral">{user.role}</span></p>
                     </div>
                 )}
 
@@ -124,7 +144,7 @@ const MoneyAllocation = () => {
                         id="amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        className="w-full input border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         placeholder="Enter the amount"
                     />
                 </div>
