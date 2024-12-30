@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Fix the import
 import useAxiosPublic from '../Hooks/useAxiosPublic';
+import useUser from '../pages/Others/Register/useUser';
 
 const AdminRoute = ({ children }) => {
+    const { userdb } = useUser()
     const location = useLocation();
     const axiosPublic = useAxiosPublic(); // Axios instance with refresh token logic
     const [isLoading, setIsLoading] = useState(true); // Loading state
-    const [isTokenValid, setIsTokenValid] = useState(false); // Valid token state
+    const [isAdminValid, setisAdminValid] = useState(false); // Valid token state
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -16,39 +18,22 @@ const AdminRoute = ({ children }) => {
             if (storedToken) {
                 try {
                     const decodedToken = jwtDecode(storedToken);
-                    const expiryTime = decodedToken?.exp * 1000;
-
-                    if (expiryTime < Date.now()) {
-                        await refreshToken(); // Try refreshing if expired
+                    if (decodedToken.role === 'admin') {
+                        setisAdminValid(true); // Token is valid
                     } else {
-                        setIsTokenValid(true); // Token is valid
+                        setisAdminValid(false); // Token is not valid
                     }
                 } catch (error) {
                     console.error('Invalid token:', error);
-                    setIsTokenValid(false);
+                    setisAdminValid(false);
                 }
             } else {
-                setIsTokenValid(false); // No token found
+                setisAdminValid(false); // No token found
             }
             setIsLoading(false); // Stop loading
         };
 
-        const refreshToken = async () => {
-            try {
-                const response = await axiosPublic.post('/refresh-token');
-                const newAccessToken = response.data?.data?.token;
 
-                if (newAccessToken) {
-                    localStorage.setItem('authToken', newAccessToken); // Update token
-                    setIsTokenValid(true);
-                } else {
-                    setIsTokenValid(false);
-                }
-            } catch (error) {
-                console.error('Failed to refresh token:', error);
-                setIsTokenValid(false);
-            }
-        };
 
         verifyToken(); // Start verification on mount
     }, [axiosPublic]);
@@ -58,7 +43,7 @@ const AdminRoute = ({ children }) => {
         return <div>Loading...</div>;
     }
 
-    if (!isTokenValid) {
+    if (!isAdminValid) {
         // Redirect to login if the token is invalid
         return <Navigate state={{ from: location }} to="/login" />;
     }
