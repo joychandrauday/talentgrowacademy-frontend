@@ -75,6 +75,7 @@ import ConsultantManagerCount from "../pages/Dashboard/DashboardRoleWise/Consult
 import ConsultantManagerCountResult from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCountResult";
 import SGLManagerCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLManagerCount";
 import ConsultantManagerDashboard from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerDashboard";
+import AdminRoute from "./AdminRoute";
 
 
 
@@ -197,7 +198,7 @@ export const router = createBrowserRouter([
       //admin rooutes
       {
         path: "admin",
-        element: <AdminDashboard />,
+        element: <AdminRoute><AdminDashboard /></AdminRoute>,
         children: [
           {
             path: "",
