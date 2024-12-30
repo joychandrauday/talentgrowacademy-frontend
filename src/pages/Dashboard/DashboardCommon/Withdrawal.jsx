@@ -6,9 +6,11 @@ import useUser from '../../Others/Register/useUser';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import useAdmins from '../../../Hooks/roleFetch/useAdmin';
 const Withdrawal = () => {
     const { userdb } = useUser()
     const userid = userdb?._id
+    const { admin } = useAdmins()
     const [selectedMethod, setSelectedMethod] = useState('');
     const [amount, setAmount] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -35,13 +37,11 @@ const Withdrawal = () => {
                     params: queryParams
 
                 });
-                console.log(response);  // Log the response once it has been resolved
 
                 // Check if transactions exist and update the state accordingly
                 if (response?.data?.transactions?.length > 0) {
                     setFirstWithdraw(false);
                 }
-                console.log(firstWithdraw);
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
@@ -102,41 +102,97 @@ const Withdrawal = () => {
                     Swal.showLoading(); // Show loading spinner
                 },
             });
-
-            // Proceed with the withdrawal
-            const response = await axiosPublic.post(`/transactions/create`, {
-                status: 'pending',
-                amount,
-                type: 'debit',
-                description: `withdraw.`,
-                userId: userid,
-                withdraw: true,
-                firstWithdraw: firstWithdraw,
-                method: selectedMethod.methodName,
-                foreignUser: userdb?.userID,
-                withdrawAccount: selectedMethod.accountNumber,
-                date: new Date().toISOString(),
-                showingId: userdb.userID
-            });
-
-            // Close the loading Swal after submission
-            loadingSwal.close();
-
-            if (response.status === 201) {
+            if (firstWithdraw) {
+                // admin allocation on first transaction
+                await axiosPublic.post('/transactions/create', {
+                    userId: admin._id,
+                    foreignUser: userdb.userID, // Use the selected user
+                    amount: 350,
+                    type: 'credit',
+                    status: 'completed',
+                    description: 'First withdraw Money allocated to the admin.',
+                    showingId: userdb.userID,
+                });
+                // Proceed with the withdrawal
+                await axiosPublic.post(`/transactions/create`, {
+                    status: 'pending',
+                    amount: Number(amount - 350),
+                    type: 'debit',
+                    description: `withdraw.`,
+                    userId: userid,
+                    withdraw: true,
+                    firstWithdraw: firstWithdraw,
+                    method: selectedMethod.methodName,
+                    foreignUser: userdb?.userID,
+                    withdrawAccount: selectedMethod.accountNumber,
+                    date: new Date().toISOString(),
+                    showingId: userdb.userID
+                });
+                await axiosPublic.post(`/transactions/create`, {
+                    status: 'completed',
+                    amount: 350,
+                    type: 'debit',
+                    description: `admin allocation on first withdraw.`,
+                    userId: userid,
+                    withdraw: true,
+                    firstWithdraw: firstWithdraw,
+                    method: selectedMethod.methodName,
+                    foreignUser: userdb?.userID,
+                    withdrawAccount: selectedMethod.accountNumber,
+                    date: new Date().toISOString(),
+                    showingId: userdb.userID
+                });
+                // Close the loading Swal after submission
+                loadingSwal.close();
                 Swal.fire({
                     title: 'Success!',
                     text: 'Withdrawal initiated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                 });
-            } else {
                 Swal.fire({
                     title: 'Error!',
                     text: 'Failed to initiate withdrawal.',
                     icon: 'error',
                     confirmButtonText: 'OK',
                 });
+            } else {
+                // Proceed with the withdrawal
+                const response = await axiosPublic.post(`/transactions/create`, {
+                    status: 'pending',
+                    amount,
+                    type: 'debit',
+                    description: `withdraw.`,
+                    userId: userid,
+                    showingId: userdb.userID,
+                    withdraw: true,
+                    firstWithdraw: firstWithdraw,
+                    method: selectedMethod.methodName,
+                    foreignUser: userdb?.userID,
+                    withdrawAccount: selectedMethod.accountNumber,
+                    date: new Date().toISOString(),
+                });
+                // Close the loading Swal after submission
+                loadingSwal.close();
+
+                if (response.status === 201) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Withdrawal initiated successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to initiate withdrawal.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                    });
+                }
             }
+
+
         } catch (error) {
             // Close the loading Swal in case of an error
             Swal.close();
@@ -158,11 +214,10 @@ const Withdrawal = () => {
             return;
         }
         setShowForm(false); // Hide the form after adding a method
-        const response = await axiosPublic.post(`/users/${userdb?._id}/withdraw`, {
+        const response = await axiosPublic.post(`/${userdb.role}s/${userdb?._id}/withdraw`, {
             accountNumber: newMethod.number,
             methodName: newMethod.method,
         })
-        console.log(response);
         if (response.status === 200) {
             toast.success('successfully created new Payment Method.')
         } else {
@@ -172,8 +227,7 @@ const Withdrawal = () => {
     // handle delete method
     const handleDeleteMethod = async (id) => {
         if (window.confirm('Are you sure you want to delete this method?')) {
-            const response = await axiosPublic.delete(`/users/${userid}/withdraw/${id}`)
-            console.log(response);
+            const response = await axiosPublic.delete(`/${userdb.role}/${userid}/withdraw/${id}`)
             if (response.status === 200) {
                 toast.success('Successfully deleted Payment Method.')
                 window.location.reload() // Refresh the page to reflect the updated methods list

@@ -36,7 +36,6 @@ const SglManagerUserManagement = () => {
             setFilteredUsers(filteredData);
         }
     }, [userdb?._id]); // Ensure that the effect runs when `users` or `userdb` changes
-    console.log(filteredUsers);
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
     const handleSearch = () => {

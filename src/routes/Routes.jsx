@@ -73,6 +73,7 @@ import ConsultantManagerUserManagement from "../pages/Dashboard/DashboardRoleWis
 import ConsultantManagerConsultantManagement from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerConsultantManagement";
 import ConsultantManagerCount from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCount";
 import ConsultantManagerCountResult from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerCountResult";
+import SGLManagerCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLManagerCount";
 
 
 
@@ -397,11 +398,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
-            element: <Count />
-          },
-          {
-            path: "count-result",
-            element: <CountResult />
+            element: <SGLManagerCount />
           },
           {
             path: "search",

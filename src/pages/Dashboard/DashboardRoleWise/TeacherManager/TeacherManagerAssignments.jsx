@@ -58,13 +58,11 @@ const TeacherManagerAssignments = () => {
         });
 
         if (status) {
-            console.log(status);
             try {
                 // Make the PATCH request to update the assignment status
                 const markResponse = await axiosPublic.patch(
                     `/courses/${assignment.courseId}/assignments/${assignment._id}/mark`, status
                 );
-                console.log(markResponse);
                 if (markResponse.data.success) {
                     Swal.fire({
                         title: 'Success!',

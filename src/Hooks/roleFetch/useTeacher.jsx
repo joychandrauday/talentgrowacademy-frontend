@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../useAxiosPublic';
 
 
-const useTeacher = () => {
+const useTeacher = (queryParams) => {
     const axiosPublic = useAxiosPublic()
     const fetchRole = async () => {
-        const { data } = await axiosPublic.get('/teachers');
+        const { data } = await axiosPublic.get('/teachers', { params: queryParams });
         return data.data.teacchers;
     };
 
@@ -15,7 +15,7 @@ const useTeacher = () => {
         isError,
         refetch,
     } = useQuery({
-        queryKey: ['teacchers'],
+        queryKey: ['teacchers', queryParams],
         queryFn: fetchRole,
         staleTime: 5 * 60 * 1000, // Cache trainers for 5 minutes
         cacheTime: 10 * 60 * 1000, // Keep data in memory for 10 minutes

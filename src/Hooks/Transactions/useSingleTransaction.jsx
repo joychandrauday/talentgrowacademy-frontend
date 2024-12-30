@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../useAxiosPublic';
 
 const useSingleTransaction = (queryParams) => {
-    console.log(queryParams);
     const axiosPublic = useAxiosPublic();
 
     // Function to fetch transactions from the backend
@@ -23,7 +22,6 @@ const useSingleTransaction = (queryParams) => {
         staleTime: 60 * 60 * 1000, // Cache data for 1 hour
         retry: 2, // Retry twice if fetching fails
     });
-    console.log(data);
     return {
         transactions: data?.transactions || [], // Transactions data from response
         totalCount: data?.pagination?.total || 0, // Total number of transactions

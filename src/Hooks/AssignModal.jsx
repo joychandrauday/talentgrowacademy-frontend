@@ -11,6 +11,7 @@ const AssignModal = ({
     queryParams,
     role
 }) => {
+    console.log(queryParams);
     const { users, isLoading, isError } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();
     const [selectedUsers, setSelectedUsers] = useState([]);
