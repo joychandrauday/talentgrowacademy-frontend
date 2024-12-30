@@ -49,6 +49,14 @@ const TeacherCourses = () => {
             Swal.fire('Error', 'Failed to update live status', 'error');
         }
     };
+    const isValidUrl = (url) => {
+        try {
+            const parsedUrl = new URL(url);
+            return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+        } catch (err) {
+            return false;
+        }
+    };
     return (
         <div className="p-6">
             <h1 className="text-2xl font-semibold mb-4">Teacher Courses</h1>
@@ -93,12 +101,16 @@ const TeacherCourses = () => {
                             value={updatedLink}
                             onChange={(e) => setUpdatedLink(e.target.value)}
                             placeholder={userdb.course ? userdb.course.classLink : 'no link found'}
-                            className="p-2 border rounded w-full"
+                            className={`p-2 border rounded w-full ${!isValidUrl(updatedLink) && updatedLink ? 'border-red-500' : ''}`}
                         />
+                        {!isValidUrl(updatedLink) && updatedLink && (
+                            <p className="text-red-500 mt-2">Please enter a valid URL starting with http:// or https://</p>
+                        )}
                         <div className="mt-4 flex justify-center">
                             <button
                                 onClick={handleClassLinkUpdate}
                                 className="bg-green-500 text-white px-6 py-3 rounded"
+                                disabled={!isValidUrl(updatedLink)} // Disable button if the link is invalid
                             >
                                 Update Class Link
                             </button>

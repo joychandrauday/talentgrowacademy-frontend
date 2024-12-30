@@ -254,7 +254,7 @@ const UserDashboard = ({ user }) => {
                   </h2>
                   {course?.classLink && course?.isLive ? (
                     <Link
-                      to={course.classLink}
+                      to={`${course.classLink}`}
                       className="btn text-white hover:bg-primary bg-secondary"
                     >
                       Join Now
