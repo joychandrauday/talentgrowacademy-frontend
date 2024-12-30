@@ -46,7 +46,7 @@ const TeacherManagerCourseManagement = () => {
                 if (modalMode === 'edit') {
                     // Update existing course
                     const res2 = await axiosPublic.patch(`/courses/update-course/${datam._id}`, datam);
-                    const res3 = await axiosPublic.patch(`/teachers/${datam.teacherId}`, {
+                    await axiosPublic.patch(`/teachers/${datam.teacherId}`, {
                         data: datam._id
                     });
 
@@ -60,7 +60,7 @@ const TeacherManagerCourseManagement = () => {
                 } else {
                     // Add new course
                     const res2 = await axiosPublic.post('/courses/', datam);
-                    const res3 = await axiosPublic.patch(`/teachers/${datam.teacherId}`, {
+                    await axiosPublic.patch(`/teachers/${datam.teacherId}`, {
                         data: res2.data.data._id
                     });
                     if (res2.status === 201) {
@@ -84,7 +84,6 @@ const TeacherManagerCourseManagement = () => {
         }
     };
 
-
     const handleDelete = async (id) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
@@ -99,7 +98,6 @@ const TeacherManagerCourseManagement = () => {
         if (result.isConfirmed) {
             try {
                 const res = await axiosPublic.delete(`/courses/${id}`);
-
                 if (res.data.success) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -191,6 +189,7 @@ const TeacherManagerCourseManagement = () => {
                             <input
                                 type="text"
                                 {...register('classLink')}
+                                defaultValue={'classLink'}
                                 placeholder="Class Link"
                                 className="input input-bordered w-full"
                                 required
@@ -201,9 +200,6 @@ const TeacherManagerCourseManagement = () => {
                                 required
                                 defaultValue={selectedCourse?.teacherId || ''}
                             >
-                                <option value="" disabled>
-                                    Select a Teacher
-                                </option>
                                 {teachers.map((teacher) => (
                                     <option key={teacher._id} value={teacher._id}>
                                         {teacher.name}
