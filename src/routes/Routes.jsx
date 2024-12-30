@@ -303,7 +303,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <ConsultantManagerUserManagement />
+            element: <ConsultantManagerConsultantManagement />
           },
           {
             path: "consultant",
