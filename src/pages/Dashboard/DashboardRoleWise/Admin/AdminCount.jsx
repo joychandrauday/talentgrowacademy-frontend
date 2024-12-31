@@ -270,7 +270,7 @@ const AdminCount = () => {
                         {filteredData.map((user) => (
                             <tr key={user._id} className="hover:bg-gray-50">
                                 <td className="border px-4 py-2">
-                                    {new Date(user.createdAt).toLocaleDateString()}<br></br>
+                                    {new Date(user.createdAt).toLocaleDateString()}<br />
                                     {new Date(user.createdAt).toLocaleTimeString()}
                                 </td>
                                 <td className="border px-4 py-2">

@@ -214,11 +214,12 @@ const Withdrawal = () => {
             return;
         }
         setShowForm(false); // Hide the form after adding a method
-        const response = await axiosPublic.post(`/${userdb.role}s/${userdb?._id}/withdraw`, {
+        const response = await axiosPublic.post(`/users/${userdb?.userID}/withdraw`, {
             accountNumber: newMethod.number,
             methodName: newMethod.method,
         })
         if (response.status === 200) {
+            window.location.reload()
             toast.success('successfully created new Payment Method.')
         } else {
             toast.error('Failed to create new Payment Method.')
@@ -227,7 +228,7 @@ const Withdrawal = () => {
     // handle delete method
     const handleDeleteMethod = async (id) => {
         if (window.confirm('Are you sure you want to delete this method?')) {
-            const response = await axiosPublic.delete(`/${userdb.role}/${userid}/withdraw/${id}`)
+            const response = await axiosPublic.delete(`/users/${userdb.userID}/withdraw/${id}`)
             if (response.status === 200) {
                 toast.success('Successfully deleted Payment Method.')
                 window.location.reload() // Refresh the page to reflect the updated methods list
