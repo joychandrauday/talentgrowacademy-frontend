@@ -1,114 +1,258 @@
 [
     {
         "id": 1,
-        "title": "Controller",
-        "location": "Dhaka, Bangladesh",
-        "type": "Full-time",
-        "description": "We are seeking a detail-oriented Controller to oversee financial reporting and compliance.",
+        "title": "Trainer",
+        "location": "Khulna, Bangladesh",
+        "type": "Part-time",
+        "description": "We are seeking a skilled Trainer to design and deliver effective training programs.",
         "status": "active",
-        "postedAt": "2024-12-01T09:00:00.000Z",
-        "modifiedAt": "2024-12-03T12:00:00.000Z",
+        "postedAt": "2024-12-10T09:00:00.000Z",
+        "modifiedAt": "2024-12-12T10:00:00.000Z",
         "jobResponsibilities": [
-            "Oversee financial reporting and budgeting processes.",
-            "Ensure compliance with financial regulations and standards.",
-            "Develop financial strategies and policies.",
-            "Collaborate with management on financial planning."
+            "Develop and deliver training materials and sessions.",
+            "Evaluate trainee progress and provide constructive feedback.",
+            "Ensure training programs meet organizational objectives.",
+            "Stay updated on industry best practices for training."
         ]
     },
     {
         "id": 2,
-        "title": "Accountant",
-        "location": "Chittagong, Bangladesh",
-        "type": "Part-time",
-        "description": "We are looking for an experienced Accountant to manage financial transactions and records.",
+        "title": "Group Leader",
+        "location": "Sylhet, Bangladesh",
+        "type": "Full-time",
+        "description": "We are hiring a proactive Group Leader to coordinate and inspire a team.",
         "status": "active",
-        "postedAt": "2024-11-30T08:30:00.000Z",
-        "modifiedAt": "2024-12-02T10:00:00.000Z",
+        "postedAt": "2024-12-09T10:00:00.000Z",
+        "modifiedAt": "2024-12-11T11:00:00.000Z",
         "jobResponsibilities": [
-            "Prepare and maintain financial records and reports.",
-            "Manage accounts payable and receivable.",
-            "Reconcile bank statements and financial discrepancies.",
-            "Assist in tax preparation and audits."
+            "Guide and manage team activities to meet goals.",
+            "Motivate team members and foster collaboration.",
+            "Monitor and report team performance metrics.",
+            "Resolve conflicts and maintain a positive work environment."
         ]
     },
     {
         "id": 3,
-        "title": "Consultant",
-        "location": "Remote",
-        "type": "Contract",
-        "description": "We are hiring a Consultant with expertise in business strategy and process improvement.",
-        "status": "inactive",
-        "postedAt": "2024-11-29T09:45:00.000Z",
-        "modifiedAt": "2024-12-01T11:00:00.000Z",
+        "title": "Senior Group Leader",
+        "location": "Dhaka, Bangladesh",
+        "type": "Full-time",
+        "description": "We are seeking an experienced Senior Group Leader to manage multiple teams.",
+        "status": "active",
+        "postedAt": "2024-12-08T09:30:00.000Z",
+        "modifiedAt": "2024-12-10T10:30:00.000Z",
         "jobResponsibilities": [
-            "Analyze business processes and provide strategic advice.",
-            "Develop solutions to improve efficiency and productivity.",
-            "Assist in implementing new business strategies.",
-            "Provide ongoing support and recommendations."
+            "Oversee the coordination and performance of multiple teams.",
+            "Develop strategies to enhance team collaboration.",
+            "Provide leadership and mentorship to group leaders.",
+            "Align team efforts with organizational goals."
         ]
     },
     {
         "id": 4,
-        "title": "Group Leader",
-        "location": "Sylhet, Bangladesh",
+        "title": "Teacher",
+        "location": "Chittagong, Bangladesh",
         "type": "Full-time",
-        "description": "We are seeking a motivated Group Leader to guide and manage a team of professionals.",
+        "description": "We are hiring a dedicated Teacher to provide quality education and mentorship.",
         "status": "active",
-        "postedAt": "2024-11-28T10:00:00.000Z",
-        "modifiedAt": "2024-12-02T13:00:00.000Z",
+        "postedAt": "2024-12-07T08:45:00.000Z",
+        "modifiedAt": "2024-12-09T09:45:00.000Z",
         "jobResponsibilities": [
-            "Lead and manage a team to achieve project goals.",
-            "Coordinate tasks and ensure timely completion.",
-            "Foster a positive and productive work environment.",
-            "Report progress and address any challenges."
+            "Develop and deliver lesson plans aligned with curriculum standards.",
+            "Assess and track student progress.",
+            "Create a positive and inclusive learning environment.",
+            "Engage with students and parents to address concerns."
         ]
     },
     {
         "id": 5,
-        "title": "Trainer",
-        "location": "Khulna, Bangladesh",
+        "title": "Checker",
+        "location": "Barisal, Bangladesh",
         "type": "Part-time",
-        "description": "We are looking for a skilled Trainer to deliver engaging training sessions and workshops.",
+        "description": "We are looking for a meticulous Checker to ensure accuracy in tasks and documentation.",
         "status": "active",
-        "postedAt": "2024-11-27T09:30:00.000Z",
-        "modifiedAt": "2024-12-01T12:00:00.000Z",
+        "postedAt": "2024-12-06T11:15:00.000Z",
+        "modifiedAt": "2024-12-08T12:15:00.000Z",
         "jobResponsibilities": [
-            "Design and deliver training programs and workshops.",
-            "Evaluate training effectiveness and provide feedback.",
-            "Develop training materials and resources.",
-            "Support employees in skill development."
+            "Review and verify documents for accuracy.",
+            "Identify and report errors or inconsistencies.",
+            "Collaborate with teams to resolve discrepancies.",
+            "Maintain records of reviewed materials."
         ]
     },
     {
         "id": 6,
         "title": "Manager",
-        "location": "Barisal, Bangladesh",
+        "location": "Rangpur, Bangladesh",
         "type": "Full-time",
-        "description": "We are seeking an experienced Manager to oversee daily operations and ensure team performance.",
+        "description": "We are hiring a Manager to oversee operations and ensure team efficiency.",
         "status": "active",
-        "postedAt": "2024-11-26T11:00:00.000Z",
-        "modifiedAt": "2024-12-01T15:00:00.000Z",
+        "postedAt": "2024-12-05T10:00:00.000Z",
+        "modifiedAt": "2024-12-07T11:00:00.000Z",
         "jobResponsibilities": [
-            "Manage daily operations and team performance.",
-            "Develop and implement business strategies.",
-            "Ensure compliance with company policies and procedures.",
-            "Lead and mentor team members."
+            "Plan and manage daily operations.",
+            "Monitor team performance and address challenges.",
+            "Develop and implement operational strategies.",
+            "Foster a productive and motivated work environment."
         ]
     },
     {
         "id": 7,
-        "title": "Senior Group Leader",
+        "title": "Account",
+        "location": "Khulna, Bangladesh",
+        "type": "Full-time",
+        "description": "We are seeking an Account professional to manage financial records and transactions.",
+        "status": "active",
+        "postedAt": "2024-12-04T09:00:00.000Z",
+        "modifiedAt": "2024-12-06T10:00:00.000Z",
+        "jobResponsibilities": [
+            "Maintain accurate financial records.",
+            "Process and reconcile transactions.",
+            "Assist in financial reporting and audits.",
+            "Ensure compliance with accounting standards."
+        ]
+    },
+    {
+        "id": 8,
+        "title": "Senior Account",
         "location": "Dhaka, Bangladesh",
         "type": "Full-time",
-        "description": "We are hiring a Senior Group Leader to manage multiple teams and oversee project success.",
+        "description": "We are hiring a Senior Account professional to lead financial operations.",
         "status": "active",
-        "postedAt": "2024-11-25T12:00:00.000Z",
-        "modifiedAt": "2024-12-02T16:00:00.000Z",
+        "postedAt": "2024-12-03T08:30:00.000Z",
+        "modifiedAt": "2024-12-05T09:30:00.000Z",
         "jobResponsibilities": [
-            "Oversee and manage multiple teams.",
-            "Ensure successful execution of projects.",
-            "Develop and implement strategic plans.",
-            "Provide mentorship and guidance to team leaders."
+            "Oversee financial records and transactions.",
+            "Lead and mentor accounting staff.",
+            "Ensure timely and accurate financial reporting.",
+            "Develop and implement accounting policies."
+        ]
+    },
+    {
+        "id": 9,
+        "title": "Controller",
+        "location": "Chittagong, Bangladesh",
+        "type": "Full-time",
+        "description": "We are seeking a Controller to oversee financial strategies and compliance.",
+        "status": "active",
+        "postedAt": "2024-12-02T10:00:00.000Z",
+        "modifiedAt": "2024-12-04T11:00:00.000Z",
+        "jobResponsibilities": [
+            "Develop and oversee financial policies and strategies.",
+            "Ensure compliance with financial regulations.",
+            "Prepare and present financial reports to stakeholders.",
+            "Lead financial planning and analysis efforts."
+        ]
+    },
+    {
+        "id": 10,
+        "title": "Senior Controller",
+        "location": "Sylhet, Bangladesh",
+        "type": "Full-time",
+        "description": "We are looking for a Senior Controller to lead financial operations and strategy.",
+        "status": "active",
+        "postedAt": "2024-12-01T09:00:00.000Z",
+        "modifiedAt": "2024-12-03T10:00:00.000Z",
+        "jobResponsibilities": [
+            "Manage financial operations across departments.",
+            "Develop and implement financial strategies.",
+            "Ensure accuracy in financial reporting.",
+            "Provide guidance on compliance and risk management."
+        ]
+    },
+    {
+        "id": 11,
+        "title": "Telecaller",
+        "location": "Remote",
+        "type": "Part-time",
+        "description": "We are seeking a friendly Telecaller to handle client inquiries and provide support.",
+        "status": "active",
+        "postedAt": "2024-11-30T09:30:00.000Z",
+        "modifiedAt": "2024-12-02T10:30:00.000Z",
+        "jobResponsibilities": [
+            "Engage with clients over calls to address inquiries.",
+            "Maintain accurate records of interactions.",
+            "Provide information about products and services.",
+            "Resolve customer concerns effectively."
+        ]
+    },
+    {
+        "id": 12,
+        "title": "Consultant",
+        "location": "Dhaka, Bangladesh",
+        "type": "Contract",
+        "description": "We are hiring a Consultant to provide expert advice on strategic decisions.",
+        "status": "active",
+        "postedAt": "2024-11-29T10:00:00.000Z",
+        "modifiedAt": "2024-12-01T11:00:00.000Z",
+        "jobResponsibilities": [
+            "Advise clients on strategic decisions and processes.",
+            "Develop and propose business solutions.",
+            "Provide insights on market trends and opportunities.",
+            "Assist in implementing efficiency-enhancing changes."
+        ]
+    },
+    {
+        "id": 13,
+        "title": "Senior Consultant",
+        "location": "Remote",
+        "type": "Full-time",
+        "description": "We are seeking a Senior Consultant to lead complex advisory projects.",
+        "status": "active",
+        "postedAt": "2024-11-28T09:30:00.000Z",
+        "modifiedAt": "2024-12-01T10:30:00.000Z",
+        "jobResponsibilities": [
+            "Lead and manage advisory projects.",
+            "Develop comprehensive business strategies.",
+            "Provide expert recommendations to clients.",
+            "Foster strong client relationships."
+        ]
+    },
+    {
+        "id": 14,
+        "title": "Lead Checker",
+        "location": "Chittagong, Bangladesh",
+        "type": "Part-time",
+        "description": "We are looking for a Lead Checker to oversee quality control processes.",
+        "status": "active",
+        "postedAt": "2024-11-27T09:00:00.000Z",
+        "modifiedAt": "2024-11-30T10:00:00.000Z",
+        "jobResponsibilities": [
+            "Supervise quality control checks and processes.",
+            "Ensure compliance with standards and guidelines.",
+            "Identify and resolve quality issues.",
+            "Collaborate with teams to enhance output quality."
+        ]
+    },
+    {
+        "id": 15,
+        "title": "Audit",
+        "location": "Dhaka, Bangladesh",
+        "type": "Full-time",
+        "description": "We are hiring an Auditor to examine and evaluate financial records and compliance.",
+        "status": "active",
+        "postedAt": "2024-11-26T10:00:00.000Z",
+        "modifiedAt": "2024-11-29T11:00:00.000Z",
+        "jobResponsibilities": [
+            "Conduct internal and external audits.",
+            "Evaluate financial records for accuracy and compliance.",
+            "Prepare detailed audit reports.",
+            "Provide recommendations for process improvements."
+        ]
+    },
+    {
+        "id": 16,
+        "title": "Support",
+        "location": "Remote",
+        "type": "Full-time",
+        "description": "We are looking for a dedicated Support professional to assist with client and technical queries.",
+        "status": "active",
+        "postedAt": "2024-11-25T09:30:00.000Z",
+        "modifiedAt": "2024-11-28T10:30:00.000Z",
+        "jobResponsibilities": [
+            "Provide timely assistance to client and team inquiries.",
+            "Troubleshoot and resolve technical issues.",
+            "Maintain documentation of support processes.",
+            "Enhance customer satisfaction through effective communication."
         ]
     }
 ]
