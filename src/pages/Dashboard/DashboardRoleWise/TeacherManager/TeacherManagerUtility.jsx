@@ -11,7 +11,7 @@ const TeacherManagerUtility = () => {
     const { cards, refetch } = useCard();
     const [selectedCard, setSelectedCard] = useState(null);
     const axiosPublic = useAxiosPublic();
-
+    const filteredCard = cards.filter(c => c.cardGroup === 'link')
     const {
         register,
         handleSubmit,
@@ -53,9 +53,9 @@ const TeacherManagerUtility = () => {
                 {/* Manage Cards Tab */}
                 <TabPanel>
                     <h2 className="text-xl font-bold ">Manage Cards</h2>
-                    {cards && cards.length > 0 ? (
+                    {filteredCard && filteredCard.length > 0 ? (
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-                            {cards.map((card) => (
+                            {filteredCard.map((card) => (
                                 <div key={card._id} className="p-4 relative bg-white rounded shadow card">
                                     <div className="card-body">
                                         <h3 className="text-lg font-bold card-title">{card.title}</h3>

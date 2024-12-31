@@ -43,14 +43,22 @@ const CourseDetailed = () => {
             Swal.fire('Error', 'Please provide a valid assignment link.', 'error');
             return;
         }
+        const today = new Date().toDateString();
+        const alreadySubmitted = submittedAssignments.some(
+            (assignment) => new Date(assignment.date).toDateString() === today
+        );
 
+        if (alreadySubmitted) {
+            Swal.fire('Error', 'You can only submit one assignment per day.', 'error');
+            return;
+        }
         const newAssignment = {
             date: new Date().toISOString(),
             submittedBy: userId,
             courseId: id,
             mark: null,
             link: assignmentLink,
-            status: isResubmit ? 'Resubmitted' : 'Submitted',
+            status: isResubmit ? 'Resubmitted' : 'Pending',
         };
 
         try {
@@ -84,7 +92,15 @@ const CourseDetailed = () => {
             Swal.fire('Error', 'Please provide a valid assignment link.', 'error');
             return;
         }
+        const today = new Date().toDateString();
+        const alreadySubmitted = submittedAssignments.some(
+            (assignment) => new Date(assignment.date).toDateString() === today
+        );
 
+        if (alreadySubmitted) {
+            Swal.fire('Error', 'You can only submit one assignment per day.', 'error');
+            return;
+        }
         const newAssignment = {
             date: new Date().toISOString(),
             submittedBy: userId,

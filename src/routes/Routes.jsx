@@ -76,6 +76,7 @@ import ConsultantManagerCountResult from "../pages/Dashboard/DashboardRoleWise/C
 import SGLManagerCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLManagerCount";
 import ConsultantManagerDashboard from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerDashboard";
 import AdminRoute from "./AdminRoute";
+import AdminCount from "../pages/Dashboard/DashboardRoleWise/Admin/AdminCount";
 
 
 
@@ -235,6 +236,10 @@ export const router = createBrowserRouter([
           {
             path: "utilities",
             element: <AdminUtilities />
+          },
+          {
+            path: "count",
+            element: <AdminCount />
           },
         ]
       },

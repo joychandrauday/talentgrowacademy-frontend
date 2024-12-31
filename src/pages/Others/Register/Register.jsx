@@ -135,10 +135,29 @@ const Register = () => {
             case 'Nepal':
                 setCountryCode('+977');
                 break;
+            case 'Malaysia':
+                setCountryCode('+60');
+                break;
+            case 'United States':
+                setCountryCode('+1');
+                break;
+            case 'Saudi Arab':
+                setCountryCode('+966');
+                break;
+            case 'Oman':
+                setCountryCode('+968');
+                break;
+            case 'Singapore':
+                setCountryCode('+65');
+                break;
+            case 'Italy':
+                setCountryCode('+39');
+                break;
             default:
                 setCountryCode('');
         }
     };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-300 via-purple-500 to-indigo-500 bg-no-repeat bg-cover pt-32 pb-12 p-2">
@@ -207,6 +226,12 @@ const Register = () => {
                             <option value="Pakistan">Pakistan</option>
                             <option value="Sri Lanka">Sri Lanka</option>
                             <option value="Nepal">Nepal</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="United States">United States</option>
+                            <option value="Saudi Arab">Saudi Arab</option>
+                            <option value="Oman">Oman</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Italy">Italy</option>
                         </select>
                         {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>}
                     </div>
