@@ -15,7 +15,7 @@ const IconSection = () => {
         </div>
         <div>
           <p className="font-bold text-3xl">
-            9+ <br />
+            10+ <br />
             Courses
           </p>
         </div>
