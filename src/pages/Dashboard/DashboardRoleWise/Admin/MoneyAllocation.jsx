@@ -106,36 +106,59 @@ const MoneyAllocation = () => {
             return;
         }
         if (amount > Number(user?.balance)) {
-            Swal.fire('Error', 'insufficient user balance!!', 'error');
+            Swal.fire('Error', 'Insufficient user balance!', 'error');
             return;
         }
-        const Deduct = await axiosPublic.post('/transactions/create', {
-            userId: user._id,
-            showingId: user.userID,
-            foreignUser: userdb._id, // Use the selected user
-            amount: parseFloat(amount),
-            type: 'debit',
-            withdraw: true,
-            status: 'completed',
-            description: 'Money deducted by admin.',
-        });
-        // deducred money added to admin
-        const response = await axiosPublic.post('/transactions/create', {
-            userId: userdb._id,
-            showingId: userdb.userID,
-            foreignUser: user.userID,
-            amount: parseFloat(amount),
-            type: 'credit',
-            status: 'completed',
-            description: 'Money deducted from user.',
-        });
-        if (response.status === 201) {
-            swal.fire('Success', 'Money deducted successfully', 'success');
-            setUserIdToAllocate('');
-            setAmount('');
-            setUser(null); // Reset user after successful transaction
+
+        try {
+            setLoading(true); // Start loading
+            // Show loading Swal
+            Swal.fire({
+                title: 'Processing Transaction...',
+                html: 'Please wait while we process the transaction.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+
+            // Deduct money from the user
+            const Deduct = await axiosPublic.post('/transactions/create', {
+                userId: user._id,
+                showingId: user.userID,
+                foreignUser: userdb._id, // Use the selected user
+                amount: parseFloat(amount),
+                type: 'debit',
+                withdraw: true,
+                status: 'completed',
+                description: 'Money deducted by admin.',
+            });
+
+            // Add deducted money to the admin
+            const response = await axiosPublic.post('/transactions/create', {
+                userId: userdb._id,
+                showingId: userdb.userID,
+                foreignUser: user.userID,
+                amount: parseFloat(amount),
+                type: 'credit',
+                status: 'completed',
+                description: 'Money deducted from user.',
+            });
+
+            if (response.status === 201) {
+                Swal.fire('Success', 'Money deducted successfully', 'success');
+                setUserIdToAllocate('');
+                setAmount('');
+                setUser(null); // Reset user after successful transaction
+            }
+        } catch (error) {
+            console.error('Error during transaction:', error);
+            Swal.fire('Error', 'Something went wrong during the transaction.', 'error');
+        } finally {
+            setLoading(false); // Stop loading
         }
-    }
+    };
+
     return (
         <div className="p-5 min-h-screen w-full">
             <h1 className="text-2xl font-bold text-center mb-5">Money Allocation</h1>
