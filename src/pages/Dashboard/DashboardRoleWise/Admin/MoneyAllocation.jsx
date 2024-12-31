@@ -14,6 +14,7 @@ const MoneyAllocation = () => {
     const [amount, setAmount] = useState('');
     const [user, setUser] = useState(null);  // To store the searched user data
     const [isAdminSelected, setIsAdminSelected] = useState(true)
+    const [loading, setLoading] = useState(false)
     console.log(isAdminSelected);
     const handleSearchUser = async () => {
         if (!userIdToAllocate) {
@@ -25,12 +26,14 @@ const MoneyAllocation = () => {
             if (!isAdminSelected) {
                 if (response.status === 200) {
                     setUser(response.data.data.users[0]);
-                    response.data.data.users[0] && toast.success('User found !!')
+                    response.data.data.users.length > 0 && toast.success('User found !!')
+                    response.data.data.users.length < 1 && toast.error('User not found !!')
                 }
             } else {
                 if (response.status === 200) {
                     setUser(response.data.data.results[0]);
-                    response.data.data.results[0] && toast.success('User found!!')
+                    response.data.data.results.length > 0 && toast.success('User found!!')
+                    response.data.data.results.length < 1 && toast.error('User not found!!')
                 }
             }
         } catch (err) {
@@ -45,7 +48,17 @@ const MoneyAllocation = () => {
             swal.fire('Error', 'Please fill in all fields and search for a user first', 'error');
             return;
         }
+        // Show loading Swal
+        Swal.fire({
+            title: 'Processing Registration...',
+            html: 'Please wait while we process the registration.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
 
+        setLoading(true); // Start loading
         // Show loading Swal
         Swal.fire({
             title: 'Processing Registration...',
@@ -81,12 +94,44 @@ const MoneyAllocation = () => {
                 setAmount('');
                 setUser(null); // Reset user after successful transaction
             }
+            setLoading(false)
         } catch (err) {
             swal.fire('Error', err.response?.data?.message || 'Failed to allocate money', 'error');
-
+            setLoading(false)
         }
     };
-
+    const handleDeductMoney = async () => {
+        if (!user || !amount) {
+            Swal.fire('Error', 'Please fill in all fields and search for a user first', 'error');
+            return;
+        }
+        const Deduct = await axiosPublic.post('/transactions/create', {
+            userId: user._id,
+            showingId: user.userID,
+            foreignUser: userdb._id, // Use the selected user
+            amount: parseFloat(amount),
+            type: 'debit',
+            withdraw: true,
+            status: 'completed',
+            description: 'Money deducted by admin.',
+        });
+        // deducred money added to admin
+        const response = await axiosPublic.post('/transactions/create', {
+            userId: userdb._id,
+            showingId: userdb.userID,
+            foreignUser: user.userID,
+            amount: parseFloat(amount),
+            type: 'credit',
+            status: 'completed',
+            description: 'Money deducted from user.',
+        });
+        if (response.status === 201) {
+            swal.fire('Success', 'Money deducted successfully', 'success');
+            setUserIdToAllocate('');
+            setAmount('');
+            setUser(null); // Reset user after successful transaction
+        }
+    }
     return (
         <div className="p-5 min-h-screen w-full">
             <h1 className="text-2xl font-bold text-center mb-5">Money Allocation</h1>
@@ -131,6 +176,11 @@ const MoneyAllocation = () => {
                 {user && (
                     <div className="mb-4">
                         <p className="font-medium flex items-center gap-2 ">User Found: <span className="card-title">{user.name}</span><span className="badge badge-neutral">{user.role}</span></p>
+                        {/* balanec */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-700">Current Balance: </span>
+                            <span className="font-medium text-indigo-600">৳ {user.balance}</span>
+                        </div>
                     </div>
                 )}
 
@@ -148,14 +198,24 @@ const MoneyAllocation = () => {
                         placeholder="Enter the amount"
                     />
                 </div>
+                <div className="flex items-center gap-2">
 
-                <button
-                    type="submit"
-                    className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
-                >
-                    Allocate Money
-                </button>
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
+                    >
+                        Allocate Money
+                    </button>
+                </div>
             </form>
+            <div className="max-w-md mx-auto bg-white p-6 shadow-md rounded-md">
+                <button
+                    onClick={handleDeductMoney}
+                    className="w-full bg-red-700 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
+                >
+                    Deduct Money
+                </button>
+            </div>
         </div>
     );
 };
