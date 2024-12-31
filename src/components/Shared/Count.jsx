@@ -235,23 +235,37 @@ const Count = ({ countId, countRole }) => {
                         <option value="inactive">Inactive</option>
                     </select>
                 </div>
-                <div className="flex">
-                    <input
-                        type="date"
-                        name="fromDate"
-                        value={queryParams.fromDate}
-                        onChange={handleDateRangeChange}
-                        className="border border-gray-300 rounded p-2 w-full"
-                    />
-                    <input
-                        type="date"
-                        name="toDate"
-                        value={queryParams.toDate}
-                        onChange={handleDateRangeChange}
-                        className="border border-gray-300 rounded p-2 w-full"
-                    />
-
+                <div className="relative flex">
+                    <div className="relative w-full">
+                        {!queryParams.fromDate && (
+                            <span className="absolute left-3 top-2.5 text-gray-400 pointer-events-none">
+                                From Date
+                            </span>
+                        )}
+                        <input
+                            type="date"
+                            name="fromDate"
+                            value={queryParams.fromDate}
+                            onChange={handleDateRangeChange}
+                            className="border border-gray-300 rounded p-2 w-full"
+                        />
+                    </div>
+                    <div className="relative w-full ml-2">
+                        {!queryParams.toDate && (
+                            <span className="absolute left-3 top-2.5 text-gray-400 pointer-events-none">
+                                To Date
+                            </span>
+                        )}
+                        <input
+                            type="date"
+                            name="toDate"
+                            value={queryParams.toDate}
+                            onChange={handleDateRangeChange}
+                            className="border border-gray-300 rounded p-2 w-full"
+                        />
+                    </div>
                 </div>
+
                 <div className="flex justify-between gap-4 items-center w-full p-4 bg-gray-100 rounded-lg shadow-md">
                     {/* Today's Data Checkbox */}
                     <label className="flex items-center space-x-2">
