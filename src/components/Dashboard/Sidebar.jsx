@@ -113,15 +113,6 @@ const Sidebar = ({ user }) => {
                 <FaPlusCircle /> Add Role
               </NavLink>
               <NavLink
-                to="/dashboard/admin/customize"
-                className={({ isActive }) =>
-                  `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
-                  }`
-                }
-              >
-                <FaEdit /> Edit Role
-              </NavLink>
-              <NavLink
                 to="/dashboard/admin/manage"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""

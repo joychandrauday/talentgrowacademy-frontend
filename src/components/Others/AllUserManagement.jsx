@@ -194,7 +194,14 @@ const AllUserManagement = () => {
                     date: new Date().toISOString(),
                 });
 
-                Swal.fire('Success', 'User has been activated and roles assigned.', 'success');
+                const dataToSend = {
+                    trainer: null,
+                    groupLeader: null,
+                    seniorGroupLeader: null,
+                }
+
+                await axiosPublic.patch(`/users/${userID}`, dataToSend);
+                Swal.fire('Success', 'User has been activated . Reassign the User.', 'success');
                 refetch(); // Refresh data after activation
             }
         } catch (error) {
@@ -249,7 +256,7 @@ const AllUserManagement = () => {
                 html: `
                     <label for="consultant" style="display: block; text-align: left;">Select Senior Group Leader:</label>
                     <select id="consultant" class="swal2-select" style="width: 100%; padding: 0.5rem;">
-                        <option value="">--Select Senior Group Leader--</option>
+                        <option value="">--Select Consultant--</option>
                         ${consultantOptions}
                     </select>
                     <label for="seniorGroupLeader" style="display: block; text-align: left;">Select Senior Group Leader:</label>
@@ -310,7 +317,7 @@ const AllUserManagement = () => {
                 if (trainer) {
                     dataToSend.trainer = trainer;
                 }
-
+                console.log(dataToSend);
                 if (Object.keys(dataToSend).length > 0) {
                     await axiosPublic.patch(`/users/${userID}`, dataToSend);
                     Swal.fire('Updated!', 'The user has been Updated and assigned.', 'success');
