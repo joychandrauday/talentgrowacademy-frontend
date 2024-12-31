@@ -70,18 +70,30 @@ const Profile = () => {
               <strong>Country:</strong> {userdb.country}
             </p>
 
-            <p className="flex gap-2 items-center">
-              <FaLink className="text-gray-500 mr-2" />
-              <strong>Reference:</strong> {userdb.reference?.userID}
-            </p>
-            <p className="flex gap-2 items-center">
-              <FaUsers className="text-yellow-500 mr-2" />
-              <strong>Group Leader:</strong> {userdb.groupLeader?.userID}
-            </p>
-            <p className="flex gap-2 items-center">
-              <FaChalkboardTeacher className="text-indigo-500 mr-2" />
-              <strong>Trainer:</strong> {userdb.trainer?.userID}
-            </p>
+            {
+              userdb.isAdminstration !== true && <>
+                <p className="flex gap-2 items-center">
+                  <FaLink className="text-gray-500 mr-2" />
+                  <strong>Reference:</strong> {userdb.reference?.userID}
+                </p>
+                <p className="flex gap-2 items-center">
+                  <FaUsers className="text-yellow-500 mr-2" />
+                  <strong>Group Leader:</strong> {userdb.groupLeader?.userID}
+                </p>
+                <p className="flex gap-2 items-center">
+                  <FaChalkboardTeacher className="text-indigo-500 mr-2" />
+                  <strong>Trainer:</strong> {userdb.trainer?.userID}
+                </p>
+              </>
+            }
+            {
+              userdb.role === 'trainer' && <>
+                <p className="flex gap-2 items-center">
+                  <FaUsers className="text-yellow-500 mr-2" />
+                  <strong>Group Leader:</strong> {userdb.groupLeader?.userID}
+                </p>
+              </>
+            }
             <p className="flex gap-2 items-center">
               <FaCalendarCheck className="text-blue-400 mr-2" />
               <strong>Joined:</strong> {new Date(userdb.createdAt).toLocaleDateString()}

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import useUser from '../../Others/Register/useUser';
+import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 
 const ChangePass = () => {
+    const { userdb } = useUser()
+    const axiosPublic = useAxiosPublic()
     const [form, setForm] = useState({
         currentPassword: '',
         newPassword: '',
@@ -24,14 +27,20 @@ const ChangePass = () => {
 
         try {
             setLoading(true);
-            const response = await axios.post('/api/change-password', {
+            const response = await axiosPublic.post(`/users/change-password/${userdb.userID}`, {
                 currentPassword: form.currentPassword,
                 newPassword: form.newPassword
             });
-
+            console.log(response);
             alert(response.data.message || 'Password updated successfully!');
+            setForm({
+                currentPassword: '',
+                newPassword: '',
+                retypePassword: ''
+            });
         } catch (error) {
-            alert(error.response?.data?.message || 'An error occurred while updating the password.');
+            console.log(error.response?.data?.message || 'An error occurred while updating the password.');
+            console.log(error);
         } finally {
             setLoading(false);
         }
@@ -53,33 +62,33 @@ const ChangePass = () => {
                         placeholder="Current Password"
                         value={form.currentPassword}
                         onChange={handleChange}
-                        className="p-3 shadow-md shadow-gray-500 border text-white rounded-md"
+                        className="p-3 shadow-md shadow-gray-500 border  text-primary rounded-md"
                         required
                     />
                 </div>
 
                 <div className="flex flex-col">
                     <input
-                        type="password"
+                        type="text"
                         id="newPassword"
                         name="newPassword"
                         placeholder="New Password"
                         value={form.newPassword}
                         onChange={handleChange}
-                        className="p-3 text-white shadow-md shadow-gray-500 rounded-md"
+                        className="p-3 shadow-md shadow-gray-500 text-primary rounded-md"
                         required
                     />
                 </div>
 
                 <div className="flex flex-col">
                     <input
-                        type="password"
+                        type="text"
                         id="retypePassword"
                         name="retypePassword"
                         placeholder="Re-type New Password"
                         value={form.retypePassword}
                         onChange={handleChange}
-                        className="p-3 text-white shadow-md shadow-gray-500 rounded-md"
+                        className="p-3 shadow-md shadow-gray-500 text-primary rounded-md"
                         required
                     />
                 </div>
