@@ -105,6 +105,10 @@ const MoneyAllocation = () => {
             Swal.fire('Error', 'Please fill in all fields and search for a user first', 'error');
             return;
         }
+        if (amount > Number(user?.balance)) {
+            Swal.fire('Error', 'insufficient user balance!!', 'error');
+            return;
+        }
         const Deduct = await axiosPublic.post('/transactions/create', {
             userId: user._id,
             showingId: user.userID,
