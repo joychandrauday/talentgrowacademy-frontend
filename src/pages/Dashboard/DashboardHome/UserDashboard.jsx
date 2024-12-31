@@ -35,9 +35,9 @@ const UserDashboard = ({ user }) => {
   const supportMeetCard = cards.filter(
     (card) => card.ID === "userDashboardSupportMeet"
   );
-  const orientationCard = cards.filter(
-    (card) => card.ID === "userDashboardOrientation"
-  );
+  // const orientationCard = cards.filter(
+  //   (card) => card.ID === "userDashboardOrientation"
+  // );
 
   const fetchCourses = async () => {
     const response = await axiosPublic.get("/courses", {
@@ -220,7 +220,7 @@ const UserDashboard = ({ user }) => {
           </div>
 
           {/* Orientation Section */}
-          <div className="orientationSection mt-12 w-full lg:w-4/5 mx-auto">
+          {/* <div className="orientationSection mt-12 w-full lg:w-4/5 mx-auto">
             <div className="card-body bg-white border shadow-md text-center p-6">
               <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
                 {orientationCard[0]?.title}
@@ -239,7 +239,7 @@ const UserDashboard = ({ user }) => {
                 </Link>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Course Links */}
           <div className="courseLink mt-12">
