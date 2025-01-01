@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ScrollRestoration, useParams } from 'react-router-dom';
 import axios from 'axios';
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
-import { Document, Page } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { BsStars } from 'react-icons/bs';
 import useUser from '../../pages/Others/Register/useUser';
 
