@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, ScrollRestoration } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import ManageCards from "../../../../components/Dashboard/AdminComponent/ManageCards";
-import ManageAdminBanner from "../../../../components/Dashboard/AdminComponent/ManageAdminBanner";
+import ManageAdminBanner from "../../../../components/Dashboard/AdminComponent/MangeHomeSlider";
+import ManageHomeSlider from "../../../../components/Dashboard/AdminComponent/MangeHomeSlider";
+import MangeDashboardSlider from "../../../../components/Dashboard/AdminComponent/MangeDashboardSlider";
+import ManageEvents from "../../../../components/Dashboard/AdminComponent/ManageEvents";
 
 const AdminUtilities = () => {
     const navigate = useNavigate();
@@ -27,8 +30,18 @@ const AdminUtilities = () => {
         },
         { id: "manage-cards", title: "Manage Cards", content: <ManageCards /> },
         {
-            id: "manage-design", title: "Manage Design", content: (
-                <ManageAdminBanner />
+            id: "manage-home-banner", title: "Manage Home Slider", content: (
+                <ManageHomeSlider />
+            )
+        },
+        {
+            id: "manage-dashboard-slider", title: "Manage Dashboard slider", content: (
+                <MangeDashboardSlider />
+            )
+        },
+        {
+            id: "manage-events", title: "Manage Events", content: (
+                <ManageEvents />
             )
         },
     ];
@@ -68,6 +81,7 @@ const AdminUtilities = () => {
                     </TabPanel>
                 ))}
             </Tabs>
+            <ScrollRestoration />
         </div>
     );
 };
