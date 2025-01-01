@@ -77,6 +77,9 @@ import SGLManagerCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGL
 import ConsultantManagerDashboard from "../pages/Dashboard/DashboardRoleWise/ConsultantManager/ConsultantManagerDashboard";
 import AdminRoute from "./AdminRoute";
 import AdminCount from "../pages/Dashboard/DashboardRoleWise/Admin/AdminCount";
+import BookSection from "../components/HomeComponents/BookSection";
+import SingleBook from "../components/HomeComponents/SingleBook";
+import AllBooks from "../components/HomeComponents/AllBooks";
 
 
 
@@ -111,6 +114,14 @@ export const router = createBrowserRouter([
       {
         path: "/career",
         element: <Career />
+      },
+      {
+        path: "/books",
+        element: <AllBooks />
+      },
+      {
+        path: "/books/:id",
+        element: <PrivateRoute><SingleBook /></PrivateRoute>,
       },
       {
         path: "/departments",
