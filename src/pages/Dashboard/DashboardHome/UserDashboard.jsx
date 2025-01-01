@@ -18,17 +18,25 @@ import "swiper/css/navigation";
 
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { useEffect, useState } from "react";
 
 const UserDashboard = ({ user }) => {
   const axiosPublic = useAxiosPublic();
   const { cards } = useCard();
+  const [slides, setSlides] = useState([]);
+  // Fetching the banners from backend
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const response = await axiosPublic.get('/home-slider?type=dashboard');
+        setSlides(response.data); // Assuming the response data contains the slider images
+      } catch (error) {
+        console.error('Failed to fetch slider images:', error);
+      }
+    };
 
-  //Load the selected slider image
-  const sortedBanners = banners.sort(
-    (a, b) => new Date(b.uploadedTime) - new Date(a.uploadedTime)
-  );
-  const selectedBanner = sortedBanners.slice(0, 3);
-
+    fetchSlides();
+  }, [axiosPublic]);
 
 
   const helpCard = cards.filter((card) => card.ID === "userDashboardHelp");
@@ -87,10 +95,10 @@ const UserDashboard = ({ user }) => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        {selectedBanner.map((banner, index) => (
+        {slides.map((banner, index) => (
           <SwiperSlide key={index}>
             <img
-              src={banner.image}
+              src={banner.imageUrl}
               alt={`Banner ${index + 1}`}
               className="w-full sm:h-[200px] md:h-[300px] lg:h-[400px] xl:h-[500px] object-cover"
             />
