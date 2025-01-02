@@ -83,6 +83,15 @@ import AllBooks from "../components/HomeComponents/AllBooks";
 import ManageEvents from "../components/Dashboard/AdminComponent/ManageEvents";
 import AllEvents from "../pages/Others/Events/AllEvents";
 import SingleEvent from "../pages/Others/Events/SingleEvent";
+import TrainerRoute from "./SecureRoutes/TrainerRoute";
+import GlRoute from "./SecureRoutes/glRoute";
+import ControllerRoute from "./SecureRoutes/ControllerRoute";
+import ConsultantRoute from "./SecureRoutes/ConsultantRoute";
+import ConsultantManagerRoute from "./SecureRoutes/ConsultantManagerRoute";
+import SGLRoute from "./SecureRoutes/SGLRoute";
+import SGLManagerRoute from "./SecureRoutes/SGLManagerRoute";
+import TeacherRoute from "./SecureRoutes/TeacherRoute";
+import TeacherManagerRoute from "./SecureRoutes/TeacherManagerRoute";
 
 
 
@@ -271,7 +280,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "controller",
-        element: <ControllerDashboard />,
+        element: <ControllerRoute><ControllerDashboard /></ControllerRoute>,
         children: [
           {
             path: "",
@@ -305,7 +314,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "consultant",
-        element: <ControllerDashboard />,
+        element: <ConsultantRoute><ControllerDashboard /></ConsultantRoute>,
         children: [
           {
             path: "",
@@ -331,7 +340,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "consultant-manager",
-        element: <ConsultantManagerDashboard />,
+        element: <ConsultantManagerRoute><ConsultantManagerDashboard /></ConsultantManagerRoute>,
         children: [
           {
             path: "",
@@ -349,7 +358,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "group-leader",
-        element: <GroupLeaderDashboard />,
+        element: <GlRoute>< GroupLeaderDashboard /></GlRoute>,
         children: [
           {
             path: "",
@@ -376,7 +385,7 @@ export const router = createBrowserRouter([
       //Sgl routes
       {
         path: "sgl",
-        element: <SeniorGroupLeaderDashboard />,
+        element: <SGLRoute><SeniorGroupLeaderDashboard /></SGLRoute>,
         children: [
           {
             path: "",
@@ -407,7 +416,7 @@ export const router = createBrowserRouter([
       //Sgl routes
       {
         path: "sgl-manager",
-        element: <SGLManagerDashboard />,
+        element: <SGLManagerRoute><SGLManagerDashboard /></SGLManagerRoute>,
         children: [
           {
             path: "",
@@ -437,7 +446,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "trainer",
-        element: <TrainerDashboard />,
+        element: <TrainerRoute><TrainerDashboard /></TrainerRoute>,
         children: [
           {
             path: "",
@@ -455,7 +464,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "teacher",
-        element: <TeacherDashboard />,
+        element: <TeacherRoute><TeacherDashboard /></TeacherRoute>,
         children: [
           {
             path: "",
@@ -469,7 +478,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "teacher-manager",
-        element: <TeacherDashboard />,
+        element: <TeacherManagerRoute><TeacherDashboard /></TeacherManagerRoute>,
         children: [
           {
             path: "",
