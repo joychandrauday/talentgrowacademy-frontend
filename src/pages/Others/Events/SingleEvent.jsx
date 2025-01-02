@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import Heading from "../../../components/Shared/Heading";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const SingleEvent = () => {
     const { eventId } = useParams();
@@ -18,7 +19,7 @@ const SingleEvent = () => {
     });
 
     if (isLoading) {
-        return <div className="text-center text-lg">Loading event details...</div>;
+        return <LoadingSpinner />;
     }
 
     if (error) {

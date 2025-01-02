@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Fix the import
 import useAxiosPublic from '../Hooks/useAxiosPublic';
+import LoadingSpinner from '../components/Shared/LoadingSpinner';
 
 const PrivateRoute = ({ children }) => {
   const location = useLocation();
@@ -55,7 +56,7 @@ const PrivateRoute = ({ children }) => {
 
   if (isLoading) {
     // Show a loader while verifying the token
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (!isTokenValid) {

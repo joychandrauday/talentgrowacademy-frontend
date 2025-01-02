@@ -4,6 +4,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Fix the import
 import useAxiosPublic from '../Hooks/useAxiosPublic';
 import useUser from '../pages/Others/Register/useUser';
+import LoadingSpinner from '../components/Shared/LoadingSpinner';
 
 const AdminRoute = ({ children }) => {
     const { userdb } = useUser()
@@ -40,7 +41,7 @@ const AdminRoute = ({ children }) => {
 
     if (isLoading) {
         // Show a loader while verifying the token
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     if (!isAdminValid) {

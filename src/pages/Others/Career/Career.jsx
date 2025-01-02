@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import emailjs from "emailjs-com";
 import { ScrollRestoration, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const fetchJobs = async () => {
   const { data } = await axios.get("/jobs.json");
@@ -77,7 +78,7 @@ const Career = () => {
       });
   };
 
-  if (isLoading) return <div className="text-primary">Loading...</div>;
+  if (isLoading) return <LoadingSpinner />;
   if (error) return <div className="text-secondary">Error loading jobs.</div>;
 
   return (

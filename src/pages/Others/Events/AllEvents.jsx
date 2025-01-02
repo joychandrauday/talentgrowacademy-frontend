@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import Heading from "../../../components/Shared/Heading";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const AllEvents = () => {
     const axiosPublic = useAxiosPublic();
@@ -23,7 +24,7 @@ const AllEvents = () => {
 
     // Loading state
     if (isLoading) {
-        return <div className="text-center text-lg">Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     // Error state

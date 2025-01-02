@@ -4,6 +4,7 @@ import axios from 'axios';
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import { BsStars } from 'react-icons/bs';
 import useUser from '../../pages/Others/Register/useUser';
+import LoadingSpinner from '../Shared/LoadingSpinner';
 
 const SingleBook = () => {
     const { id } = useParams(); // Get the book ID from the URL parameter
@@ -48,7 +49,7 @@ const SingleBook = () => {
     }, [book, id]); // This effect runs only after book data is set
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     if (error) {
