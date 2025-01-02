@@ -15,7 +15,6 @@ const MoneyAllocation = () => {
     const [user, setUser] = useState(null);  // To store the searched user data
     const [isAdminSelected, setIsAdminSelected] = useState(true)
     const [loading, setLoading] = useState(false)
-    console.log(isAdminSelected);
     const handleSearchUser = async () => {
         if (!userIdToAllocate) {
             swal.fire('Error', 'Please enter a valid user ID', 'error');

@@ -12,7 +12,8 @@ const SingleBook = () => {
     const [error, setError] = useState(null);
     const [viewCount, setViewCount] = useState(0);
     const axiosPublic = useAxiosPublic();
-    const { userdb } = useUser()
+    const { userdb } = useUser();
+
     // Fetch book data
     useEffect(() => {
         const fetchBookData = async () => {
@@ -54,34 +55,41 @@ const SingleBook = () => {
         return <div>{error}</div>;
     }
 
+    // Check if the book is premium and if the user is active
+    const isPremium = book?.premium;
+    const isUserActive = userdb.status === 'active';
+
     return (
         <div className="md:max-w-4xl mx-auto p-6 pt-20 space-y-6 bg-white shadow-lg rounded-xl mt-10">
             {
-                userdb.status === 'active' ? <>
-                    {/* Title and Basic Information */}
-                    <div className="text-center relative">
-                        <h1 className="text-3xl font-bold text-indigo-600">{book.title}</h1>
-                        <p className="text-xl text-gray-700">{book.author}</p>
-                        <p className="text-sm badge bg-secondary text-white">Views: {viewCount}</p>
-                        <span className="badge badge-warning absolute top-0 right-0"> premium <BsStars /></span>
-                    </div>
-
-                    {/* Description */}
-                    <div className="space-y-4">
-                        <h2 className="text-2xl font-semibold">Description</h2>
-                        <p className="text-gray-700">{book.description}</p>
-                    </div>
-
-                    {/* PDF Reader */}
-                    <div className="border-t border-gray-300 pt-6 space-y-4">
-                        <h2 className="text-2xl font-semibold">Read the Book</h2>
-                        <div className="relative">
-                            <iframe src={book.fileUrl} width="100%" height="600px"></iframe>
+                // Check if the book is premium and if the user is active
+                isPremium && !isUserActive ? (
+                    <h1 className="text-3xl font-bold text-indigo-600">Please activate your account to access premium books.</h1>
+                ) : (
+                    <>
+                        {/* Title and Basic Information */}
+                        <div className="text-center relative">
+                            <h1 className="text-3xl font-bold text-indigo-600">{book.title}</h1>
+                            <p className="text-xl text-gray-700">{book.author}</p>
+                            <p className="text-sm badge bg-secondary text-white">Views: {viewCount}</p>
+                            {isPremium && <span className="badge badge-warning absolute top-0 right-0"> premium <BsStars /></span>}
                         </div>
-                    </div>
-                </> : <>
-                    <h1 className="text-3xl font-bold text-indigo-600">Please activate your account to acces premium books.</h1>
-                </>
+
+                        {/* Description */}
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-semibold">Description</h2>
+                            <p className="text-gray-700">{book.description}</p>
+                        </div>
+
+                        {/* PDF Reader */}
+                        <div className="border-t border-gray-300 pt-6 space-y-4">
+                            <h2 className="text-2xl font-semibold">Read the Book</h2>
+                            <div className="relative">
+                                <iframe src={book.fileUrl} width="100%" height="600px" title={book.title}></iframe>
+                            </div>
+                        </div>
+                    </>
+                )
             }
             <ScrollRestoration />
         </div>

@@ -12,7 +12,6 @@ const TeacherCourses = () => {
     const [updatedLink, setUpdatedLink] = useState(''); // State for updated class link
     const [selectedCourseId, setSelectedCourseId] = useState(null); // State for selected course
     const axiosPublic = useAxiosPublic();
-    console.log(userdb.course);
     // Handle updating the class link for a selected course
     const handleClassLinkUpdate = async () => {
         if (!updatedLink) {
