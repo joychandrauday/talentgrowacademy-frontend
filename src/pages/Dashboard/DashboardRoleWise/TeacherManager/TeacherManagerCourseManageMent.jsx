@@ -7,7 +7,6 @@ import useTeacher from '../../../../Hooks/roleFetch/useTeacher';
 
 const TeacherManagerCourseManagement = () => {
     const { courses, refetch } = useCourses(); // Fetching courses with refetch functionality
-    const { teachers } = useTeacher(); // Fetching teachers
     const axiosPublic = useAxiosPublic();
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState(''); // 'edit' or 'add'
@@ -46,9 +45,6 @@ const TeacherManagerCourseManagement = () => {
                 if (modalMode === 'edit') {
                     // Update existing course
                     const res2 = await axiosPublic.patch(`/courses/update-course/${datam._id}`, datam);
-                    await axiosPublic.patch(`/teachers/${datam.teacherId}`, {
-                        data: datam._id
-                    });
 
                     if (res2.status === 200) {
                         Swal.fire({
@@ -60,9 +56,6 @@ const TeacherManagerCourseManagement = () => {
                 } else {
                     // Add new course
                     const res2 = await axiosPublic.post('/courses/', datam);
-                    await axiosPublic.patch(`/teachers/${datam.teacherId}`, {
-                        data: res2.data.data._id
-                    });
                     if (res2.status === 201) {
                         Swal.fire({
                             title: 'Success!',
@@ -194,18 +187,7 @@ const TeacherManagerCourseManagement = () => {
                                 className="input input-bordered w-full"
                                 required
                             />
-                            <select
-                                {...register('teacherId')}
-                                className="select select-bordered w-full"
-                                required
-                                defaultValue={selectedCourse?.teacherId || ''}
-                            >
-                                {teachers.map((teacher) => (
-                                    <option key={teacher._id} value={teacher._id}>
-                                        {teacher.name}
-                                    </option>
-                                ))}
-                            </select>
+
                             <textarea
                                 {...register('description')}
                                 placeholder="Description"

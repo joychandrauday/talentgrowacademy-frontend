@@ -49,11 +49,11 @@ const GroupLeaderUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
     const { trainers } = useTrainers()
-
+    const filterTrainer = trainers.filter(trainer => trainer.groupLeader?._id === userdb?._id)
     const handleReassignUser = async (userID) => {
         try {
             // Prepare options for the dropdown
-            const trainerOptions = trainers?.map(leader =>
+            const trainerOptions = filterTrainer?.map(leader =>
                 `<option value="${leader._id}">${leader.name}</option>`).join('');
 
             // Create the SweetAlert2 dialog with dropdowns
