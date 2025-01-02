@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import emailjs from "emailjs-com";
 import { ScrollRestoration, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const fetchJobs = async () => {
   const { data } = await axios.get("/jobs.json");
@@ -57,8 +58,6 @@ const Career = () => {
       .send("service_73dpibo", "template_4m959s8", templateParams, "fzZUIlhcc1N4osyMf")
       .then(
         (result) => {
-          console.log("Email sent successfully:", result.text);
-
           // SweetAlert confirmation
           Swal.fire({
             icon: "success",
@@ -79,7 +78,7 @@ const Career = () => {
       });
   };
 
-  if (isLoading) return <div className="text-primary">Loading...</div>;
+  if (isLoading) return <LoadingSpinner />;
   if (error) return <div className="text-secondary">Error loading jobs.</div>;
 
   return (
@@ -90,9 +89,8 @@ const Career = () => {
         {jobs.map((job) => (
           <div
             key={job.id}
-            className={`bg-gradient-to-r from-[#2B6777] to-[#4A90A4] text-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl ${
-              job.status === "active" ? "border-primary" : "border-secondary"
-            }`}
+            className={`bg-gradient-to-r from-[#2B6777] to-[#4A90A4] text-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl ${job.status === "active" ? "border-primary" : "border-secondary"
+              }`}
           >
             <div className="p-6 flex flex-col h-full justify-between">
               <h2 className="text-2xl font-extrabold mb-2">{job.title}</h2>
@@ -196,11 +194,10 @@ const Career = () => {
               <div className="flex justify-between items-center">
                 <button
                   type="submit"
-                  className={`w-full bg-blue-500 text-white py-2 px-4 rounded-lg transition-colors ${
-                    isLoadingSubmission
-                      ? "cursor-not-allowed opacity-50"
-                      : "hover:bg-blue-600"
-                  }`}
+                  className={`w-full bg-blue-500 text-white py-2 px-4 rounded-lg transition-colors ${isLoadingSubmission
+                    ? "cursor-not-allowed opacity-50"
+                    : "hover:bg-blue-600"
+                    }`}
                   disabled={isLoadingSubmission}
                 >
                   {isLoadingSubmission ? "Submitting..." : "Submit Application"}

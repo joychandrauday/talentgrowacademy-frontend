@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ScrollRestoration } from 'react-router-dom';
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner';
 
 const Departments = () => {
   const [data, setData] = useState([]);
@@ -24,7 +25,7 @@ const Departments = () => {
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

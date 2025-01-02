@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Heading from '../../../components/Shared/Heading';
 import { Link, ScrollRestoration } from 'react-router-dom';
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner';
 
 // Function to fetch courses
 const fetchCourses = async () => {
@@ -34,7 +35,7 @@ const Courses = () => {
             ? courses
             : courses.filter(course => course.category === selectedCategory);
 
-    if (isLoading) return <p>Loading courses...</p>;
+    if (isLoading) return <LoadingSpinner />;
     if (error) return <p>Error fetching courses: {error.message}</p>;
 
     return (

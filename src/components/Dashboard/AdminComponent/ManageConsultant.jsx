@@ -11,6 +11,7 @@ import useSGL from "../../../Hooks/roleFetch/useSGL";
 import useSGLManager from "../../../Hooks/roleFetch/useSGLManager";
 import useConsultant from "../../../Hooks/roleFetch/useConsultant";
 import useConsManager from "../../../Hooks/roleFetch/useConsManager";
+import LoadingSpinner from "../../Shared/LoadingSpinner";
 
 const ManageConsultant = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -219,7 +220,7 @@ const ManageConsultant = () => {
             {/* Responsive Table */}
             <div className="overflow-x-auto">
                 {isLoading ? (
-                    <p>Loading...</p>
+                    <LoadingSpinner />
                 ) : isError ? (
                     <p>Error loading groupLeaders</p>
                 ) : (

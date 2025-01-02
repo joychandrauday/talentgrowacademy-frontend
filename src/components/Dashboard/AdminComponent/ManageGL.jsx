@@ -30,7 +30,6 @@ const ManageGL = () => {
     const { groupLeaders, totalCount, isLoading, isError, refetch } = useGL(queryParams);
     const { seniorGroupLeaders } = useSGL()
     const { seniorGroupLeaderManagers } = useSGLManager()
-    console.log(seniorGroupLeaderManagers, seniorGroupLeaders);
     const handleSearch = (e) => {
         e.preventDefault();
         setCurrentPage(1); // Reset to first page
