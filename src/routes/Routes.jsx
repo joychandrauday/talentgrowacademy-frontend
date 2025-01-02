@@ -84,7 +84,6 @@ import ManageEvents from "../components/Dashboard/AdminComponent/ManageEvents";
 import AllEvents from "../pages/Others/Events/AllEvents";
 import SingleEvent from "../pages/Others/Events/SingleEvent";
 import TrainerRoute from "./SecureRoutes/TrainerRoute";
-import GlRoute from "./SecureRoutes/glRoute";
 import ControllerRoute from "./SecureRoutes/ControllerRoute";
 import ConsultantRoute from "./SecureRoutes/ConsultantRoute";
 import ConsultantManagerRoute from "./SecureRoutes/ConsultantManagerRoute";
@@ -92,6 +91,7 @@ import SGLRoute from "./SecureRoutes/SGLRoute";
 import SGLManagerRoute from "./SecureRoutes/SGLManagerRoute";
 import TeacherRoute from "./SecureRoutes/TeacherRoute";
 import TeacherManagerRoute from "./SecureRoutes/TeacherManagerRoute";
+import GlRoutes from "./SecureRoutes/GlRoutes";
 
 
 
@@ -358,7 +358,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "group-leader",
-        element: <GlRoute>< GroupLeaderDashboard /></GlRoute>,
+        element: <GlRoutes>< GroupLeaderDashboard /></GlRoutes>,
         children: [
           {
             path: "",

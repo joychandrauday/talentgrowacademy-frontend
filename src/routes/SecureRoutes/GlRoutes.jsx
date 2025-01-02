@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode'; // Fix the import
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import LoadingSpinner from '../../components/Shared/LoadingSpinner';
 
-const GlRoute = ({ children }) => {
+const GlRoutes = ({ children }) => {
     const location = useLocation();
     const axiosPublic = useAxiosPublic(); // Axios instance with refresh token logic
     const [isLoading, setIsLoading] = useState(true); // Loading state
@@ -52,8 +52,8 @@ const GlRoute = ({ children }) => {
 };
 
 // Props validation
-GlRoute.propTypes = {
+GlRoutes.propTypes = {
     children: PropTypes.node.isRequired,
 };
 
-export default GlRoute;
+export default GlRoutes;
