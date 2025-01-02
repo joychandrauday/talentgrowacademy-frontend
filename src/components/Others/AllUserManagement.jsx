@@ -317,7 +317,6 @@ const AllUserManagement = () => {
                 if (trainer) {
                     dataToSend.trainer = trainer;
                 }
-                console.log(dataToSend);
                 if (Object.keys(dataToSend).length > 0) {
                     await axiosPublic.patch(`/users/${userID}`, dataToSend);
                     Swal.fire('Updated!', 'The user has been Updated and assigned.', 'success');

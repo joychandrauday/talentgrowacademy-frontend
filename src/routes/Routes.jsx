@@ -80,6 +80,9 @@ import AdminCount from "../pages/Dashboard/DashboardRoleWise/Admin/AdminCount";
 import BookSection from "../components/HomeComponents/BookSection";
 import SingleBook from "../components/HomeComponents/SingleBook";
 import AllBooks from "../components/HomeComponents/AllBooks";
+import ManageEvents from "../components/Dashboard/AdminComponent/ManageEvents";
+import AllEvents from "../pages/Others/Events/AllEvents";
+import SingleEvent from "../pages/Others/Events/SingleEvent";
 
 
 
@@ -114,6 +117,14 @@ export const router = createBrowserRouter([
       {
         path: "/career",
         element: <Career />
+      },
+      {
+        path: "/events",
+        element: <AllEvents />
+      },
+      {
+        path: "/event/:eventId",
+        element: <SingleEvent />
       },
       {
         path: "/books",
@@ -239,6 +250,10 @@ export const router = createBrowserRouter([
           {
             path: "books",
             element: <AdminAllBoookManagement />
+          },
+          {
+            path: "events",
+            element: <ManageEvents />
           },
           {
             path: "courses",

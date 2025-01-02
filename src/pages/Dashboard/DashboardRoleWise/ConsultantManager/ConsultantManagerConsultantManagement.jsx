@@ -32,7 +32,6 @@ const SGLglManagement = () => {
                 console.error('Error fetching data:', error);
             }
         };
-        console.log(gl);
         fetchData(); // Call the async function
     }, [userdb]); // Add userdb as a dependency to re-run when userdb changes
     // set up assignEndpoint route

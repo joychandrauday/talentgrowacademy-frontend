@@ -11,7 +11,6 @@ import useAxiosPublic from '../../Hooks/useAxiosPublic';
 const BannerSlider = () => {
     const axiosPublic = useAxiosPublic();
     const [slides, setSlides] = useState([]);
-    console.log(slides);
     // Fetching the banners from backend
     useEffect(() => {
         const fetchSlides = async () => {
@@ -24,7 +23,7 @@ const BannerSlider = () => {
         };
 
         fetchSlides();
-    }, [axiosPublic]);
+    }, []);
 
     return (
         <div className="min-h-screen">

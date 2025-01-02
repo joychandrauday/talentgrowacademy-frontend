@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useUser from '../../Others/Register/useUser';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+import toast from 'react-hot-toast';
 
 const ChangePass = () => {
     const { userdb } = useUser()
@@ -31,7 +32,6 @@ const ChangePass = () => {
                 currentPassword: form.currentPassword,
                 newPassword: form.newPassword
             });
-            console.log(response);
             alert(response.data.message || 'Password updated successfully!');
             setForm({
                 currentPassword: '',
@@ -39,8 +39,7 @@ const ChangePass = () => {
                 retypePassword: ''
             });
         } catch (error) {
-            console.log(error.response?.data?.message || 'An error occurred while updating the password.');
-            console.log(error);
+            toast.error('Something went wrong!')
         } finally {
             setLoading(false);
         }
