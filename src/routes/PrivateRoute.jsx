@@ -38,7 +38,7 @@ const PrivateRoute = ({ children }) => {
       try {
         const response = await axiosPublic.post('/refresh-token');
         const newAccessToken = response.data?.data?.token;
-
+        console.log(response, "refresh token")
         if (newAccessToken) {
           localStorage.setItem('authToken', newAccessToken); // Update token
           setIsTokenValid(true);
@@ -53,6 +53,7 @@ const PrivateRoute = ({ children }) => {
 
     verifyToken(); // Start verification on mount
   }, [axiosPublic]);
+  console.log(isTokenValid)
 
   if (isLoading) {
     // Show a loader while verifying the token

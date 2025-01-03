@@ -102,7 +102,7 @@ const Withdrawal = () => {
                     Swal.showLoading(); // Show loading spinner
                 },
             });
-            if (firstWithdraw) {
+            if (firstWithdraw && !userdb.isAdminstration) {
                 // admin allocation on first transaction
                 await axiosPublic.post('/transactions/create', {
                     userId: admin._id,

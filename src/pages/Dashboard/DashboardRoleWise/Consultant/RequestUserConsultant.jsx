@@ -164,7 +164,9 @@ const RequestUserConsultant = () => {
                         </div>
                         <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
                             <span className="font-medium">Message Done:</span>
-                            <span className='flex justify-end'>{userData.isMessageDone ? new Date(userData.messageDate).toLocaleDateString() : 'No'}</span>
+                            <span className='flex justify-end'>{userData.isMessageDone
+                                ? `${new Date(userData.messageDate).toLocaleDateString()} | ${new Date(userData.messageDate).toLocaleTimeString()}`
+                                : 'No'}</span>
                         </div>
                         <div className="flex justify-between text-sm border-b border-gray-700 pb-2">
                             <span className="font-medium">WhatsApp Verified:</span>

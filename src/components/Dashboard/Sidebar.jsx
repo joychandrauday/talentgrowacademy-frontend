@@ -31,6 +31,7 @@ import { GiTeacher } from "react-icons/gi";
 import { IoBookSharp } from "react-icons/io5";
 import { BiLink, BiTask } from "react-icons/bi";
 import { HiCurrencyBangladeshi } from "react-icons/hi2";
+import { TbCoinTaka } from "react-icons/tb";
 
 const Sidebar = ({ user }) => {
   const { logOut } = useContext(AuthContext);
@@ -437,6 +438,15 @@ const Sidebar = ({ user }) => {
                   <FaUsersGear /> Trainer
                 </NavLink>
                 <NavLink
+                  to="/dashboard/sgl-manager/search"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaSearch /> Search User
+                </NavLink>
+                <NavLink
                   to="/dashboard/sgl-manager/count"
                   className={({ isActive }) =>
                     `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
@@ -469,6 +479,24 @@ const Sidebar = ({ user }) => {
                   }
                 >
                   <IoMdArrowDropright /> Count
+                </NavLink>
+                <NavLink
+                  to="/dashboard/consultant-manager/count-result"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count Result
+                </NavLink>
+                <NavLink
+                  to="/dashboard/consultant-manager/search"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <FaSearch /> Search User
                 </NavLink>
               </div>
             </div>
@@ -505,6 +533,15 @@ const Sidebar = ({ user }) => {
                   }
                 >
                   <BiLink /> Manage Links
+                </NavLink>
+                <NavLink
+                  to="/dashboard/teacher-manager/allocation"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <TbCoinTaka /> Money Allocation
                 </NavLink>
               </div>
             </div>

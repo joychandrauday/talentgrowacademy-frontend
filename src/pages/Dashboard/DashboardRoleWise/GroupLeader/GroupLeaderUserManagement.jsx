@@ -201,7 +201,11 @@ const GroupLeaderUserManagement = () => {
                             <td className="border px-4 py-2">{user.trainer?.userID}</td>
                             <td className="border px-4 py-2">{user.consultant ? user.consultant?.userID : "N/A"}</td>
                             <td className="border px-4 py-2">{user.phone}</td>
-                            <td className="border px-4 py-2" >{user.whatsapp}</td>
+                            <td className="border px-4 py-2" >
+                                <a href={`https://wa.me/${user.whatsapp.replace(/[\s()-]/g, '')}`} className='link'>
+                                    {user.whatsapp}
+                                </a>
+                            </td>
                             <td className="border px-4 py-2" >
                                 {
                                     // status
