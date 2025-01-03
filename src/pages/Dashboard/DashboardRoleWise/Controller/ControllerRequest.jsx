@@ -6,15 +6,19 @@ import { FaCheckCircle, FaHourglassHalf, FaTimesCircle } from 'react-icons/fa';
 
 const ControllerRequest = () => {
     const [requests, setRequests] = useState([]); // State to store the requests
+    const [filteredRequests, setFilteredRequests] = useState([]); // State for filtered requests
+    const [searchTerm, setSearchTerm] = useState(""); // State for search term
     const [loading, setLoading] = useState(true); // Loading state
-    const axiosPublic = useAxiosPublic()
+    const axiosPublic = useAxiosPublic();
+
     // Fetch requests on component mount
     useEffect(() => {
         const fetchRequests = async () => {
             try {
                 const response = await axiosPublic.get('/requests'); // API endpoint to fetch requests
-                setRequests(response.data.data); // Set the requests in state
-
+                const sortedRequests = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                setRequests(sortedRequests);
+                setFilteredRequests(sortedRequests); // Set filtered requests initially to all requests
             } catch (error) {
                 console.error('Error fetching requests:', error);
             } finally {
@@ -25,6 +29,18 @@ const ControllerRequest = () => {
         fetchRequests();
     }, []);
 
+    // Handle search input change
+    const handleSearch = (e) => {
+        const term = e.target.value.toLowerCase();
+        setSearchTerm(term);
+        const filtered = requests.filter(
+            (request) =>
+                (request.userId && request.userId.userID.toLowerCase().includes(term)) ||
+                (request.userId && request.userId.name.toLowerCase().includes(term))
+        );
+        setFilteredRequests(filtered);
+    };
+
     // Render a loading state if data is being fetched
     if (loading) {
         return <div>Loading...</div>;
@@ -32,7 +48,6 @@ const ControllerRequest = () => {
 
     const updateRequestStatus = async (requestId, requestBy, userId, newStatus) => {
         try {
-
             const { isConfirmed } = await Swal.fire({
                 title: `Are you sure you want to ${newStatus} this request?`,
                 text: "This action cannot be undone!",
@@ -47,11 +62,11 @@ const ControllerRequest = () => {
                 const payload = {
                     identifiers: [userId], // Array of selected user IDs
                     data: {
-                        consultant: requestBy
+                        consultant: requestBy,
                     },
                 };
                 if (newStatus === 'accept') {
-                    const responseConsultant = await axiosPublic.post('/users/assignconsultant', payload);;
+                    const responseConsultant = await axiosPublic.post('/users/assignconsultant', payload);
                     if (responseConsultant.status === 200) {
                         const response = await axiosPublic.patch(`/requests/${requestId}`, { status: newStatus });
                         if (response.status === 200) {
@@ -72,7 +87,22 @@ const ControllerRequest = () => {
 
     return (
         <div className='p-6'>
-            <h1>Controller Request</h1>
+            <div className="mb-8">
+                <h1 className="text-primary italic text-2xl capitalize font-bold">Manage Requests</h1>
+                <h4 className="text-sm text-primary italic">All User Requests By Consultants.</h4>
+            </div>
+
+            {/* Search Form */}
+            <div className="mb-4">
+                <input
+                    type="text"
+                    placeholder="Search by User ID or Name"
+                    className="input input-bordered w-full max-w-md"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                />
+            </div>
+
             <div className="overflow-x-auto"> {/* Wrap the table with overflow-x-auto for responsiveness */}
                 <table className="min-w-full table-auto border-collapse border border-gray-300 overflow-x-auto">
                     <thead>
@@ -89,10 +119,10 @@ const ControllerRequest = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {requests.map((request) => (
+                        {filteredRequests.map((request) => (
                             <tr key={request._id}>
                                 <td className="border px-4 py-2">{new Date(request.createdAt).toLocaleDateString()}</td>
-                                <td className="border px-4 py-2">{request.userId ? request.userId.userID : "N/A"}</td >
+                                <td className="border px-4 py-2">{request.userId ? request.userId.userID : "N/A"}</td>
                                 <td className="border px-4 py-2">{request.userId ? request.userId.name : 'N/A'}</td>
                                 <td className="border px-4 py-2">{request.userId ? request.userId.phone : 'N/A'}</td>
                                 <td className="border px-4 py-2">{request.requestBy ? request.requestBy.userID : "N/A"}</td>

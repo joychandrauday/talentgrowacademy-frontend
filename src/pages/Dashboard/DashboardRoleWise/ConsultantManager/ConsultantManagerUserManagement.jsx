@@ -18,14 +18,7 @@ const ConsultantManagerUserManagement = () => {
         page: 1,
         fromDate: '',
         toDate: '',
-        [consultant.consultantManager]: userdb._id,
     });
-
-    useEffect(() => {
-        if (userdb) {
-            setQueryParams((prevParams) => ({ ...prevParams, seniorGroupLeader: userdb._id }));
-        }
-    }, [userdb]);
 
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
     const axiosPublic = useAxiosPublic();

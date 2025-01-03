@@ -43,9 +43,12 @@ const UserDashboard = ({ user }) => {
   const supportMeetCard = cards.filter(
     (card) => card.ID === "userDashboardSupportMeet"
   );
-  // const orientationCard = cards.filter(
-  //   (card) => card.ID === "userDashboardOrientation"
-  // );
+  const supportWhatsappCard = cards.filter(
+    (card) => card.ID === "userDashboardSupportWhatsapp"
+  );
+  const orientationCard = cards.filter(
+    (card) => card.ID === "userDashboardOrientation"
+  );
 
   const fetchCourses = async () => {
     const response = await axiosPublic.get("/courses", {
@@ -210,16 +213,19 @@ const UserDashboard = ({ user }) => {
 
                   <div className="supportOne flex justify-between items-center">
                     <div className="identity text-left italic">
-                      <h1 className="text-primary capitalize font-bold">
-                        Support WhatsApp Group
-                      </h1>
+                      <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
+                        {supportWhatsappCard[0]?.title}
+                      </h2>
                     </div>
                     <div className="buttonLink">
-                      <button className="btn bg-secondary">
+                      <Link
+                        to={`${supportWhatsappCard[0]?.link1}}`}
+                        className="btn bg-secondary"
+                      >
                         <div className="flex gap-2 items-center text-white">
-                          Join Now <FaWhatsapp className="text-2xl" />
+                          Contact Now <FaWhatsapp className="text-2xl" />
                         </div>
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -228,26 +234,14 @@ const UserDashboard = ({ user }) => {
           </div>
 
           {/* Orientation Section */}
-          {/* <div className="orientationSection mt-12 w-full lg:w-4/5 mx-auto">
+          <div className="orientationSection mt-12 w-full lg:w-4/5 mx-auto">
             <div className="card-body bg-white border shadow-md text-center p-6">
               <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
                 {orientationCard[0]?.title}
               </h2>
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-12">
-                <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl">
-                  {orientationCard[0]?.linkHeading1}
-                </h2>
-                <Link
-                  to={`${orientationCard[0]?.link1}`}
-                  className="btn text-white hover:bg-primary bg-secondary"
-                >
-                  <div className="flex gap-2 items-center text-white">
-                    Join Now
-                  </div>
-                </Link>
-              </div>
+
             </div>
-          </div> */}
+          </div>
 
           {/* Course Links */}
           <div className="courseLink mt-12">

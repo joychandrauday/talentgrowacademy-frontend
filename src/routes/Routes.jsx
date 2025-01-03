@@ -92,6 +92,7 @@ import SGLManagerRoute from "./SecureRoutes/SGLManagerRoute";
 import TeacherRoute from "./SecureRoutes/TeacherRoute";
 import TeacherManagerRoute from "./SecureRoutes/TeacherManagerRoute";
 import GlRoutes from "./SecureRoutes/GlRoutes";
+import TeacherManagerAllocateMoney from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerAllocateMoney";
 
 
 
@@ -344,7 +345,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <ConsultantManagerConsultantManagement />
+            element: <ConsultantManagerUserManagement />
           },
           {
             path: "consultant",
@@ -352,8 +353,16 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
+            element: <ConsultantManagerCountResult />
+          },
+          {
+            path: "count-result",
             element: <ConsultantManagerCount />
           },
+          {
+            path: "search",
+            element: <ProfileSearch />
+          }
         ]
       },
       {
@@ -495,6 +504,10 @@ export const router = createBrowserRouter([
           {
             path: "links",
             element: <TeacherManagerUtility />
+          },
+          {
+            path: "allocation",
+            element: <TeacherManagerAllocateMoney />
           },
         ]
       },

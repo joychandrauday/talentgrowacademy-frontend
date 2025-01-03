@@ -167,7 +167,7 @@ const GroupLeaderTrainerManagement = () => {
                     assignEndpoint={assignedEndpoint}
                     onConfirm={handleConfirmAssign}
                     role={'trainer'}
-                    queryParams={{ groupLeader: userdb._id, status: 'active' }}
+                    queryParams={{ groupLeader: userdb._id, status: 'active', trainer: 'none' }}
                 />
             )}
 

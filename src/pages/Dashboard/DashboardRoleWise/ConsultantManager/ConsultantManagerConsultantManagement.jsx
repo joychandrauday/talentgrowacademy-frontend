@@ -80,19 +80,6 @@ const SGLglManagement = () => {
                         <option value="pending">Pending</option>
                     </select>
                 </div>
-                <div>
-                    <select
-                        name="role"
-                        // value={filters.role}
-                        // onChange={handleFilterChange}
-                        className="border border-gray-300 rounded p-2 w-full"
-                    >
-                        <option value="">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </div>
                 <div className="flex space-x-2">
                     <input
                         type="date"
