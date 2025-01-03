@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { useQuery } from '@tanstack/react-query';
 import useUser from '../../../Others/Register/useUser';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
+import LoadingSpinner from '../../../../components/Shared/LoadingSpinner';
 
 const TeacherCourses = () => {
     const { userdb } = useUser();
@@ -12,7 +13,6 @@ const TeacherCourses = () => {
     // Fetch courses assigned to the teacher
     const fetchCourses = async () => {
         const { data } = await axiosPublic.get(`/courses/teacher/${userdb._id}`);
-        console.log(data);
         return data.courses;
     };
 
@@ -27,7 +27,6 @@ const TeacherCourses = () => {
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
         cacheTime: 10 * 60 * 1000, // Data expires in 10 minutes
     });
-
     const handleClassLinkUpdate = async (courseId) => {
         if (!updatedLink) {
             Swal.fire('Error', 'Please enter a valid link', 'error');
@@ -76,14 +75,16 @@ const TeacherCourses = () => {
         }
     };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Error loading courses.</div>;
+    if (isLoading) return <LoadingSpinner />;
+    if (isError) return <div className='card-body'>
+        <h3 className="text-center text-lg font-semibold">No courses found</h3>
+    </div>;
 
     return (
         <div className="p-6">
             <h1 className="text-2xl font-semibold mb-4">Teacher Courses</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {courses.map((course) => (
+                {courses?.map((course) => (
                     <div key={course._id} className="p-4 border rounded shadow-md">
                         {/* Course Image */}
                         <img

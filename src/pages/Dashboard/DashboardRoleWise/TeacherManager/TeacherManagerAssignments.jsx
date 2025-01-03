@@ -48,8 +48,8 @@ const TeacherManagerAssignments = () => {
             preConfirm: () => {
                 const status = document.getElementById('status').value;
 
-                if (!status) {
-                    Swal.showValidationMessage('Please select a status.');
+                if (!status || status === 'Pending') {
+                    Swal.showValidationMessage('Please select a valid status.');
                     return null;
                 }
 
@@ -61,90 +61,17 @@ const TeacherManagerAssignments = () => {
             try {
                 // Make the PATCH request to update the assignment status
                 const markResponse = await axiosPublic.patch(
-                    `/courses/${assignment.courseId}/assignments/${assignment._id}/mark`, status
+                    `/courses/${assignment.courseId}/assignments/${assignment._id}/mark`,
+                    { status }
                 );
+
                 if (markResponse.data.success) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'The assignment has been graded successfully.',
+                        text: `The assignment has been ${status.toLowerCase()} successfully.`,
                         icon: 'success',
-                        confirmButtonText: 'Next',
+                        confirmButtonText: 'OK',
                     });
-
-                    // If the status is "Accepted", ask for bonus allocation
-                    if (markResponse.data.status === 'Accepted') {
-                        const { value: bonus } = await Swal.fire({
-                            title: 'Allocate Bonus',
-                            input: 'number',
-                            inputLabel: 'Enter bonus amount',
-                            inputPlaceholder: 'Enter a bonus amount (e.g., 500)',
-                            inputAttributes: {
-                                min: 0,
-                                step: 1,
-                            },
-                            showCancelButton: true,
-                            confirmButtonText: 'Submit',
-                            cancelButtonText: 'Cancel',
-                            inputValidator: (value) => {
-                                if (!value || value < 0) {
-                                    return 'Please enter a valid bonus amount!';
-                                }
-                            },
-                        });
-
-                        if (bonus && bonus <= userdb?.balance) {
-                            try {
-                                // Post a transaction
-                                await axiosPublic.post(`/transactions/create`, {
-                                    status: 'completed',
-                                    amount: Number(bonus),
-                                    type: 'debit',
-                                    description: `Bonus for excellent performance in assignment ${assignment._id}`,
-                                    userId: userdb._id,
-                                    date: new Date().toISOString(),
-                                });
-                                // Post a transaction
-                                await axiosPublic.post(`/transactions/create`, {
-                                    status: 'completed',
-                                    amount: Number(bonus),
-                                    type: 'credit',
-                                    description: `Bonus for excellent performance in assignment ${assignment._id}`,
-                                    userId: assignment.submittedBy._id,
-                                    date: new Date().toISOString(),
-                                });
-
-                                Swal.fire({
-                                    title: 'Bonus Added!',
-                                    text: 'The bonus has been successfully allocated to the student.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK',
-                                });
-                            } catch (error) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'An error occurred while allocating the bonus.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                });
-                                console.error('Error allocating bonus:', error);
-                            }
-                        } else if (bonus > userdb?.balance) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Insufficient balance for bonus allocation.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                            });
-                        }
-                    } else {
-                        // If status is not "Accepted", ask the user to submit the assignment again
-                        Swal.fire({
-                            title: 'Assignment Submission',
-                            text: 'Please submit the assignment again for review.',
-                            icon: 'info',
-                            confirmButtonText: 'OK',
-                        });
-                    }
                 } else {
                     Swal.fire({
                         title: 'Error!',
@@ -164,6 +91,7 @@ const TeacherManagerAssignments = () => {
             }
         }
     };
+
 
 
 

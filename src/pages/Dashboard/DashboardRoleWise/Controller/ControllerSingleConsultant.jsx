@@ -26,7 +26,8 @@ const ControllerSingleConsultant = () => {
         toDate: '',
     });
 
-    const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
+    const { users, totalPages, currentPage, totalCount, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
+
     useEffect(() => {
         if (singleuser) {
             setQueryParams((prevParams) => ({ ...prevParams, consultant: singleuser._id }));
@@ -38,7 +39,11 @@ const ControllerSingleConsultant = () => {
 
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
-        refetch()
+        refetch();
+    };
+
+    const handlePageChange = (newPage) => {
+        setQueryParams((prevParams) => ({ ...prevParams, page: newPage }));
     };
 
     return (
@@ -50,7 +55,6 @@ const ControllerSingleConsultant = () => {
                     <div className="space-y-4 text-center ">
                         <div className="space-x-4 text-center">
                             <div className="w-20 h-20 mx-auto bg-gray-600 rounded-full">
-                                {/* Assuming there's a profile picture */}
                                 <img src={singleuser.avatar || '/default-avatar.png'} alt="Profile" className="w-full h-full object-cover rounded-full" />
                             </div>
                             <div>
@@ -71,12 +75,11 @@ const ControllerSingleConsultant = () => {
             </section>
 
             {
-                //add three card (total users | active users | inactive users)
                 users.length > 0 && (
                     <div className="space-y-4 md:space-y-0 p-6 md:flex md:gap-4">
                         <div className="card w-full md:w-1/3 shadow-md bg-primary text-primary-content rounded-lg p-6 flex items-center justify-center">
                             <div>
-                                <h3 className="text-lg font-bold text-white">{users.length}</h3>
+                                <h3 className="text-lg font-bold text-white">{totalCount}</h3>
                                 <p className="text-sm text-gray-400">Total Users</p>
                             </div>
                         </div>
@@ -133,6 +136,27 @@ const ControllerSingleConsultant = () => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Pagination Section */}
+            <div className="flex justify-center items-center space-x-2 mt-4">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className="btn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg"
+                >
+                    Previous
+                </button>
+                <span className="text-gray-700 font-semibold">
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className="btn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg"
+                >
+                    Next
+                </button>
             </div>
 
             {/* Modal for inactive users */}

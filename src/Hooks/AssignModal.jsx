@@ -11,7 +11,11 @@ const AssignModal = ({
     queryParams,
     role
 }) => {
-    const { users, isLoading, isError } = useFetchUsers(queryParams);
+    const [currentPage, setCurrentPage] = useState(1);
+    const { users, totalPages, isLoading, isError } = useFetchUsers({
+        ...queryParams,
+        page: currentPage,
+    });
     const axiosPublic = useAxiosPublic();
     const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -43,7 +47,12 @@ const AssignModal = ({
             }
         } catch (error) {
             Swal.fire('Error', error.response?.data?.message || 'Assignment failed.', 'error');
+        }
+    };
 
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
         }
     };
 
@@ -52,48 +61,70 @@ const AssignModal = ({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 ">
+            <div className="bg-white rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-bold mb-4">Assign Users</h2>
                 <p className="text-gray-700 mb-4">Select users to assign them.</p>
 
                 {users.length > 0 ? (
-                    <table className="table-auto w-full border border-gray-300 mb-4">
-                        <thead>
-                            <tr className="bg-gray-100">
-                                <th className="border px-4 py-2">Select</th>
-                                <th className="border px-4 py-2">Name</th>
-                                <th className="border px-4 py-2">Email</th>
-                                <th className="border px-4 py-2">User ID</th>
-                                <th className="border px-4 py-2">Phone</th>
-                                <th className="border px-4 py-2">Whatsapp</th>
-                                <th className="border px-4 py-2">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user) => (
-                                <tr key={user._id} className="hover:bg-gray-50">
-                                    <td className="border px-4 py-2 text-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedUsers.includes(user._id)}
-                                            onChange={() => handleCheckboxChange(user._id)}
-                                        />
-                                    </td>
-                                    <td className="border px-4 py-2">{user.name}</td>
-                                    <td className="border px-4 py-2">{user.email}</td>
-                                    <td className="border px-4 py-2">{user.userID}</td>
-                                    <td className="border px-4 py-2">{user.phone}</td>
-                                    <td className="border px-4 py-2">{user.whatsapp}</td>
-                                    <td className="border px-4 py-2">{user.status}</td>
+                    <>
+                        <table className="table-auto w-full border border-gray-300 mb-4">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="border px-4 py-2">Select</th>
+                                    <th className="border px-4 py-2">Name</th>
+                                    <th className="border px-4 py-2">Email</th>
+                                    <th className="border px-4 py-2">User ID</th>
+                                    <th className="border px-4 py-2">Phone</th>
+                                    <th className="border px-4 py-2">Whatsapp</th>
+                                    <th className="border px-4 py-2">Status</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {users.map((user) => (
+                                    <tr key={user._id} className="hover:bg-gray-50">
+                                        <td className="border px-4 py-2 text-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedUsers.includes(user._id)}
+                                                onChange={() => handleCheckboxChange(user._id)}
+                                            />
+                                        </td>
+                                        <td className="border px-4 py-2">{user.name}</td>
+                                        <td className="border px-4 py-2">{user.email}</td>
+                                        <td className="border px-4 py-2">{user.userID}</td>
+                                        <td className="border px-4 py-2">{user.phone}</td>
+                                        <td className="border px-4 py-2">{user.whatsapp}</td>
+                                        <td className="border px-4 py-2">{user.status}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        <div className="flex justify-between items-center">
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 disabled:opacity-50"
+                            >
+                                Previous
+                            </button>
+                            <span className="text-gray-700">
+                                Page {currentPage} of {totalPages}
+                            </span>
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 disabled:opacity-50"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </>
                 ) : (
                     <p className="text-gray-500">No users available to assign.</p>
                 )}
 
-                <div className="flex justify-end space-x-2">
+                <div className="flex justify-end space-x-2 mt-4">
                     <button
                         onClick={handleModalClose}
                         className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
