@@ -110,7 +110,7 @@ const Navbar = () => {
 
         {/* User Actions */}
         <div className="flex flex-col md:flex-row items-center gap-4 mt-4 md:mt-0">
-          {userdb.email ? (
+          {userdb?.email ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -118,8 +118,8 @@ const Navbar = () => {
               >
                 <div className="w-10 rounded-full">
                   <img
-                    alt={userdb.avatar || "User"}
-                    src={userdb.avatar || "https://via.placeholder.com/40"}
+                    alt={userdb?.avatar || "User"}
+                    src={userdb?.avatar || "https://via.placeholder.com/40"}
                   />
                 </div>
               </button>
