@@ -90,7 +90,7 @@ const Sidebar = ({ user }) => {
         {/* Navigation Links */}
         <nav className="space-y-2 font-semibold">
           <NavLink
-            to={`/dashboard/${user.role}`}
+            to={`/dashboard/${user?.role}`}
             className={({ isActive }) =>
               `flex gap-4 border shadow-md items-center p-2 rounded-md hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : ""
               }`
@@ -574,7 +574,7 @@ const Sidebar = ({ user }) => {
             <FaUser /> Profile
           </NavLink>
           {/* Additional Navigation */}
-          {user.status === 'active' && (
+          {user?.status === 'active' && (
             <>
               <NavLink
                 to="/dashboard/passbook"
