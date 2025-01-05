@@ -8,10 +8,6 @@ import useGL from '../../../../Hooks/roleFetch/useGL';
 import useSGL from '../../../../Hooks/roleFetch/useSGL';
 
 const SGLManagerCount = () => {
-    const { userdb } = useUser();
-    const axiosPublic = useAxiosPublic();
-
-    const [countUsersFor, setCountUsersFor] = useState([])
     const [selectCountUserId, setSelectCountUserId] = useState('')
     const [selectedRole, setSelectedRole] = useState('');
     const { trainers } = useTrainers()

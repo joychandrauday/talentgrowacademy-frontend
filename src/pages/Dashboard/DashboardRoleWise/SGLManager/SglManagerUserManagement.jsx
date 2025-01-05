@@ -20,17 +20,17 @@ const SglManagerUserManagement = () => {
         toDate: '',
     });
     const { users, totalPages, currentPage, isLoading, isError, error, refetch } = useFetchUsers(queryParams);
-    const [filteredUsers, setFilteredUsers] = useState([])
-    useEffect(() => {
-        if (users && Array.isArray(users)) {
-            // Ensure that `user.seniorGroupLeader.seniorGroupLeaderManager` is a string (or cast if necessary)
-            const filteredData = users.filter(user => {
-                // Assuming user.seniorGroupLeader.seniorGroupLeaderManager is a string from the backend
-                return user.seniorGroupLeader.seniorGroupLeaderManager === userdb?._id;
-            });
-            setFilteredUsers(filteredData);
-        }
-    }, [userdb?._id]); // Ensure that the effect runs when `users` or `userdb` changes
+    // const [filteredUsers, setFilteredUsers] = useState([])
+    // useEffect(() => {
+    //     if (users && Array.isArray(users)) {
+    //         // Ensure that `user.seniorGroupLeader.seniorGroupLeaderManager` is a string (or cast if necessary)
+    //         const filteredData = users.filter(user => {
+    //             // Assuming user.seniorGroupLeader.seniorGroupLeaderManager is a string from the backend
+    //             return user.seniorGroupLeader?.seniorGroupLeaderManager === userdb?._id;
+    //         });
+    //         setFilteredUsers(filteredData);
+    //     }
+    // }, [userdb?._id]); // Ensure that the effect runs when `users` or `userdb` changes
     const axiosPublic = useAxiosPublic();
     const [searchInput, setSearchInput] = useState(queryParams.searchTerm);
     const handleSearch = () => {
@@ -52,27 +52,7 @@ const SglManagerUserManagement = () => {
         setQueryParams({ ...queryParams, [e.target.name]: e.target.value });
     };
 
-    const activateUser = async (userID) => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: "This will activate the user.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, activate!',
-                cancelButtonText: 'Cancel',
-            });
 
-            if (result.isConfirmed) {
-                await axiosPublic.patch(`/users/${userID}`, { status: 'active' });
-                Swal.fire('Activated!', 'The user has been activated.', 'success');
-                refetch();
-            }
-        } catch (err) {
-            Swal.fire('Error!', 'Failed to activate the user.', 'error');
-            console.error(err);
-        }
-    };
 
 
 
@@ -147,7 +127,7 @@ const SglManagerUserManagement = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredUsers.map((user) => (
+                    {users.map((user) => (
                         <tr key={user._id} className="hover:bg-gray-50">
                             <td className="border px-4 py-2">
                                 {new Date(user.createdAt).toLocaleDateString()}
