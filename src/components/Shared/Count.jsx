@@ -32,6 +32,10 @@ const Count = ({ countId, countRole }) => {
             let dynamicField = countRole ? countRole : userdb.role;
             if (dynamicField === 'group-leader') {
                 dynamicField = 'groupLeader'
+            } else if (dynamicField === 'trainer') {
+                dynamicField = 'trainer'
+            } else if (dynamicField === 'sgl') {
+                dynamicField = 'seniorGroupLeader'
             } else if (userdb.role === 'manager-teacher') {
                 dynamicField = 'teacherManager'
             } else if (userdb.role === 'sgl') {
