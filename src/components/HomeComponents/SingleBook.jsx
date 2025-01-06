@@ -86,14 +86,14 @@ const SingleBook = () => {
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
                             <div className="relative">
                                 {/* Embed PDF using iframe */}
-                                <object
+                                <embed
                                     data={`${book.fileUrl}#toolbar=0&zoom=page-width`} // Disable toolbar (which includes download button)
                                     width="100%"
                                     height="600px"
                                     title={book.title}
                                     style={{ border: 'none', maxWidth: '100%', width: '100%' }}
                                     allow="fullscreen"
-                                ></object>
+                                ></embed >
 
                             </div>
                         </div>
