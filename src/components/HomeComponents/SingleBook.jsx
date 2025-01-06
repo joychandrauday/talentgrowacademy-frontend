@@ -87,7 +87,7 @@ const SingleBook = () => {
                             <div className="relative">
                                 {/* Embed PDF using iframe */}
                                 <embed
-                                    data={`${book.fileUrl}#toolbar=0&zoom=page-width`} // Disable toolbar (which includes download button)
+                                    src={`${book.fileUrl}#toolbar=0&zoom=page-width`} // Disable toolbar (which includes download button)
                                     width="100%"
                                     height="600px"
                                     title={book.title}
