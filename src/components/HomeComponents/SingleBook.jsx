@@ -91,8 +91,8 @@ const SingleBook = () => {
                                     width="100%"
                                     height="600px"
                                     title={book.title}
+                                    style={{ border: 'none' }}
                                 />
-
                             </div>
                         </div>
                     </>
