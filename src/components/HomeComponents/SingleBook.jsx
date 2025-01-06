@@ -86,7 +86,13 @@ const SingleBook = () => {
                         <div className="border-t border-gray-300 pt-6 space-y-4">
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
                             <div className="relative">
-                                <iframe src={book.fileUrl} width="100%" height="600px" title={book.title}></iframe>
+                                <iframe
+                                    src={`${book.fileUrl}#toolbar=0&zoom=page-width`}
+                                    width="100%"
+                                    height="600px"
+                                    title={book.title}
+                                />
+
                             </div>
                         </div>
                     </>
