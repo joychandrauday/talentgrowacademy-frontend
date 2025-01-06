@@ -12,7 +12,6 @@ const SingleBook = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [viewCount, setViewCount] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
     const axiosPublic = useAxiosPublic();
     const { userdb } = useUser();
 
@@ -61,17 +60,23 @@ const SingleBook = () => {
     const isPremium = book?.premium;
     const isUserActive = userdb.status === 'active';
 
-    // Handle opening and closing of the modal
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
     return (
         <div className="md:max-w-4xl mx-auto p-6 pt-20 space-y-6 bg-white shadow-lg rounded-xl mt-10">
+            <style>
+                {`
+                    .responsive-pdf {
+                        width: 100%;
+                        height: 100vh; /* Full screen height for mobile */
+                    }
+
+                    @media (max-width: 768px) {
+                        .responsive-pdf {
+                            height: 80vh; /* Adjust height on mobile to ensure it fits nicely */
+                        }
+                    }
+                `}
+            </style>
+
             {
                 // Check if the book is premium and if the user is active
                 isPremium && !isUserActive ? (
@@ -92,42 +97,19 @@ const SingleBook = () => {
                             <p className="text-gray-700">{book.description}</p>
                         </div>
 
-                        {/* Button to Open PDF on Mobile */}
-                        <div className="block md:hidden">
-                            <button
-                                className="px-4 py-2 bg-indigo-600 text-white rounded-full shadow-lg"
-                                onClick={openModal}
-                            >
-                                Read PDF
-                            </button>
-                        </div>
-
-                        {/* Modal to Read PDF */}
-                        {isModalOpen && (
-                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                                <div className="bg-white p-4 rounded-lg w-11/12 md:w-1/2">
-                                    <button
-                                        className="absolute top-2 right-2 text-xl text-gray-600"
-                                        onClick={closeModal}
-                                    >
-                                        &times;
-                                    </button>
-                                    <h2 className="text-2xl font-semibold mb-4">Read the Book</h2>
-                                    <embed
-                                        src={book.fileUrl}
-                                        type="application/pdf"
-                                        width="100%"
-                                        height="600px"
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {/* PDF Reader for Desktop */}
-                        <div className="border-t border-gray-300 pt-6 space-y-4 hidden md:block">
+                        {/* PDF Reader (For Both Desktop and Mobile) */}
+                        <div className="border-t border-gray-300 pt-6 space-y-4">
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
+
+                            {/* Embed the PDF for both mobile and desktop */}
                             <div className="relative w-full overflow-scroll">
-                                <embed src={book.fileUrl} type="application/pdf" width="100%" height="600px" />
+                                <embed
+                                    src={book.fileUrl}
+                                    type="application/pdf"
+                                    width="100%"
+                                    height="600px"
+                                    className="responsive-pdf"
+                                />
                             </div>
                         </div>
                     </>
