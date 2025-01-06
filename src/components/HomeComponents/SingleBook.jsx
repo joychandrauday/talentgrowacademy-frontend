@@ -30,12 +30,11 @@ const SingleBook = () => {
         };
 
         fetchBookData();
-    }, [id]); // Run this effect only when the id changes
+    }, [id]);
 
     // Increment view count only once when the component is mounted
     useEffect(() => {
         if (book) {
-            // Update the view count once when the book data is loaded
             const incrementViewCount = async () => {
                 try {
                     await axiosPublic.put(`/books/${id}`, { views: book.views + 1 });
@@ -46,7 +45,7 @@ const SingleBook = () => {
 
             incrementViewCount();
         }
-    }, [book, id]); // This effect runs only after book data is set
+    }, [book, id]);
 
     if (loading) {
         return <LoadingSpinner />;
@@ -82,17 +81,18 @@ const SingleBook = () => {
                             <p className="text-gray-700">{book.description}</p>
                         </div>
 
-                        {/* PDF Reader */}
+                        {/* PDF Reader using iframe */}
                         <div className="border-t border-gray-300 pt-6 space-y-4">
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
                             <div className="relative">
+                                {/* Embed PDF using iframe */}
                                 <iframe
-                                    src={`${book.fileUrl}#toolbar=0&zoom=page-width`}
+                                    src={book.fileUrl} // URL of the PDF
                                     width="100%"
                                     height="600px"
                                     title={book.title}
                                     style={{ border: 'none' }}
-                                />
+                                ></iframe>
                             </div>
                         </div>
                     </>
