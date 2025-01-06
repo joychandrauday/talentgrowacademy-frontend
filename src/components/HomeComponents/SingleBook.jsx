@@ -101,14 +101,16 @@ const SingleBook = () => {
                         <div className="border-t border-gray-300 pt-6 space-y-4">
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
 
-                            {/* Use iframe instead of embed to display PDF */}
+                            {/* Use object tag for PDF rendering */}
                             <div className="relative w-full overflow-scroll">
-                                <iframe
-                                    src={book.fileUrl}
+                                <object
+                                    data={book.fileUrl}
+                                    type="application/pdf"
                                     className="responsive-pdf"
-                                    frameBorder="0"
-                                    title="PDF Preview"
-                                />
+                                    aria-label="PDF Viewer"
+                                >
+                                </object>
+                                <p>Your browser does not support embedded PDFs. Please download the PDF to view it: <a href={book.fileUrl} target="_blank" rel="noopener noreferrer">Download PDF</a></p>
                             </div>
                         </div>
                     </>
