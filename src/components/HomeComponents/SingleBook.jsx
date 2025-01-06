@@ -87,13 +87,12 @@ const SingleBook = () => {
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
                             <div className="relative">
                                 <iframe
-                                    src={`${book.fileUrl}#toolbar=0`} 
-            width="100%"
-            height="600px"
-            title={book.title}
-            sandbox="allow-scripts allow-same-origin"
-            style={{ pointerEvents: 'none' }} // Optional: Prevent right-click or interaction
-        ></iframe>
+                                    src={`${book.fileUrl}#toolbar=0&zoom=page-width`}
+                                    width="100%"
+                                    height="600px"
+                                    title={book.title}
+                                />
+
                             </div>
                         </div>
                     </>
