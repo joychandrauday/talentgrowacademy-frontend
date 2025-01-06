@@ -101,14 +101,13 @@ const SingleBook = () => {
                         <div className="border-t border-gray-300 pt-6 space-y-4">
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
 
-                            {/* Embed the PDF for both mobile and desktop */}
+                            {/* Use iframe to render PDF for both mobile and desktop */}
                             <div className="relative w-full overflow-scroll">
-                                <embed
+                                <iframe
                                     src={book.fileUrl}
-                                    type="application/pdf"
-                                    width="100%"
-                                    height="600px"
                                     className="responsive-pdf"
+                                    frameBorder="0"
+                                    title="PDF Preview"
                                 />
                             </div>
                         </div>
