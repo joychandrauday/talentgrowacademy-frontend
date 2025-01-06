@@ -5,7 +5,7 @@ import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import { BsStars } from 'react-icons/bs';
 import useUser from '../../pages/Others/Register/useUser';
 import LoadingSpinner from '../Shared/LoadingSpinner';
-import { MobilePDFReader } from 'react-read-pdf';
+
 const SingleBook = () => {
     const { id } = useParams(); // Get the book ID from the URL parameter
     const [book, setBook] = useState(null);
@@ -85,9 +85,8 @@ const SingleBook = () => {
                         {/* PDF Reader */}
                         <div className="border-t border-gray-300 pt-6 space-y-4">
                             <h2 className="text-2xl font-semibold">Read the Book</h2>
-                            <div className="relative" style={{ overflow: 'scroll', height: 600 }}>
-                                {/* <embed src={book.fileUrl} type="application/pdf" width="100%" height="600px" /> */}
-                                <MobilePDFReader url={`${book.fileUrl}`} />
+                            <div className="relative w-full overflow-scroll ">
+                                <embed src={book.fileUrl} type="application/pdf" width="100%" height="600px" />
                             </div>
                         </div>
 
