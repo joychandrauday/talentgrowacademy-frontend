@@ -53,7 +53,7 @@ const TeacherManagerAssignments = () => {
                     return null;
                 }
 
-                return { status };
+                return status;
             },
         });
 
