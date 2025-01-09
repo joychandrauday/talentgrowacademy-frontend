@@ -72,6 +72,7 @@ const TeacherManagerAssignments = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
+                    window.location.reload();
                 } else {
                     Swal.fire({
                         title: 'Error!',
