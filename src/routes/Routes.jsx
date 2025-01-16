@@ -93,6 +93,7 @@ import TeacherRoute from "./SecureRoutes/TeacherRoute";
 import TeacherManagerRoute from "./SecureRoutes/TeacherManagerRoute";
 import GlRoutes from "./SecureRoutes/GlRoutes";
 import TeacherManagerAllocateMoney from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerAllocateMoney";
+import ActiveRoute from "./ActiveRoute";
 
 
 
@@ -176,7 +177,9 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <PrivateRoute>
-      <Dashboard></Dashboard>
+      <ActiveRoute>
+        <Dashboard></Dashboard>
+      </ActiveRoute>
     </PrivateRoute>,
     children: [
       {
