@@ -160,6 +160,7 @@ const Passbook = () => {
                 Type
               </th>
               <th className="py-3 px-6 text-left">Transaction Number</th>
+              <th className="py-3 px-6 text-left">Method</th>
               <th
                 className="py-3 px-6 text-left cursor-pointer"
                 onClick={() => handleSort("amount")}
@@ -180,6 +181,7 @@ const Passbook = () => {
                   <td className="py-3 px-6">{tx.foreignUser}</td>
                   <td className="py-3 px-6">{tx.type}</td>
                   <td className="py-3 px-6">{tx.referenceId}</td>
+                  <td className="py-3 px-6">{tx.method}</td>
                   <td className="py-3 px-6">{tx.amount}</td>
                   <td className="py-3 px-6">
                     <span

@@ -302,21 +302,40 @@ const Withdrawal = () => {
 
                                 // Check for first withdraw condition
                                 if (firstWithdraw) {
-                                    if (inputAmount < 500) {
-                                        setErrorMessage('Withdrawal amount must be at least 500 ৳.');
-                                    } else if (inputAmount > userdb.balance) {
-                                        setErrorMessage('You have insufficient balance.');
+                                    if (userdb.isAdminstration) {
+                                        if (inputAmount < 100) {
+                                            setErrorMessage('Withdrawal amount must be at least 100 ৳.');
+                                        } else if (inputAmount > userdb.balance) {
+                                            setErrorMessage('You have insufficient balance.');
+                                        } else {
+                                            setErrorMessage(''); // Clear error message
+                                        }
                                     } else {
-                                        setErrorMessage(''); // Clear error message
+                                        if (inputAmount < 500) {
+                                            setErrorMessage('Withdrawal amount must be at least 500 ৳.');
+                                        } else if (inputAmount > userdb.balance) {
+                                            setErrorMessage('You have insufficient balance.');
+                                        } else {
+                                            setErrorMessage(''); // Clear error message
+                                        }
                                     }
                                 } else {
-                                    // Handle the case where it is not the first withdraw
-                                    if (inputAmount < 200) {
-                                        setErrorMessage('Withdrawal amount must be at least 100 ৳.');
-                                    } else if (inputAmount > userdb.balance) {
-                                        setErrorMessage('You have insufficient balance.');
+                                    if (userdb.isAdminstration) {
+                                        if (inputAmount < 100) {
+                                            setErrorMessage('Withdrawal amount must be at least 100 ৳.');
+                                        } else if (inputAmount > userdb.balance) {
+                                            setErrorMessage('You have insufficient balance.');
+                                        } else {
+                                            setErrorMessage(''); // Clear error message
+                                        }
                                     } else {
-                                        setErrorMessage(''); // Clear error message
+                                        if (inputAmount < 500) {
+                                            setErrorMessage('Withdrawal amount must be at least 500 ৳.');
+                                        } else if (inputAmount > userdb.balance) {
+                                            setErrorMessage('You have insufficient balance.');
+                                        } else {
+                                            setErrorMessage(''); // Clear error message
+                                        }
                                     }
                                 }
                             }}
@@ -353,7 +372,7 @@ const Withdrawal = () => {
                     <button
                         onClick={handleWithdraw}
                         className="btn p-3 bg-primary text-white  rounded-md font-bold hover:bg-secondary transition"
-                        disabled={!selectedMethod || !amount || amount < 100 || amount > userdb.balance || (firstWithdraw && amount < 500)}
+                        disabled={!selectedMethod || !amount || (userdb.isAdminstration === 'false' && amount < 200) || amount > userdb.balance || (userdb.isAdminstration === 'false' && firstWithdraw && amount < 500) || (firstWithdraw && userdb.isAdminstration && amount < 100)}
                     >
                         Proceed to Withdraw
                     </button>
