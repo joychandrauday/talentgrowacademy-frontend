@@ -86,7 +86,7 @@ const ManageTeacherManager = () => {
             });
 
             if (confirm) {
-                await axiosPublic.patch(`/steacher-managers/${userID}`, {
+                await axiosPublic.patch(`/teacher-managers/${userID}`, {
                     status: 'active',
                 });
 

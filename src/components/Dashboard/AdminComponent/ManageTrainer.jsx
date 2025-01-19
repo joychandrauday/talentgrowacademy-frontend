@@ -86,7 +86,7 @@ const ManageTrainer = () => {
             });
 
             if (confirm) {
-                await axiosPublic.patch(`/users/${userID}`, {
+                await axiosPublic.patch(`/trainers/${userID}`, {
                     status: 'Actuvated successfully',
                 });
 
@@ -111,7 +111,7 @@ const ManageTrainer = () => {
             });
 
             if (confirm) {
-                await axiosPublic.patch(`/users/${userID}`, {
+                await axiosPublic.patch(`/trainers/${userID}`, {
                     status: 'blocked',
                 });
 
