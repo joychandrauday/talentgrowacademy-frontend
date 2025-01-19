@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
 
 const ManageDashboardSlider = () => {
     const axiosPublic = useAxiosPublic();
-    const queryClient = useQueryClient(); // This will help in refetching data
+    const queryClient = useQueryClient();
 
-    // Fetching sliders using useQuery and axiosPublic
     const { data: sliders, isLoading, error } = useQuery({
-        queryKey: ['homeSliders'],  // This is the query key
+        queryKey: ['homeSliders'],
         queryFn: async () => {
             const response = await axiosPublic.get('/home-slider?type=dashboard');
             return response.data;
@@ -19,58 +18,69 @@ const ManageDashboardSlider = () => {
     const [newSlider, setNewSlider] = useState({
         title: '',
         description: '',
-        imageUrl: '',
+        imageFile: null,
     });
 
-    const [isEditing, setIsEditing] = useState(false); // Flag to track if we are editing a slider
-    const [editingSliderId, setEditingSliderId] = useState(null); // Store the ID of the slider being edited
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingSliderId, setEditingSliderId] = useState(null);
 
-    // Handler to add a new slider
+    const uploadImageToCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'Profile_pic'); // Replace with your actual upload preset
+        const response = await fetch('https://api.cloudinary.com/v1_1/dab8rppoj/image/upload', { // Replace with your actual cloud name
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await response.json();
+        return data.secure_url;
+    };
+
     const handleAddSlider = async () => {
         try {
+            const imageUrl = newSlider.imageFile
+                ? await uploadImageToCloudinary(newSlider.imageFile)
+                : null;
+
             await axiosPublic.post('/home-slider', {
-                title: newSlider.title ? newSlider.title : null,
-                description: newSlider.description ? newSlider.description : null,
-                imageUrl: newSlider.imageUrl ? newSlider.imageUrl : null,
-                type: 'dashboard', // This is the type of the slider (home, about, etc.)
+                title: newSlider.title || null,
+                description: newSlider.description || null,
+                imageUrl,
+                type: 'dashboard',
             });
-            queryClient.invalidateQueries(['homeSliders']); // Refetch sliders after adding
-            setNewSlider({
-                title: '',
-                description: '',
-                imageUrl: '',
-            });
+            queryClient.invalidateQueries(['homeSliders']);
+            setNewSlider({ title: '', description: '', imageFile: null });
             toast.success('Slide Added Successfully.');
         } catch (error) {
             console.error('Error adding slider:', error);
         }
     };
 
-    // Handler to edit an existing slider
     const handleEditSlider = async () => {
         try {
-            const updatedSlider = {
-                ...newSlider,
-            };
-            await axiosPublic.put(`/home-slider/${editingSliderId}`, updatedSlider);
-            queryClient.invalidateQueries(['homeSliders']); // Refetch sliders after editing
-            setIsEditing(false); // Stop editing after success
-            setNewSlider({
-                title: '',
-                description: '',
-                imageUrl: '',
+            const imageUrl = newSlider.imageFile
+                ? await uploadImageToCloudinary(newSlider.imageFile)
+                : newSlider.imageUrl;
+
+            await axiosPublic.put(`/home-slider/${editingSliderId}`, {
+                title: newSlider.title,
+                description: newSlider.description,
+                imageUrl,
             });
+            queryClient.invalidateQueries(['homeSliders']);
+            setIsEditing(false);
+            setNewSlider({ title: '', description: '', imageFile: null });
             toast.success('Slide Updated Successfully.');
         } catch (error) {
             console.error('Error editing slider:', error);
         }
     };
 
-    // Handler to delete a slider
     const handleDeleteSlider = async (sliderId) => {
         try {
             await axiosPublic.delete(`/home-slider/${sliderId}`);
-            queryClient.invalidateQueries(['homeSliders']); // Refetch sliders after deleting
+            queryClient.invalidateQueries(['homeSliders']);
             toast.success('Slide Deleted Successfully.');
         } catch (error) {
             console.error('Error deleting slider:', error);
@@ -78,13 +88,13 @@ const ManageDashboardSlider = () => {
         }
     };
 
-    // Handler to populate the form with data from the slider to edit
     const startEditing = (slider) => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
         setNewSlider({
             title: slider.title,
             description: slider.description,
             imageUrl: slider.imageUrl,
+            imageFile: null,
         });
         setIsEditing(true);
         setEditingSliderId(slider._id);
@@ -102,10 +112,9 @@ const ManageDashboardSlider = () => {
         <div className="p-6 bg-base-200 rounded-lg">
             <h1 className="text-3xl font-bold text-center mb-6">Manage Dashboard Banner</h1>
 
-            {/* Form to add or edit a slider */}
-            <div className=" mx-auto p-6 bg-white rounded-lg shadow-lg">
+            <div className="mx-auto p-6 bg-white rounded-lg shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4">{isEditing ? 'Edit Slider' : 'Add New Slider'}</h2>
-                <div className="div grid grid-cols-1 md:grid-cols-2 items-center justify-center gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center gap-4">
                     <div className="form-control mb-4">
                         <label className="label">
                             <span className="label-text">Title</span>
@@ -133,14 +142,12 @@ const ManageDashboardSlider = () => {
 
                     <div className="form-control mb-4">
                         <label className="label">
-                            <span className="label-text">Image URL</span>
+                            <span className="label-text">Image File</span>
                         </label>
                         <input
-                            type="text"
-                            placeholder="Enter image URL"
-                            className="input input-bordered input-primary w-full"
-                            value={newSlider.imageUrl}
-                            onChange={(e) => setNewSlider({ ...newSlider, imageUrl: e.target.value })}
+                            type="file"
+                            className="file-input file-input-bordered file-input-primary w-full"
+                            onChange={(e) => setNewSlider({ ...newSlider, imageFile: e.target.files[0] })}
                         />
                     </div>
 
@@ -153,7 +160,6 @@ const ManageDashboardSlider = () => {
                 </div>
             </div>
 
-            {/* Displaying fetched sliders */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 {sliders.map((slider) => (
                     <div key={slider._id} className="card w-full bg-base-100 shadow-xl">

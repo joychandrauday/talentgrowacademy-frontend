@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../../../../Hooks/useAxiosPublic";
-import { BsStars } from "react-icons/bs";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { FaDeleteLeft } from "react-icons/fa6";
 
 const AdminAllBookManagement = () => {
     const axiosPublic = useAxiosPublic();
     const [showAddForm, setShowAddForm] = useState(false);
     const [editBook, setEditBook] = useState(null);
+    const [loading, setLoading] = useState(false); // State to track loading status
 
-    // Fetch books using TanStack Query
     const { data: books = [], isLoading, refetch } = useQuery({
         queryKey: ["books"],
         queryFn: async () => {
@@ -21,7 +19,6 @@ const AdminAllBookManagement = () => {
         },
     });
 
-    // Form handling with React Hook Form
     const {
         register,
         handleSubmit,
@@ -29,28 +26,60 @@ const AdminAllBookManagement = () => {
         formState: { errors },
     } = useForm();
 
-    // Add book handler
+    const uploadToCloudinary = async (file, folder) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "Profile_pic");
+        formData.append("folder", folder);
+
+        const response = await fetch("https://api.cloudinary.com/v1_1/dab8rppoj/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await response.json();
+        return data.secure_url;
+    };
+
     const onSubmit = async (data) => {
         try {
+            setLoading(true); // Set loading to true before uploading files
+
+            let bookImage = editBook?.bookImage || "";
+            if (data.bookImage?.[0]) {
+                bookImage = await uploadToCloudinary(data.bookImage[0], "book-images");
+            }
+
+            let fileUrl = editBook?.fileUrl || "";
+            if (data.file?.[0]) {
+                fileUrl = await uploadToCloudinary(data.file[0], "book-files");
+            }
+
+            const payload = {
+                ...data,
+                bookImage,
+                fileUrl,
+            };
+
             if (editBook) {
-                // Update existing book
-                await axiosPublic.put(`/books/${editBook._id}`, data);
+                await axiosPublic.put(`/books/${editBook._id}`, payload);
                 Swal.fire("Success!", "The book has been updated.", "success");
             } else {
-                // Add new book
-                await axiosPublic.post("/books", data);
+                await axiosPublic.post("/books", payload);
                 Swal.fire("Success!", "The book has been added.", "success");
             }
-            refetch(); // Refetch books after action
+
+            refetch();
             reset();
             setShowAddForm(false);
             setEditBook(null);
         } catch (error) {
-            Swal.fire("Error!", error.response?.data?.message || "An error occurred.", "error");
+            Swal.fire("Error!", error.message || "An error occurred.", "error");
+        } finally {
+            setLoading(false); // Set loading to false after processing
         }
     };
 
-    // Delete book handler
     const handleDelete = async (id) => {
         const result = await Swal.fire({
             title: "Are you sure?",
@@ -65,21 +94,19 @@ const AdminAllBookManagement = () => {
         if (result.isConfirmed) {
             try {
                 await axiosPublic.delete(`/books/${id}`);
-                refetch(); // Refetch books after deletion
+                refetch();
                 Swal.fire("Deleted!", "The book has been deleted.", "success");
             } catch (error) {
-                Swal.fire("Error!", error.response?.data?.message || "An error occurred.", "error");
+                Swal.fire("Error!", error.message || "An error occurred.", "error");
             }
         }
     };
 
-    // Edit book handler
     const handleEdit = (book) => {
         setEditBook(book);
         setShowAddForm(true);
     };
 
-    // Loading state
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -91,7 +118,7 @@ const AdminAllBookManagement = () => {
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
                 onClick={() => {
                     setShowAddForm(!showAddForm);
-                    setEditBook(null); // Reset editBook when opening add form
+                    setEditBook(null);
                 }}
             >
                 {showAddForm ? "Cancel" : "Add New Book"}
@@ -121,14 +148,22 @@ const AdminAllBookManagement = () => {
                         ></textarea>
                     </div>
                     <div className="mb-4">
-                        <label className="block font-bold mb-2">File URL</label>
+                        <label className="block font-bold mb-2">Book Image</label>
                         <input
-                            type="url"
+                            type="file"
+                            accept="image/*"
                             className="w-full border px-3 py-2 rounded"
-                            {...register("fileUrl", { required: "File URL is required" })}
-                            defaultValue={editBook?.fileUrl || ""}
+                            {...register("bookImage")}
                         />
-                        {errors.fileUrl && <p className="text-red-500">{errors.fileUrl.message}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block font-bold mb-2">Book File (PDF)</label>
+                        <input
+                            type="file"
+                            accept="application/pdf"
+                            className="w-full border px-3 py-2 rounded"
+                            {...register("file")}
+                        />
                     </div>
                     <div className="mb-4">
                         <label className="block font-bold mb-2">Author</label>
@@ -137,15 +172,6 @@ const AdminAllBookManagement = () => {
                             className="w-full border px-3 py-2 rounded"
                             {...register("author")}
                             defaultValue={editBook?.author || ""}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block font-bold mb-2">Book Image URL</label>
-                        <input
-                            type="url"
-                            className="w-full border px-3 py-2 rounded"
-                            {...register("bookImage")}
-                            defaultValue={editBook?.bookImage || ""}
                         />
                     </div>
                     <div className="mb-4">
@@ -172,9 +198,18 @@ const AdminAllBookManagement = () => {
                     </div>
                     <button
                         type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={loading} // Disable the button while loading
                     >
-                        {editBook ? "Update Book" : "Add Book"}
+                        {loading ? (
+                            <div className="flex justify-center items-center">
+                                <div className="spinner-border animate-spin border-4 rounded-full w-6 h-6 border-t-transparent border-blue-500"></div>
+                            </div>
+                        ) : editBook ? (
+                            "Update Book"
+                        ) : (
+                            "Add Book"
+                        )}
                     </button>
                 </form>
             )}
@@ -185,33 +220,30 @@ const AdminAllBookManagement = () => {
                         <th className="px-6 py-3 text-left">Image</th>
                         <th className="px-6 py-3 text-left">Title</th>
                         <th className="px-6 py-3 text-left">Author</th>
-                        <th className="px-6 py-3 text-left">Link</th>
-                        <th className="px-6 py-3 text-left">Premium</th>
                         <th className="px-6 py-3 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {books?.map((book) => (
+                    {books.map((book) => (
                         <tr key={book._id} className="border-b">
                             <td className="px-6 py-4">
-                                {book.bookImage ? <img src={book.bookImage} className="w-24" alt="" /> : "N/A"}
+                                <img src={book.bookImage} alt={book.title} className="h-16 w-16 object-cover" />
                             </td>
                             <td className="px-6 py-4">{book.title}</td>
-                            <td className="px-6 py-4">{book.author || "Unknown"}</td>
-                            <td className="px-6 py-4">{
-                                book.fileUrl ? <a href={book.fileUrl} className="link link-primary" target="_blank" rel="noopener noreferrer">View</a> : 'N/A'
-                            }</td>
-                            <td className="px-6 py-4">{book.premium ? <span className="badge badge-warning"> premium <BsStars /></span> : "No"}</td>
-                            <td className="px-6 flex items-center justify-between gap-4 py-4 ">
-                                <FaEdit
-                                    className="cursor-pointer text-primary text-xl"
+                            <td className="px-6 py-4">{book.author}</td>
+                            <td className="px-6 py-4">
+                                <button
+                                    className="text-yellow-500 mr-4"
                                     onClick={() => handleEdit(book)}
-                                />
-                                <FaTrash
-                                    className="cursor-pointer text-red-600 text-xl"
+                                >
+                                    <FaEdit />
+                                </button>
+                                <button
+                                    className="text-red-500"
                                     onClick={() => handleDelete(book._id)}
-
-                                />
+                                >
+                                    <FaTrash />
+                                </button>
                             </td>
                         </tr>
                     ))}
