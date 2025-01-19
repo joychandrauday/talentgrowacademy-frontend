@@ -60,7 +60,7 @@ const ManageTrainer = () => {
                 cancelButtonColor: '#d33',
             });
 
-            if (confirm) {
+            if (confirm) {ye
                 await axiosPublic.patch(`/trainers/${userId}`, editedUserData);
 
                 Swal.fire('Updated!', 'The user has been updated.', 'info');
@@ -79,7 +79,7 @@ const ManageTrainer = () => {
                 text: "You will be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, block it!',
+                confirmButtonText: 'Yes, Reactivate!',
                 cancelButtonText: 'No, cancel!',
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -87,7 +87,7 @@ const ManageTrainer = () => {
 
             if (confirm) {
                 await axiosPublic.patch(`/trainers/${userID}`, {
-                    status: 'Actuvated successfully',
+                    status: 'active',
                 });
 
                 Swal.fire('Activated!', 'The user has been Activated.', 'info');
