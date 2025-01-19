@@ -72,7 +72,7 @@ const CountResult = () => {
         fetchData(); // Call the async function
     }, [userdb, selectedRole, seniorGroupLeaders]);
 
-
+    console.log(groupLeaders);
     return (
         <div className="p-4">
             {/* Dropdown for Trainer ID */}

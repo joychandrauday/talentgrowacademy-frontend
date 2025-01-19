@@ -8,11 +8,12 @@ import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import useUser from '../../../Others/Register/useUser';
 
 const ManageWithdrawal = () => {
-    const { userdb } = useUser()
+    const { userdb } = useUser();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [sortBy, setSortBy] = useState("timestamp");
     const [sortOrder, setSortOrder] = useState("desc");
+    const [statusFilter, setStatusFilter] = useState(""); // New state for status filter
     const axiosPublic = useAxiosPublic();
     const { transactions, isLoading, isError, error, refetch } = useTransactions({
         page,
@@ -21,6 +22,7 @@ const ManageWithdrawal = () => {
         sortOrder,
         type: 'debit',
         withdraw: true,
+        status: statusFilter, // Pass the status filter to the hook
     });
 
     const handleSort = (sortField) => {
@@ -38,13 +40,12 @@ const ManageWithdrawal = () => {
 
     const updateStatus = async (transactionId, newStatus, userId) => {
         try {
-            // Show SweetAlert loader
             const loadingSwal = Swal.fire({
                 title: 'Processing...',
                 text: 'Please wait while we process the transaction.',
                 allowOutsideClick: false,
                 didOpen: () => {
-                    Swal.showLoading(); // Show the loader
+                    Swal.showLoading();
                 },
             });
 
@@ -60,7 +61,7 @@ const ManageWithdrawal = () => {
                     icon: 'success',
                     timer: 1500,
                 });
-                refetch(); // Refresh the transactions after status update
+                refetch();
             }
         } catch (error) {
             Swal.fire({
@@ -88,14 +89,36 @@ const ManageWithdrawal = () => {
         });
     };
 
+    const handleFilterChange = (e) => {
+        setStatusFilter(e.target.value);
+        setPage(1); // Reset page to 1 whenever filter changes
+    };
+
     if (isLoading) return <div className="text-center mt-10">Loading...</div>;
     if (isError) return <div className="text-center mt-10 text-red-500">Error: {error.message}</div>;
 
     return (
         <div className="p-5 min-h-screen w-full">
-            <h1 className="text-2xl font-bold text-center mb-5">Manage Transactions</h1>
+            <h1 className="text-2xl font-bold text-center mb-5">Manage Withdrawal</h1>
 
             <div className="w-full">
+                {/* Filter */}
+                <div className="flex justify-between items-center mb-5">
+                    <label className="text-gray-700">
+                        Filter by Status:
+                        <select
+                            value={statusFilter}
+                            onChange={handleFilterChange}
+                            className="ml-2 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">All</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </label>
+                </div>
+
                 {/* Transactions Table */}
                 <div className="overflow-x-auto">
                     <table className="table-auto w-full bg-white shadow-md rounded-lg">

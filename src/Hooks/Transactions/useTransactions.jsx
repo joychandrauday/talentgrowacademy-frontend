@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../useAxiosPublic';
 
-const useTransactions = ({ page = 1, limit = 10, sortBy = 'timestamp', sortOrder = 'desc', type, withdraw }) => {
+const useTransactions = ({ page = 1, limit = 10, sortBy = 'timestamp', sortOrder = 'desc', type, withdraw, status }) => {
     const axiosPublic = useAxiosPublic();
 
     // Fetch transactions from the API with dynamic query parameters
@@ -12,7 +12,7 @@ const useTransactions = ({ page = 1, limit = 10, sortBy = 'timestamp', sortOrder
                 limit,
                 sortBy,
                 sortOrder,
-                type, withdraw
+                type, withdraw, status
             },
         });
         return response.data; // Assuming your response contains the data in the 'data' field
@@ -20,7 +20,7 @@ const useTransactions = ({ page = 1, limit = 10, sortBy = 'timestamp', sortOrder
 
     // Use React Query to fetch data and manage caching, error handling, etc.
     const queryResult = useQuery({
-        queryKey: ['transactions', page, limit, sortBy, sortOrder, type, withdraw],  // The query key includes the parameters for caching and refetching
+        queryKey: ['transactions', page, limit, sortBy, sortOrder, type, withdraw, status],  // The query key includes the parameters for caching and refetching
         queryFn: fetchTransactions,
         retry: 2, // Retry fetching in case of failure
         staleTime: 600000, // Data stays fresh for 10 minutes

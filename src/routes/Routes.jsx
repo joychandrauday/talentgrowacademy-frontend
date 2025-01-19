@@ -94,6 +94,9 @@ import TeacherManagerRoute from "./SecureRoutes/TeacherManagerRoute";
 import GlRoutes from "./SecureRoutes/GlRoutes";
 import TeacherManagerAllocateMoney from "../pages/Dashboard/DashboardRoleWise/TeacherManager/TeacherManagerAllocateMoney";
 import ActiveRoute from "./ActiveRoute";
+import SglCountResult from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SglCountResult";
+import GlCountResult from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GlCountResult";
+import SGLCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLCount";
 
 
 
@@ -390,7 +393,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count-result",
-            element: <CountResult />
+            element: <GlCountResult />
           }
         ]
       },
@@ -417,7 +420,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "count-result",
-            element: <CountResult />
+            element: <SglCountResult />
           },
           {
             path: "search",
@@ -448,6 +451,10 @@ export const router = createBrowserRouter([
           },
           {
             path: "count",
+            element: <SGLCount />
+          },
+          {
+            path: "count-result",
             element: <SGLManagerCount />
           },
           {

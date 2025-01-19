@@ -455,6 +455,15 @@ const Sidebar = ({ user }) => {
                 >
                   <IoMdArrowDropright /> Count
                 </NavLink>
+                <NavLink
+                  to="/dashboard/sgl-manager/count-result"
+                  className={({ isActive }) =>
+                    `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
+                    }`
+                  }
+                >
+                  <IoMdArrowDropright /> Count Result
+                </NavLink>
               </div>
             </div>
           )}

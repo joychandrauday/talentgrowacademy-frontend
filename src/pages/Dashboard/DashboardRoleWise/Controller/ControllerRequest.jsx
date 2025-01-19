@@ -71,12 +71,14 @@ const ControllerRequest = () => {
                         const response = await axiosPublic.patch(`/requests/${requestId}`, { status: newStatus });
                         if (response.status === 200) {
                             Swal.fire("Updated!", `Request has been ${newStatus}ed.`, "success");
+                            window.location.reload();
                         }
                     }
                 } else {
                     const response = await axiosPublic.patch(`/requests/${requestId}`, { status: newStatus });
                     if (response.status === 200) {
                         Swal.fire("Updated!", `Request has been ${newStatus}ed.`, "success");
+                        window.location.reload();
                     }
                 }
             }
@@ -149,7 +151,7 @@ const ControllerRequest = () => {
                                             />
                                             <FaTimesCircle
                                                 className="text-red-500 text-xl cursor-pointer"
-                                                onClick={() => updateRequestStatus(request._id, "reject")}
+                                                onClick={() => updateRequestStatus(request._id, request.requestBy._id, request.userId._id, "reject")}
                                                 title="Reject Request"
                                             />
                                         </>
