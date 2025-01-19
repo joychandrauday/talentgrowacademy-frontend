@@ -9,7 +9,6 @@ import InactiveRoute from './InactiveRoute';
 
 const ActiveRoute = ({ children }) => {
     const { userdb } = useUser()
-    const location = useLocation();
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [isActive, setisActive] = useState(false); // Valid token state
 
@@ -19,9 +18,9 @@ const ActiveRoute = ({ children }) => {
             if (activeToken) {
                 try {
 
-                    if (activeToken === 'active') {
+                    if (activeToken === 'active' || activeToken === 'inactive') {
                         setisActive(true); // Token is valid
-                    } else {
+                    } else if (activeToken === 'blocked') {
                         setisActive(false); // Token is not valid
                     }
                 } catch (error) {
@@ -48,9 +47,9 @@ const ActiveRoute = ({ children }) => {
         // Redirect to login if the token is invalid
         return <InactiveRoute />;
     }
+    return children;
 
     // Render protected children if token is valid
-    return children;
 };
 
 // Props validation
