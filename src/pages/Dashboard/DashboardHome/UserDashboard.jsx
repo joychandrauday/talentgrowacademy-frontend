@@ -219,7 +219,7 @@ const UserDashboard = ({ user }) => {
                     </div>
                     <div className="buttonLink">
                       <Link
-                        to={`${supportWhatsappCard[0]?.link1}}`}
+                        to={`${supportWhatsappCard[0]?.link1}`}
                         className="btn bg-secondary"
                       >
                         <div className="flex gap-2 items-center text-white">
