@@ -144,6 +144,7 @@ const Withdrawal = () => {
                 });
                 // Close the loading Swal after submission
                 loadingSwal.close();
+                window.location.reload();
                 Swal.fire({
                     title: 'Success!',
                     text: 'Withdrawal initiated successfully.',
@@ -182,6 +183,8 @@ const Withdrawal = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
+
+                    window.location.reload();
                 } else {
                     Swal.fire({
                         title: 'Error!',
@@ -197,6 +200,7 @@ const Withdrawal = () => {
             // Close the loading Swal in case of an error
             Swal.close();
 
+            window.location.reload();
             Swal.fire({
                 title: 'Error!',
                 text: 'Something went wrong. Please try again.',
@@ -252,6 +256,7 @@ const Withdrawal = () => {
                 <h2 className="text-lg text-gray-600">Current Balance: {userdb.balance?.toFixed(2)} ৳</h2>
 
             </header>
+
             <div className="space-y-6">
                 <h1 className="text-xl text-primary capitalize italic font-semibold">select withdraw method :</h1>
                 <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 items-center justify-center">
@@ -339,9 +344,9 @@ const Withdrawal = () => {
                                     }
                                 }
                             }}
-                            className="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="Enter withdrawal amount"
-                            disabled={!selectedMethod}
+                            placeholder={userdb.balance === 0 ? 'Your Ballance is 0' : 'Enter withdrawal amount'}
+                            className={userdb.balance === 0 ? "p-3 rounded-md border text-black focus:outline-none focus:ring-2 focus:ring-primary" : "p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"}
+                            disabled={!selectedMethod || userdb.balance === 0}
                         />
                         {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
                     </div>
@@ -372,7 +377,7 @@ const Withdrawal = () => {
                     <button
                         onClick={handleWithdraw}
                         className="btn p-3 bg-primary text-white  rounded-md font-bold hover:bg-secondary transition"
-                        disabled={!selectedMethod || !amount || (userdb.isAdminstration === 'false' && amount < 200) || amount > userdb.balance || (userdb.isAdminstration === 'false' && firstWithdraw && amount < 500) || (firstWithdraw && userdb.isAdminstration && amount < 100)}
+                        disabled={userdb.balance <= 0 || !selectedMethod || !amount || (userdb.isAdminstration === 'false' && amount < 200) || amount > userdb.balance || (userdb.isAdminstration === 'false' && firstWithdraw && amount < 500) || (firstWithdraw && userdb.isAdminstration && amount < 100)}
                     >
                         Proceed to Withdraw
                     </button>

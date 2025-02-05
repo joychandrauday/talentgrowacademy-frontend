@@ -29,7 +29,7 @@ const TeacherManagerAssignments = () => {
         fetchAllAssignments();
     }, []);
 
-
+    console.log(submittedAssignments);
     const handleGradeAssignment = async (assignment) => {
         const { value: status } = await Swal.fire({
             title: 'Grade Assignment',
@@ -109,6 +109,7 @@ const TeacherManagerAssignments = () => {
                                     <th className="py-2 px-4 text-left">#</th>
                                     <th className="py-2 px-4 text-left">Link</th>
                                     <th className="py-2 px-4 text-left">Submitted By</th>
+                                    <th className="py-2 px-4 text-left">User Id</th>
                                     <th className="py-2 px-4 text-left">Date</th>
                                     <th className="py-2 px-4 text-left">Status</th>
                                     <th className="py-2 px-4 text-left">Actions</th>
@@ -129,6 +130,7 @@ const TeacherManagerAssignments = () => {
                                             </a>
                                         </td>
                                         <td className="py-2 px-4">{assignment.submittedBy?.name}</td>
+                                        <td className="py-2 px-4">{assignment.submittedBy?.userID}</td>
                                         <td className="py-2 px-4">
                                             {new Date(assignment.date).toLocaleDateString('en-US', {
                                                 year: 'numeric',

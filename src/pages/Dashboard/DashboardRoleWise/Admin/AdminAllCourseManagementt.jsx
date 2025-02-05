@@ -188,6 +188,13 @@ const AdminAllCourseManagementt = () => {
                                 className="input input-bordered w-full"
                                 required
                             />
+                            <input
+                                type="number"
+                                {...register('serial')}
+                                placeholder="Course Serial "
+                                className="input input-bordered w-full"
+                                required
+                            />
 
                             <textarea
                                 {...register('description')}

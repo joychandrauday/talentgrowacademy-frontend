@@ -246,31 +246,34 @@ const UserDashboard = ({ user }) => {
           {/* Course Links */}
           <div className="courseLink mt-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course, index) => (
-                <div
-                  key={index}
-                  className="card-body bg-white border shadow-md text-center p-6"
-                >
-                  <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
-                    {course.name}
-                  </h2>
-                  {course?.classLink && course?.isLive ? (
-                    <Link
-                      to={`${course.classLink}`}
-                      className="btn text-white hover:bg-primary bg-secondary"
-                    >
-                      Join Now
-                    </Link>
-                  ) : (
-                    <button
-                      disabled
-                      className="btn text-white hover:bg-primary bg-secondary"
-                    >
-                      No link found
-                    </button>
-                  )}
-                </div>
-              ))}
+              {[...courses]
+                .sort((a, b) => a.serial - b.serial) // Sorting courses by serial number
+                .map((course, index) => (
+                  <div
+                    key={index}
+                    className="card-body bg-white border shadow-md text-center p-6"
+                  >
+                    <h2 className="text-primary capitalize font-bold italic text-lg sm:text-xl mb-3">
+                      {course.name}
+                    </h2>
+                    {course?.classLink && course?.isLive ? (
+                      <Link
+                        to={`${course.classLink}`}
+                        className="btn text-white hover:bg-primary bg-secondary"
+                      >
+                        Join Now
+                      </Link>
+                    ) : (
+                      <button
+                        disabled
+                        className="btn text-white hover:bg-primary bg-secondary"
+                      >
+                        No link found
+                      </button>
+                    )}
+                  </div>
+                ))}
+
             </div>
           </div>
         </>

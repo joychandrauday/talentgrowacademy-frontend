@@ -116,10 +116,12 @@ const ConsultantManagerUserManagement = () => {
                     <tbody>
                         {users.map((user) => (
                             <tr key={user._id} className="hover:bg-gray-50">
-                                <td className="border px-4 py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
+                                <td className="border px-4 py-2">{new Date(user.createdAt).toLocaleDateString()} | {new Date(user.createdAt).toLocaleTimeString()}</td>
                                 <td className="border px-4 py-2">
                                     {user.status === 'active' ? (
-                                        new Date(user.updatedAt).toLocaleDateString()
+                                        <>
+                                            {new Date(user.activateDate).toLocaleDateString()} | {new Date(user.activateDate).toLocaleTimeString()}
+                                        </>
                                     ) : (
                                         `${user.status}`
                                     )}

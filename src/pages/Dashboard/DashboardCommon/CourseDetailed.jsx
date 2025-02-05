@@ -76,6 +76,7 @@ const CourseDetailed = () => {
                         )
                         : [...prev, newAssignment]
                 );
+                window.location.reload()
                 setResubmitId(null); // Close the resubmission form
             } else {
                 Swal.fire('Error', `Failed to ${isResubmit ? 'resubmit' : 'submit'} the assignment.`, 'error');
