@@ -176,7 +176,7 @@ const Sidebar = ({ user }) => {
               >
                 <ImBooks /> All Books
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 to="/dashboard/admin/events"
                 className={({ isActive }) =>
                   `flex gap-4 border  items-center p-2 hover:text-secondary ${isActive ? "bg-primary text-white" : ""
@@ -184,7 +184,7 @@ const Sidebar = ({ user }) => {
                 }
               >
                 < IoMdArrowDropright /> Manage Events
-              </NavLink>
+              </NavLink> */}
               <NavLink
                 to="/dashboard/admin/count"
                 className={({ isActive }) =>
