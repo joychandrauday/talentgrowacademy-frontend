@@ -35,7 +35,7 @@ const ManageEvents = () => {
                 title: newEvent.title ? newEvent.title : null,
                 description: newEvent.description ? newEvent.description : null,
                 banner: newEvent.banner ? newEvent.banner : null,
-                registerLink: newEvent.registerLink ? newEvent.registerLink : null,
+                registerLink: newEvent.registerLink ? newEvent.registerLink : ' ',
                 date: newEvent.date ? newEvent.date : null,
             });
             queryClient.invalidateQueries(['events']); // Refetch events after adding
