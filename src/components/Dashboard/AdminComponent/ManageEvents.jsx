@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
@@ -54,15 +54,13 @@ const ManageEvents = () => {
 
     // Handler to add a new event
     const handleAddEvent = async () => {
-        const imageUrl =imageFile ? await uploadImageToCloudinary(imageFile) : '';
+        const imageUrl = imageFile ? await uploadImageToCloudinary(imageFile) : '';
         console.log(imageUrl);
         try {
             await axiosPublic.post('/events', {
                 title: newEvent.title ? newEvent.title : null,
                 description: newEvent.description ? newEvent.description : null,
-                imageUrl: imageUrl ? imageUrl : ' ',
-                registerLink: newEvent.registerLink ? newEvent.registerLink : null
-                banner: newEvent.banner ? newEvent.banner : null,
+                banner: imageUrl ? imageUrl : '',
                 registerLink: newEvent.registerLink ? newEvent.registerLink : ' ',
                 date: newEvent.date ? newEvent.date : null,
             });
@@ -189,16 +187,16 @@ const ManageEvents = () => {
                         </div>
 
                         <div className="form-control mb-4">
-                        <label className="label">
-                            <span className="label-text">Image</span>
-                        </label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            className="file-input file-input-bordered file-input-primary w-full"
-                            onChange={(e) => setImageFile(e.target.files[0])}
-                        />
-                    </div>
+                            <label className="label">
+                                <span className="label-text">Image</span>
+                            </label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="file-input file-input-bordered file-input-primary w-full"
+                                onChange={(e) => setImageFile(e.target.files[0])}
+                            />
+                        </div>
                         <div className="form-control mb-4">
                             <label className="label">
                                 <span className="label-text">Register Link</span>
