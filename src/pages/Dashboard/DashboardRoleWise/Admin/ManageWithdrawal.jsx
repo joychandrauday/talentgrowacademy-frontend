@@ -148,7 +148,7 @@ const ManageWithdrawal = () => {
                                         {transaction.amount}
                                     </td>
                                     <td className="p-3">
-                                        {new Date(transaction.timestamp).toLocaleDateString()}
+                                        {new Date(transaction.timestamp).toLocaleDateString()}|{new Date(transaction.timestamp).toLocaleTimeString()}
                                     </td>
                                     <td className="p-3">{transaction.status}</td>
                                     <td className="p-3">{transaction.withdrawAccount || "N/A"}</td>
