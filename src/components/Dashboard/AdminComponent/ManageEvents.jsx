@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
@@ -27,13 +27,41 @@ const ManageEvents = () => {
     const [isEditing, setIsEditing] = useState(false); // Flag to track if we are editing an event
     const [editingSliderId, setEditingSliderId] = useState(null); // Store the ID of the event being edited
     const [showForm, setShowForm] = useState(false); // State to control form visibility
+    const [imageFile, setImageFile] = useState(null); // To store selected image file
+
+
+    //upload to cludinary
+
+    const uploadImageToCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'Profile_pic');
+        formData.append('cloud_name', 'dab8rppoj');
+        try {
+            const response = await fetch('https://api.cloudinary.com/v1_1/dab8rppoj/image/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            return data.url; // Return the uploaded image URL
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('Image upload failed.');
+            throw error;
+        }
+    };
+
 
     // Handler to add a new event
     const handleAddEvent = async () => {
+        const imageUrl =imageFile ? await uploadImageToCloudinary(imageFile) : '';
+        console.log(imageUrl);
         try {
             await axiosPublic.post('/events', {
                 title: newEvent.title ? newEvent.title : null,
                 description: newEvent.description ? newEvent.description : null,
+                imageUrl: imageUrl ? imageUrl : ' ',
+                registerLink: newEvent.registerLink ? newEvent.registerLink : null
                 banner: newEvent.banner ? newEvent.banner : null,
                 registerLink: newEvent.registerLink ? newEvent.registerLink : ' ',
                 date: newEvent.date ? newEvent.date : null,
@@ -161,17 +189,16 @@ const ManageEvents = () => {
                         </div>
 
                         <div className="form-control mb-4">
-                            <label className="label">
-                                <span className="label-text">Image URL</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Enter banner URL"
-                                className="input input-bordered input-primary w-full"
-                                value={newEvent.banner}
-                                onChange={(e) => setNewEvent({ ...newEvent, banner: e.target.value })}
-                            />
-                        </div>
+                        <label className="label">
+                            <span className="label-text">Image</span>
+                        </label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="file-input file-input-bordered file-input-primary w-full"
+                            onChange={(e) => setImageFile(e.target.files[0])}
+                        />
+                    </div>
                         <div className="form-control mb-4">
                             <label className="label">
                                 <span className="label-text">Register Link</span>
