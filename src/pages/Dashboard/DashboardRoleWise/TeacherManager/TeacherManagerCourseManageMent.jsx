@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import useCourses from '../../../../Hooks/roleFetch/useCourse';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
-import useTeacher from '../../../../Hooks/roleFetch/useTeacher';
+import toast from 'react-hot-toast';
 
 const TeacherManagerCourseManagement = () => {
     const { courses, refetch } = useCourses(); // Fetching courses with refetch functionality
@@ -12,6 +12,8 @@ const TeacherManagerCourseManagement = () => {
     const [modalMode, setModalMode] = useState(''); // 'edit' or 'add'
     const [selectedCourse, setSelectedCourse] = useState(null);
     const { register, handleSubmit, reset } = useForm();
+    const [imageFile, setImageFile] = useState(null); // To store selected image file
+
 
     const openModal = (mode, course = null) => {
         setModalMode(mode);
@@ -25,8 +27,29 @@ const TeacherManagerCourseManagement = () => {
         setSelectedCourse(null);
         reset();
     };
+    const uploadImageToCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'Profile_pic');
+        formData.append('cloud_name', 'dab8rppoj');
+        try {
+            const response = await fetch('https://api.cloudinary.com/v1_1/dab8rppoj/image/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            return data.url; // Return the uploaded image URL
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('Image upload failed.');
+            throw error;
+        }
+    };
+
 
     const handleSaveChanges = async (datam) => {
+        const imageUrl = imageFile ? await uploadImageToCloudinary(imageFile) : '';
+        const updatedDatam = { ...datam, image: imageUrl };
         const confirmationText =
             modalMode === 'edit' ? 'save the changes to this course?' : 'add this new course?';
 
@@ -44,7 +67,7 @@ const TeacherManagerCourseManagement = () => {
             try {
                 if (modalMode === 'edit') {
                     // Update existing course
-                    const res2 = await axiosPublic.patch(`/courses/update-course/${datam._id}`, datam);
+                    const res2 = await axiosPublic.patch(`/courses/update-course/${updatedDatam._id}`, updatedDatam);
 
                     if (res2.status === 200) {
                         Swal.fire({
@@ -55,7 +78,7 @@ const TeacherManagerCourseManagement = () => {
                     }
                 } else {
                     // Add new course
-                    const res2 = await axiosPublic.post('/courses/', datam);
+                    const res2 = await axiosPublic.post('/courses/', updatedDatam);
                     if (res2.status === 201) {
                         Swal.fire({
                             title: 'Success!',
@@ -124,12 +147,15 @@ const TeacherManagerCourseManagement = () => {
             {/* Course Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                 {courses.map((course) => (
-                    <div key={course._id} className="card bg-white shadow-md rounded-lg p-4">
+                    <div key={course._id} className="card relative bg-white shadow-md rounded-lg p-4">
                         <img
                             src={course.image}
                             alt={course.name}
                             className="w-full h-64 object-cover rounded-t-lg"
                         />
+                        <div className="absolute badge badge-warning font-bold top-2">
+                            serial:  {course.serial}
+                        </div>
                         <h2 className="text-lg font-semibold text-gray-700">{course.name}</h2>
                         <p className="text-sm text-gray-500 mb-4">{course.description}</p>
                         <div className="mt-4 flex justify-end space-x-2">
@@ -166,11 +192,10 @@ const TeacherManagerCourseManagement = () => {
                                 required
                             />
                             <input
-                                type="text"
-                                {...register('image')}
-                                placeholder="Image URL"
-                                className="input input-bordered w-full"
-                                required
+                                type="file"
+                                accept="image/*"
+                                className="file-input file-input-bordered file-input-primary w-full"
+                                onChange={(e) => setImageFile(e.target.files[0])}
                             />
                             <input
                                 type="text"
@@ -184,6 +209,14 @@ const TeacherManagerCourseManagement = () => {
                                 {...register('classLink')}
                                 defaultValue={'classLink'}
                                 placeholder="Class Link"
+                                className="input input-bordered w-full"
+                                required
+                            />
+                            <input
+                                type="number"
+                                {...register('serial')}
+                                defaultValue={courses.length + 1}
+                                placeholder="Serial Number"
                                 className="input input-bordered w-full"
                                 required
                             />
