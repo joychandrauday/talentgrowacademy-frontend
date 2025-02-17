@@ -176,7 +176,7 @@ const Passbook = () => {
               transactions.map((tx, index) => (
                 <tr key={index} className="border-b border-gray-700">
                   <td className="py-3 px-6">
-                    {new Date(tx.timestamp).toLocaleDateString()}|{new Date(tx.timestamp).toLocaleDateString()}
+                    {new Date(tx.timestamp).toLocaleDateString()}|{new Date(tx.timestamp).toLocaleTimeString()}
                   </td>
                   <td className="py-3 px-6">{tx.foreignUser}</td>
                   <td className="py-3 px-6">{tx.type}</td>
