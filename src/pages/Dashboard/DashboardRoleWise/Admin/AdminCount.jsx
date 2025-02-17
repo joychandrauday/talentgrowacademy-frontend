@@ -274,7 +274,7 @@ const AdminCount = () => {
                                     {new Date(user.createdAt).toLocaleTimeString()}
                                 </td>
                                 <td className="border px-4 py-2">
-                                    {new Date(user?.activateDate).toLocaleDateString()}
+                                    {new Date(user?.activateDate).toLocaleDateString()} | {new Date(user?.activateDate).toLocaleTimeString()}
                                 </td>
                                 <td className="border px-4 py-2">{user.userID}</td>
                                 <td className="border px-4 py-2">{user.name}</td>

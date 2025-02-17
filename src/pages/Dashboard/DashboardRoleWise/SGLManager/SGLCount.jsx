@@ -286,7 +286,7 @@ const SGLCount = () => {
                             <tr key={user._id} className="hover:bg-gray-50">
                                 <td className="border px-4 py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td className="border px-4 py-2">
-                                    {new Date(user?.activateDate).toLocaleDateString()}
+                                    {new Date(user?.activateDate).toLocaleDateString()} | {new Date(user?.activateDate).toLocaleTimeString()}
                                 </td>
                                 <td className="border px-4 py-2">{user.userID}</td>
                                 <td className="border px-4 py-2">{user.name}</td>
