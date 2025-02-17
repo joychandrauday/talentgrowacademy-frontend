@@ -258,7 +258,7 @@ const AdminCount = () => {
                     <thead>
                         <tr className="bg-gray-100">
                             <th className="border px-4 py-2">Date</th>
-                            <th className="border px-4 py-2">Assign Date</th>
+                            <th className="border px-4 py-2">Active Date</th>
                             <th className="border px-4 py-2">User ID</th>
                             <th className="border px-4 py-2">Name</th>
                             <th className="border px-4 py-2">Phone</th>
@@ -274,7 +274,7 @@ const AdminCount = () => {
                                     {new Date(user.createdAt).toLocaleTimeString()}
                                 </td>
                                 <td className="border px-4 py-2">
-                                    {new Date(user.consultantAssign).toLocaleDateString()}
+                                    {new Date(user?.activateDate).toLocaleDateString()}
                                 </td>
                                 <td className="border px-4 py-2">{user.userID}</td>
                                 <td className="border px-4 py-2">{user.name}</td>
