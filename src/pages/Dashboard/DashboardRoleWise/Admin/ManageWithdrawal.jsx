@@ -143,10 +143,14 @@ const ManageWithdrawal = () => {
                             {transactions.map((transaction) => (
                                 <tr key={transaction.referenceId} className="text-center border-b">
                                     <td className="p-3">{transaction.foreignUser ? transaction.showingId : 'N/A'}</td>
-                                    <td className="p-3">
-                                        {transaction.type === "credit" ? "+" : "-"}
-                                        {transaction.amount}
-                                    </td>
+                                   <td className="p-3">
+    {transaction.type === "credit"
+        ? `+${transaction.amount}`
+        : transaction.type === "debit"
+        ? `-${transaction.amount}`
+        : transaction.amount
+    }
+</td>
                                     <td className="p-3">
                                         {new Date(transaction.timestamp).toLocaleDateString()}|{new Date(transaction.timestamp).toLocaleTimeString()}
                                     </td>
