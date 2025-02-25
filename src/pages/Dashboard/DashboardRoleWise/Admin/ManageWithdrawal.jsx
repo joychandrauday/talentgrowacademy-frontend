@@ -145,10 +145,10 @@ const ManageWithdrawal = () => {
                                     <td className="p-3">{transaction.foreignUser ? transaction.showingId : 'N/A'}</td>
                                    <td className="p-3">
     {transaction.type === "credit"
-        ? `+${transaction.amount}`
+        ? `+${Math.abs(transaction.amount)}`
         : transaction.type === "debit"
-        ? `-${transaction.amount}`
-        : transaction.amount
+        ? `-${Math.abs(transaction.amount)}`
+        : Math.abs(transaction.amount)
     }
 </td>
                                     <td className="p-3">
