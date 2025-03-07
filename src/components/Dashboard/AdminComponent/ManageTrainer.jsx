@@ -60,7 +60,7 @@ const ManageTrainer = () => {
                 cancelButtonColor: '#d33',
             });
 
-            if (confirm) {ye
+            if (confirm) {
                 await axiosPublic.patch(`/trainers/${userId}`, editedUserData);
 
                 Swal.fire('Updated!', 'The user has been updated.', 'info');
