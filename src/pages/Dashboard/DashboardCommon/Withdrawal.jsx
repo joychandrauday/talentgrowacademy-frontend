@@ -17,12 +17,26 @@ const Withdrawal = () => {
     const [methods, setMethods] = useState([userdb?.withdraw]);
     const [newMethod, setNewMethod] = useState({ number: '', method: '' });
     const [showForm, setShowForm] = useState(false); // State to toggle form visibility
+    const [error, setError] = useState('');
+
+    const handleNumberChange = (e) => {
+        const value = e.target.value;
+        if (!/^\d*$/.test(value)) {
+            return;
+        }
+        setNewMethod({ ...newMethod, number: value });
+        if (value.length === 11 && value.startsWith("01")) {
+            setError('');
+        } else {
+            setError('Number must be 11 digits and start with 01');
+        }
+    };
     const withdrawMethods = userdb.withdraw
     const [firstWithdraw, setFirstWithdraw] = useState(true);
     const axiosPublic = useAxiosPublic()
+
     useEffect(() => {
         const fetchData = async () => {
-            // Ensure userdb and userdb._id are defined before making the API call
             if (!userdb) {
                 return; // Exit early if userdb._id is not available
             }
@@ -42,6 +56,7 @@ const Withdrawal = () => {
                 if (response?.data?.transactions?.length > 0) {
                     setFirstWithdraw(false);
                 }
+                console.log(firstWithdraw);
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
@@ -377,7 +392,8 @@ const Withdrawal = () => {
                     <button
                         onClick={handleWithdraw}
                         className="btn p-3 bg-primary text-white  rounded-md font-bold hover:bg-secondary transition"
-                        disabled={userdb.balance <= 0 || !selectedMethod || !amount || (userdb.isAdminstration === 'false' && amount < 200) || amount > userdb.balance || (userdb.isAdminstration === 'false' && firstWithdraw && amount < 500) || (firstWithdraw && userdb.isAdminstration && amount < 100)}
+                        disabled={
+                            userdb.balance <= 0 || !selectedMethod || !amount || (userdb.isAdminstration === 'false' && amount < 200) || amount > userdb.balance || (userdb.isAdminstration === 'false' && firstWithdraw && amount < 500) || (firstWithdraw && userdb.isAdminstration && amount < 100) || errorMessage !== ''}
                     >
                         Proceed to Withdraw
                     </button>
@@ -390,6 +406,7 @@ const Withdrawal = () => {
                         <div>
                             <h2 className="text-lg font-bold">Add New Withdrawal Method</h2>
                             <div>
+                                {/* Method Selection */}
                                 <label className="block text-sm text-gray-400 mb-2">Method Name</label>
                                 <select
                                     value={newMethod.method}
@@ -404,16 +421,19 @@ const Withdrawal = () => {
                                     <option value="googlepay">Google Pay</option>
                                     <option value="paytm">Paytm</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm text-gray-400 mb-2">Number</label>
+
+                                {/* Number Input */}
+                                <label className="block text-sm text-gray-400 mt-4 mb-2">Account Number</label>
                                 <input
                                     type="text"
                                     value={newMethod.number}
-                                    onChange={(e) => setNewMethod({ ...newMethod, number: e.target.value })}
+                                    onChange={handleNumberChange}
+                                    maxLength="11"
                                     className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="Enter number"
+                                    placeholder="Enter account number"
                                 />
+
+                                {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
                             </div>
                             <button
                                 type="submit"
