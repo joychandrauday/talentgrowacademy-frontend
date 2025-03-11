@@ -42,16 +42,16 @@ const Withdrawal = () => {
             try {
                 const queryParams = {
                     userId: userid,
-                    withdraw: true,
-                    type: 'debit'
                 }
-                const response = await axiosPublic.get(`/transactions`, {
+                const response = await axiosPublic.get(`/transactions/user`, {
                     params: queryParams
 
                 });
-
+                const filtered = response?.data?.transactions?.filter((filter) => filter.description === 'withdraw.' && filter.status === 'completed')
+                console.log(filtered?.length);
+                console.log(filtered);
                 // Check if transactions exist and update the state accordingly
-                if (response?.data?.transactions?.length > 0) {
+                if (filtered?.length > 0) {
                     setFirstWithdraw(false);
                 }
             } catch (error) {

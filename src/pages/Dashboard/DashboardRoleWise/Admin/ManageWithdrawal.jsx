@@ -6,9 +6,11 @@ import { FaCheck, FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import useUser from '../../../Others/Register/useUser';
+import useAdmins from '../../../../Hooks/roleFetch/useAdmin';
 
 const ManageWithdrawal = () => {
     const { userdb } = useUser();
+    const { admin } = useAdmins()
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [sortBy, setSortBy] = useState("timestamp");
@@ -73,7 +75,7 @@ const ManageWithdrawal = () => {
         }
     };
 
-    const handleAction = (transactionId, action, userId, transaction) => {
+    const handleAction = async (transactionId, action, userId, transaction) => {
         const status = action === 'completed' ? 'completed' : 'rejected';
         Swal.fire({
             title: `Are you sure you want to ${action} this request?`,
@@ -82,12 +84,39 @@ const ManageWithdrawal = () => {
             confirmButtonColor: action === 'completed' ? '#4caf50' : '#f44336',
             cancelButtonColor: '#d33',
             confirmButtonText: action === 'completed' ? 'Yes, Approve' : 'Yes, Reject',
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                updateStatus(transactionId, status, userId, transaction);
+                await updateStatus(transactionId, status, userId, transaction);
+
+                if (action === 'rejected') {
+                    try {
+                        await axiosPublic.post('/transactions/create', {
+                            userId: userId,
+                            foreignUser: userdb.userID, // Use the selected user
+                            amount: 350,
+                            type: 'credit',
+                            status: 'completed',
+                            description: 'rejected allocated from admin.',
+                            showingId: userdb.userID,
+                        });
+                        const adminDeduct = await axiosPublic.post('/transactions/create', {
+                            userId: admin._id,
+                            showingId: userdb.userID,
+                            foreignUser: userId, // Use the selected user
+                            amount: 350,
+                            type: 'debit',
+                            withdraw: true,
+                            status: 'completed',
+                            description: 'rejected money allocated to the user from admin.',
+                        });
+                    } catch (error) {
+                        console.error('Error in admin allocation:', error);
+                    }
+                }
             }
         });
     };
+
 
     const handleFilterChange = (e) => {
         setStatusFilter(e.target.value);
@@ -143,14 +172,14 @@ const ManageWithdrawal = () => {
                             {transactions.map((transaction) => (
                                 <tr key={transaction.referenceId} className="text-center border-b">
                                     <td className="p-3">{transaction.foreignUser ? transaction.showingId : 'N/A'}</td>
-                                   <td className="p-3">
-    {transaction.type === "credit"
-        ? `+${Math.abs(transaction.amount)}`
-        : transaction.type === "debit"
-        ? `-${Math.abs(transaction.amount)}`
-        : Math.abs(transaction.amount)
-    }
-</td>
+                                    <td className="p-3">
+                                        {transaction.type === "credit"
+                                            ? `+${Math.abs(transaction.amount)}`
+                                            : transaction.type === "debit"
+                                                ? `-${Math.abs(transaction.amount)}`
+                                                : Math.abs(transaction.amount)
+                                        }
+                                    </td>
                                     <td className="p-3">
                                         {new Date(transaction.timestamp).toLocaleDateString()}|{new Date(transaction.timestamp).toLocaleTimeString()}
                                     </td>
