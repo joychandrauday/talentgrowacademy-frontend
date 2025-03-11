@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import bkash from '../../../assets/bkash.png'
-import rocket from '../../../assets/rocket.png'
 import nagad from '../../../assets/nagad.png'
 import useUser from '../../Others/Register/useUser';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
@@ -14,7 +13,6 @@ const Withdrawal = () => {
     const [selectedMethod, setSelectedMethod] = useState('');
     const [amount, setAmount] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [methods, setMethods] = useState([userdb?.withdraw]);
     const [newMethod, setNewMethod] = useState({ number: '', method: '' });
     const [showForm, setShowForm] = useState(false); // State to toggle form visibility
     const [error, setError] = useState('');
@@ -47,7 +45,7 @@ const Withdrawal = () => {
                     withdraw: true,
                     type: 'debit'
                 }
-                const response = await axiosPublic.get(`/transactions/user`, {
+                const response = await axiosPublic.get(`/transactions`, {
                     params: queryParams
 
                 });
@@ -56,7 +54,6 @@ const Withdrawal = () => {
                 if (response?.data?.transactions?.length > 0) {
                     setFirstWithdraw(false);
                 }
-                console.log(firstWithdraw);
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
@@ -330,9 +327,9 @@ const Withdrawal = () => {
                                         } else {
                                             setErrorMessage(''); // Clear error message
                                         }
-                                    } else {
+                                    } else if (!userdb.isAdminstration) {
                                         if (inputAmount < 500) {
-                                            setErrorMessage('Withdrawal amount must be at least 500 ৳.');
+                                            setErrorMessage('First Withdrawal amount must be at least 500 ৳.');
                                         } else if (inputAmount > userdb.balance) {
                                             setErrorMessage('You have insufficient balance.');
                                         } else {
@@ -349,8 +346,8 @@ const Withdrawal = () => {
                                             setErrorMessage(''); // Clear error message
                                         }
                                     } else {
-                                        if (inputAmount < 500) {
-                                            setErrorMessage('Withdrawal amount must be at least 500 ৳.');
+                                        if (inputAmount < 100) {
+                                            setErrorMessage('Withdrawal amount must be at least 100 ৳.');
                                         } else if (inputAmount > userdb.balance) {
                                             setErrorMessage('You have insufficient balance.');
                                         } else {
