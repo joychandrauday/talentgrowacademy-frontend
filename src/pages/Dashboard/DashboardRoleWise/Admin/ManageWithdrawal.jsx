@@ -99,7 +99,7 @@ const ManageWithdrawal = () => {
                             description: 'rejected allocated from admin.',
                             showingId: userdb.userID,
                         });
-                        const adminDeduct = await axiosPublic.post('/transactions/create', {
+                        await axiosPublic.post('/transactions/create', {
                             userId: admin._id,
                             showingId: userdb.userID,
                             foreignUser: userId, // Use the selected user
