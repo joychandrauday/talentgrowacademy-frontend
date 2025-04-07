@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import useUser from '../../../Others/Register/useUser';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
@@ -7,21 +6,24 @@ import { useNavigate } from 'react-router-dom';
 
 const ControllerConsultantManagement = () => {
     const { userdb } = useUser();
-    const [consultant, setConsultant] = useState([]); // List of consultants
+    const [consultant, setConsultant] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
+
     const axiosPublic = useAxiosPublic();
     const navigate = useNavigate();
 
-    // Fetch consultants on component mount
     useEffect(() => {
-        if (!userdb || !userdb._id) {
-            return;
-        }
+        if (!userdb || !userdb._id) return;
 
         const fetchData = async () => {
             try {
-                const response = await axiosPublic.get(`/admins/alladmins?role=consultant`);
+                const response = await axiosPublic.get(`/admins/alladmins?role=consultant&page=${currentPage}&limit=${limit}`);
                 if (response.status === 200) {
-                    setConsultant(response.data.data.results); // Assuming your data structure
+                    setConsultant(response.data.data.results || []);
+                    const total = response.data.data.totalCount || 0;
+                    setTotalPages(Math.ceil(total / limit));
                 } else {
                     throw new Error('Failed to fetch consultants');
                 }
@@ -31,18 +33,16 @@ const ControllerConsultantManagement = () => {
         };
 
         fetchData();
-    }, [userdb]);
+    }, [userdb, currentPage, limit]);
 
-    // Handle permission update
     const handlePermission = async (userId, newPermission) => {
         try {
             const response = await axiosPublic.patch(`/consultants/${userId}`, {
-                permission: newPermission, // No need to pass `userId` in the body
+                permission: newPermission,
             });
 
             if (response.status === 200) {
                 toast.success('Permission updated successfully!');
-                // Update permission locally
                 setConsultant((prevConsultant) =>
                     prevConsultant.map((user) =>
                         user.userID === userId ? { ...user, permission: newPermission } : user
@@ -56,55 +56,32 @@ const ControllerConsultantManagement = () => {
             console.error('Error updating permission:', error);
         }
     };
+
     return (
         <div className="p-4">
             <h1 className="text-xl font-bold mb-4">Manage Administration</h1>
 
             {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <input
-                        type="text"
-                        name="searchTerm"
-                        placeholder="Search users"
-                        className="border border-gray-300 rounded p-2 w-full"
-                    />
-                </div>
-                <div>
-                    <select
-                        name="status"
-                        className="border border-gray-300 rounded p-2 w-full"
-                    >
-                        <option value="">Filter by Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                </div>
-                <div>
-                    <select
-                        name="role"
-                        className="border border-gray-300 rounded p-2 w-full"
-                    >
-                        <option value="">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </div>
+                <input type="text" name="searchTerm" placeholder="Search users" className="border border-gray-300 rounded p-2 w-full" />
+                <select name="status" className="border border-gray-300 rounded p-2 w-full">
+                    <option value="">Filter by Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                </select>
+                <select name="role" className="border border-gray-300 rounded p-2 w-full">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                </select>
                 <div className="flex space-x-2">
-                    <input
-                        type="date"
-                        name="fromDate"
-                        className="border border-gray-300 rounded p-2 w-full"
-                    />
-                    <input
-                        type="date"
-                        name="toDate"
-                        className="border border-gray-300 rounded p-2 w-full"
-                    />
+                    <input type="date" name="fromDate" className="border border-gray-300 rounded p-2 w-full" />
+                    <input type="date" name="toDate" className="border border-gray-300 rounded p-2 w-full" />
                 </div>
             </div>
+
             <button className="bg-secondary text-white px-8 font-semibold py-2 rounded-full hover:bg-primary mb-4">
                 Search
             </button>
@@ -123,7 +100,7 @@ const ControllerConsultantManagement = () => {
                     </thead>
                     <tbody>
                         {consultant.map((user) => (
-                            <tr key={user._id} className="hover:bg-gray-50 cursor-pointer" >
+                            <tr key={user._id} className="hover:bg-gray-50 cursor-pointer">
                                 <td className="border px-4 py-2" onClick={() => navigate(`/dashboard/controller/consultant/${user.userID}`)}>{user.name}</td>
                                 <td className="border px-4 py-2" onClick={() => navigate(`/dashboard/controller/consultant/${user.userID}`)}>{user.userID}</td>
                                 <td className="border px-4 py-2" onClick={() => navigate(`/dashboard/controller/consultant/${user.userID}`)}>{user.phone}</td>
@@ -144,15 +121,37 @@ const ControllerConsultantManagement = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-6 space-x-2 flex-wrap">
+                <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                    disabled={currentPage === 1}
+                >
+                    Prev
+                </button>
+
+                {[...Array(totalPages)].map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentPage(index + 1)}
+                        className={`px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-blue-600 text-white' : ''}`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+
+                <button
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
-};
-
-ControllerConsultantManagement.propTypes = {
-    data: PropTypes.object,
-    isLoading: PropTypes.bool,
-    isError: PropTypes.bool,
-    error: PropTypes.object,
 };
 
 export default ControllerConsultantManagement;
