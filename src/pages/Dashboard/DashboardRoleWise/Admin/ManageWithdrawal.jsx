@@ -86,8 +86,6 @@ const ManageWithdrawal = () => {
             confirmButtonText: action === 'completed' ? 'Yes, Approve' : 'Yes, Reject',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await updateStatus(transactionId, status, userId, transaction);
-
                 if (action === 'rejected') {
                     try {
                         await axiosPublic.post('/transactions/create', {
@@ -112,6 +110,8 @@ const ManageWithdrawal = () => {
                     } catch (error) {
                         console.error('Error in admin allocation:', error);
                     }
+                } else {
+                    await updateStatus(transactionId, status, userId, transaction);
                 }
             }
         });
