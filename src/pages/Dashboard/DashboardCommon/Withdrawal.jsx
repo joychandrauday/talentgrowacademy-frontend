@@ -35,33 +35,24 @@ const Withdrawal = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!userdb) {
-                return; // Exit early if userdb._id is not available
-            }
-
             try {
                 const queryParams = {
-                    userId: userid,
-                }
-                const response = await axiosPublic.get(`/transactions/user`, {
-                    params: queryParams
-
+                    userId: userdb._id,
+                };
+                const response = await axiosPublic.get(`/transactions/first-withdraw`, {
+                    params: queryParams,
                 });
-                const filtered = response?.data?.transactions?.filter((filter) => filter.description === 'withdraw.' && filter.status === 'completed')
-                console.log(filtered?.length);
-                console.log(filtered);
-                // Check if transactions exist and update the state accordingly
-                if (filtered?.length > 0) {
-                    setFirstWithdraw(false);
-                }
+                setFirstWithdraw(response?.data?.firstWithdrawCompleted);
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
         };
 
-        // Call the async function to fetch data only if userdb._id is available
-        fetchData();
-    }, [axiosPublic, firstWithdraw, userdb, userdb._id, userid]); // Run the effect only when userdb._id changes
+        if (userdb && userdb._id) {
+            fetchData(); // Only call when userdb._id is defined
+        }
+    }, [axiosPublic, userdb, userdb._id]); // Depend only on userdb._id
+
 
 
     const handleWithdraw = async () => {

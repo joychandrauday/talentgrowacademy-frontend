@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Fix the import
-import useAxiosPublic from '../Hooks/useAxiosPublic';
 import useUser from '../pages/Others/Register/useUser';
 import LoadingSpinner from '../components/Shared/LoadingSpinner';
 import InactiveRoute from './InactiveRoute';
@@ -32,12 +29,9 @@ const ActiveRoute = ({ children }) => {
             }
             setIsLoading(false); // Stop loading
         };
-
-
-
         verifyStatus(); // Start verification on mount
     }, [userdb?.status]);
-    console.log(isActive);
+
     if (isLoading) {
         // Show a loader while verifying the token
         return <LoadingSpinner />;
