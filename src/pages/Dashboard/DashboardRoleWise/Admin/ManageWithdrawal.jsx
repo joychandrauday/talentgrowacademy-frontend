@@ -75,48 +75,65 @@ const ManageWithdrawal = () => {
         }
     };
 
-    const handleAction = async (transactionId, action, userId, transaction) => {
+    const handleAction = async (transactionId, action, userId, transaction, userdb, admin) => {
         const status = action === 'completed' ? 'completed' : 'rejected';
-        Swal.fire({
+        const ALLOCATION_AMOUNT = 350;
+        console.log(status);
+        const confirmResult = await Swal.fire({
             title: `Are you sure you want to ${action} this request?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: action === 'completed' ? '#4caf50' : '#f44336',
             cancelButtonColor: '#d33',
             confirmButtonText: action === 'completed' ? 'Yes, Approve' : 'Yes, Reject',
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                if (action === 'rejected') {
-                    try {
-                        await axiosPublic.post('/transactions/create', {
-                            userId: userId,
-                            foreignUser: userdb.userID, // Use the selected user
-                            amount: 350,
-                            type: 'credit',
-                            status: 'completed',
-                            description: 'rejected allocated from admin.',
-                            showingId: userdb.userID,
-                        });
-                        await axiosPublic.post('/transactions/create', {
-                            userId: admin._id,
-                            showingId: userdb.userID,
-                            foreignUser: userId, // Use the selected user
-                            amount: 350,
-                            type: 'debit',
-                            withdraw: true,
-                            status: 'completed',
-                            description: 'rejected money allocated to the user from admin.',
-                        });
-                    } catch (error) {
-                        console.error('Error in admin allocation:', error);
-                    }
-                } else {
-                    await updateStatus(transactionId, status, userId, transaction);
-                }
-            }
         });
-    };
+        console.log(confirmResult.isConfirmed);
+        if (!confirmResult.isConfirmed) return;
 
+        try {
+            Swal.fire({
+                title: 'Processing...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+
+            if (transaction.firstWithdraw && action === 'rejected') {
+                await axiosPublic.post('/transactions/create', {
+                    userId: userId,
+                    foreignUser: userdb?.userID,
+                    amount: ALLOCATION_AMOUNT,
+                    type: 'credit',
+                    status: 'completed',
+                    description: 'Rejected first withdraw – money allocated to user from admin.',
+                    showingId: userdb.userID,
+                });
+
+                await updateStatus(transactionId, status, userId, transaction);
+
+                await axiosPublic.post('/transactions/create', {
+                    userId: admin._id,
+                    foreignUser: userId,
+                    amount: ALLOCATION_AMOUNT,
+                    type: 'debit',
+                    withdraw: true,
+                    status: 'completed',
+                    description: 'Rejected first withdraw – money given to user from admin.',
+                    showingId: userdb.userID,
+                });
+            } else {
+                await updateStatus(transactionId, status, userId, transaction);
+            }
+
+            Swal.close(); // ✅ Close loading
+            Swal.fire('Success', `Request has been ${status}.`, 'success');
+        } catch (error) {
+            console.error('Error during transaction processing:', error);
+            Swal.close(); // ✅ Close loading on error
+            Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+        }
+    };
 
     const handleFilterChange = (e) => {
         setStatusFilter(e.target.value);
@@ -189,14 +206,32 @@ const ManageWithdrawal = () => {
                                     {transaction.status !== 'pending' ? <div className="opacity-60">completed</div> : <td className="p-3 flex justify-center items-center gap-2">
                                         <button
                                             className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
-                                            onClick={() => handleAction(transaction._id, "completed", transaction.userId)}
+                                            onClick={() =>
+                                                handleAction(
+                                                    transaction._id,
+                                                    "completed",
+                                                    transaction.userId,
+                                                    transaction,
+                                                    userdb,
+                                                    admin // Ensure `admin` is defined in this context
+                                                )
+                                            }
                                             disabled={transaction.status === 'completed'}
                                         >
                                             <FaCheck />
                                         </button>
                                         <button
                                             className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
-                                            onClick={() => handleAction(transaction._id, "rejected", transaction.userId, transaction)}
+                                            onClick={() =>
+                                                handleAction(
+                                                    transaction._id,
+                                                    "rejected",
+                                                    transaction.userId,
+                                                    transaction,
+                                                    userdb,
+                                                    admin
+                                                )
+                                            }
                                             disabled={transaction.status === 'completed'}
                                         >
                                             <FaTimes />
