@@ -25,6 +25,7 @@ const ManageWithdrawal = () => {
         type: 'debit',
         withdraw: true,
         status: statusFilter, // Pass the status filter to the hook
+        description: "withdraw."
     });
 
     const handleSort = (sortField) => {
