@@ -75,7 +75,7 @@ const MoneyAllocation = () => {
                 foreignUser: user._id, // Use the selected user
                 amount: parseFloat(amount),
                 type: 'debit',
-                withdraw: true,
+                withdraw: false,
                 status: 'completed',
                 description: 'Money allocated to the user by admin.',
             });
@@ -128,7 +128,7 @@ const MoneyAllocation = () => {
                 foreignUser: userdb._id, // Use the selected user
                 amount: parseFloat(amount),
                 type: 'debit',
-                withdraw: true,
+                withdraw: false,
                 status: 'completed',
                 description: 'Money deducted by admin.',
             });
