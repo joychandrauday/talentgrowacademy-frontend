@@ -137,7 +137,7 @@ const Withdrawal = () => {
                     type: 'debit',
                     description: `admin allocation on first withdraw.`,
                     userId: userid,
-                    withdraw: true,
+                    withdraw: false,
                     firstWithdraw: firstWithdraw,
                     method: selectedMethod.methodName,
                     foreignUser: userdb?.userID,

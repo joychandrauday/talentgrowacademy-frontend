@@ -117,7 +117,7 @@ const ManageWithdrawal = () => {
                     foreignUser: userId,
                     amount: ALLOCATION_AMOUNT,
                     type: 'debit',
-                    withdraw: true,
+                    withdraw: false,
                     status: 'completed',
                     description: 'Rejected first withdraw – money given to user from admin.',
                     showingId: userdb.userID,
