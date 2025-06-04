@@ -6,8 +6,11 @@ import useUser from '../../../Others/Register/useUser';
 import useAxiosPublic from '../../../../Hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
+import useAdmins from '../../../../Hooks/roleFetch/useAdmin';
 
 const MoneyAllocation = () => {
+
+    const { admin } = useAdmins()
     const { userdb } = useUser();
     const axiosPublic = useAxiosPublic();
     const [userIdToAllocate, setUserIdToAllocate] = useState('');  // To store the userID input by admin
@@ -128,14 +131,14 @@ const MoneyAllocation = () => {
                 foreignUser: userdb._id, // Use the selected user
                 amount: parseFloat(amount),
                 type: 'debit',
-                withdraw: false,
+                withdraw: true,
                 status: 'completed',
                 description: 'Money deducted by admin.',
             });
-
+            console.log(Deduct);
             // Add deducted money to the admin
             const response = await axiosPublic.post('/transactions/create', {
-                userId: userdb._id,
+                userId: admin._id,
                 showingId: userdb.userID,
                 foreignUser: user.userID,
                 amount: parseFloat(amount),
