@@ -97,6 +97,7 @@ import ActiveRoute from "./ActiveRoute";
 import SglCountResult from "../pages/Dashboard/DashboardRoleWise/SeniorGroupLeader/SglCountResult";
 import GlCountResult from "../pages/Dashboard/DashboardRoleWise/GroupLeader/GlCountResult";
 import SGLCount from "../pages/Dashboard/DashboardRoleWise/SGLManager/SGLCount";
+import Error from "../components/Others/Error";
 
 
 
@@ -181,7 +182,8 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: <PrivateRoute>
       <ActiveRoute>
-        <Dashboard></Dashboard>
+        {/* <Dashboard></Dashboard> */}
+        <Error></Error>
       </ActiveRoute>
     </PrivateRoute>,
     children: [
