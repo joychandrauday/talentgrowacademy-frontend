@@ -182,8 +182,8 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: <PrivateRoute>
       <ActiveRoute>
-        {/* <Dashboard></Dashboard> */}
-        <Error></Error>
+        <Dashboard></Dashboard>
+        {/* <Error></Error> */}
       </ActiveRoute>
     </PrivateRoute>,
     children: [
