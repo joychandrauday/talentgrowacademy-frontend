@@ -49,11 +49,11 @@ const AllUserManagement = () => {
         if (admissionFeesCard) {
             setAdmissionFees(admissionFeesCard.admissionFees);
             const percentages = {
-                reference: 0.30, // 30%
+                reference: 0.24, // 24%
                 trainer: 0.05, // 5%
-                gl: 0.07, // 7%
+                gl: 0.09, // 9%
                 sgl: 0.01, // 1%
-                consultant: 0.09, // 9%
+                consultant: 0.10, // 10%
             };
 
             const roleAllocations = {
