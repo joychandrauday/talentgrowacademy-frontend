@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const MaintenanceWrapper = ({ children }) => {
-    const isDown = true; // toggle this to false to re-enable site
+    const isDown = false; // toggle this to false to re-enable site
     const [text, setText] = useState("");
 
     const message = "⚠ SYSTEM FAILURE: SOMETHING WENT WRONG...";
