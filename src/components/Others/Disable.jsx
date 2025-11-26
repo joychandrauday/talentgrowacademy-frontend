@@ -1,89 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const MaintenanceWrapper = ({ children }) => {
-    const isDown = true; // Force scam warning mode
+    const isScam = true; // Keep true to show warning
 
-    if (!isDown) return children;
+    if (!isScam) return children;
 
     return (
-        <div className="fixed inset-0 overflow-hidden bg-black text-red-600 font-black z-[999999]">
-            {/* Full-screen pulsing background */}
-            <div className="absolute inset-0 bg-red-800 animate-pulse opacity-80"></div>
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black">
+            {/* Pulsing red border */}
+            <div className="absolute inset-0 border-8 border-red-600 animate-ping"></div>
 
-            {/* Massive centered warning */}
-            <div className="relative h-screen w-screen flex flex-col items-center justify-center">
-                <h1 className="text-6xl md:text-9xl font-extrabold animate-bounce text-yellow-400 drop-shadow-2xl tracking-wider">
-                    ⚠️ SCAM ALERT ⚠️
+            {/* Main warning card */}
+            <div className="relative bg-white rounded-lg shadow-2xl p-10 max-w-md mx-4 text-center border-4 border-red-600">
+                {/* Flashing siren */}
+                <div className="text-6xl mb-4 animate-pulse">WARNING SIREN</div>
+
+                <h1 className="text-4xl font-black text-red-600 uppercase tracking-wider">
+                    SCAM WEBSITE
                 </h1>
-                <h2 className="text-4xl md:text-7xl font-extrabold mt-4 text-white blinking-text drop-shadow-lg">
-                    THIS WEBSITE IS A SCAM!
-                </h2>
-                <p className="text-2xl md:text-5xl mt-6 text-yellow-300 font-bold animate-pulse">
-                    DO NOT INVEST • DO NOT MAKE TRANSACTION • DO NOT ENTER PERSONAL DATA
+
+                <p className="mt-6 text-xl font-bold text-gray-800">
+                    This is <span className="text-red-600">NOT</span> the real site.
                 </p>
-                <p className="text-3xl md:text-6xl mt-8 text-red-500 font-extrabold tracking-wide">
-                    YOU WILL LOSE ALL YOUR MONEY!
+
+                <p className="mt-4 text-lg text-gray-700 font-medium">
+                    Do NOT connect wallet • Do NOT enter seed phrase • Do NOT send money
                 </p>
-                <div className="mt-10 text-4xl md:text-6xl text-white font-bold animate-ping">
-                    🚨 LEAVE IMMEDIATELY 🚨
+
+                <div className="mt-8 p-4 bg-red-100 rounded-lg border-2 border-red-600">
+                    <p className="text-2xl font-bold text-red-700 animate-pulse">
+                        CLOSE THIS TAB NOW
+                    </p>
                 </div>
-            </div>
 
-            {/* Repeating SCAM text grid all over the screen */}
-            <div className="absolute inset-0 pointer-events-none">
-                {[...Array(40)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute text-6xl md:text-9xl font-black opacity-70 transform rotate-[-30deg] text-red-600 blinking-text"
-                        style={{
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            transform: `translate(-50%, -50%) rotate(${Math.random() * 60 - 30}deg)`,
-                            animationDelay: `${Math.random() * 2}s`,
-                        }}
-                    >
-                        SCAM
-                    </div>
-                ))}
-                {[...Array(30)].map((_, i) => (
-                    <div
-                        key={`warning-${i}`}
-                        className="absolute text-5xl md:text-8xl font-extrabold opacity-80 text-yellow-400 drop-shadow-2xl animate-pulse"
-                        style={{
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            transform: `translate(-50%, -50%) rotate(${Math.random() * 90 - 45}deg)`,
-                            animationDelay: `${Math.random() * 3}s`,
-                        }}
-                    >
-                        FAKE SITE!
-                    </div>
-                ))}
+                <p className="mt-6 text-sm text-gray-500">
+                    You are being protected from a known phishing/scam site.
+                </p>
             </div>
-
-            {/* Top banner ticker */}
-            <div className="absolute top-0 left-0 w-full bg-red-900 text-yellow-300 text-4xl md:text-6xl font-bold py-4 overflow-hidden whitespace-nowrap">
-                <div className="inline-block animate-marquee">
-                    ⚠️ SCAM WEBSITE ⚠️ DO NOT TRUST ⚠️ YOU WILL BE ROBBED ⚠️ CLOSE THIS TAB NOW ⚠️&nbsp;
-                </div>
-            </div>
-
-            <style jsx>{`
-                @keyframes marquee {
-                    0% { transform: translateX(100%); }
-                    100% { transform: translateX(-100%); }
-                }
-                .animate-marquee {
-                    animation: marquee 15s linear infinite;
-                }
-                @keyframes blink {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.3; }
-                }
-                .blinking-text {
-                    animation: blink 1.5s infinite;
-                }
-            `}</style>
         </div>
     );
 };
