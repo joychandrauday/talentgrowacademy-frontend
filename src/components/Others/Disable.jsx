@@ -13,11 +13,11 @@ const MaintenanceWrapper = ({ children }) => {
                     {message || "⚠ WARNING"}
                 </h1>
 
-                <p className="text-sm md:text-base text-center opacity-90">
+                <p className="text-xl md:text-base text-center opacity-90">
                     This site is full of scammers. Do not invest.
                 </p>
 
-                <p className="mt-2 text-xs opacity-70">
+                <p className="mt-2 text-xl opacity-70">
                     For your safety, please leave this website.
                 </p>
             </div>
